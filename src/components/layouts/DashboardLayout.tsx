@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
 import { ResponsiveSidebarLayout } from '../../components/layouts/ResponsiveSidebarLayout'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin, type DiscordGuild, type DiscordUser } from '../../services/discordAuth'
-import { useDashboardGuildSelection } from './DashboardContext'
+import { useDashboardGuildSelection } from '../../contexts/DashboardContext'
 
 export interface DashboardLayoutContextValue {
     selectedGuild: DiscordGuild | null

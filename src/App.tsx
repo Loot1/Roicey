@@ -9,10 +9,10 @@ import { CommandsPage } from './routes/docs/CommandsPage'
 import { ConfigurationPage } from './routes/docs/ConfigurationPage'
 import { ModerationPage } from './routes/docs/ModerationPage'
 import { FAQPage } from './routes/docs/FAQPage'
-import { DashboardLayout } from './routes/dashboard/DashboardLayout'
+import { DashboardLayout } from './components/layouts/DashboardLayout'
 import { DashboardOverviewPage } from './routes/dashboard/DashboardOverviewPage'
 import { DashboardSettingsPage } from './routes/dashboard/DashboardSettingsPage'
-import { DashboardProvider } from './routes/dashboard/DashboardContext'
+import { DashboardProvider } from './contexts/DashboardContext'
 
 export function App() {
   return (
