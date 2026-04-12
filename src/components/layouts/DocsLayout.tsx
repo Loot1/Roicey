@@ -60,7 +60,7 @@ export function DocsLayout() {
             sidebarOpen={sidebarOpen}
             onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             onCloseSidebar={() => setSidebarOpen(false)}
-            asideClassName="fixed inset-0 z-40 w-64 overflow-y-auto border-r border-base-300 bg-base-200/50 lg:static lg:z-auto"
+            asideClassName="fixed inset-0 z-40 w-64 overflow-y-auto border-r border-base-300 bg-base-200 lg:static lg:z-auto lg:bg-base-200/50"
             contentWrapperClassName="mx-auto max-w-4xl px-6 py-12 lg:px-10"
             sidebar={
                 <nav className="space-y-1 p-4">
