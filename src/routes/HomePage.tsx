@@ -1,9 +1,6 @@
-import {
-    BoltIcon,
-    ShieldCheckIcon,
-    WrenchScrewdriverIcon,
-} from '@heroicons/react/24/outline'
+import { BoltIcon, ShieldCheckIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/outline'
 import logoSansFond from '../assets/images/sansfond.png'
+import { startDiscordLogin } from '../services/discordAuth'
 
 export function HomePage() {
     return (
@@ -26,7 +23,9 @@ export function HomePage() {
                         zéro friction pour ta communauté.
                     </p>
                     <div className="flex flex-wrap gap-3">
-                        <button className="btn btn-primary btn-wide">Ajouter le bot sur Discord</button>
+                        <button className="btn btn-primary btn-wide" onClick={() => void startDiscordLogin('/dashboard').catch(console.error)}>
+                            Se connecter au dashboard
+                        </button>
                         <button className="btn btn-outline btn-secondary">Voir les commandes Discord</button>
                     </div>
                     <div className="alert alert-info alert-soft max-w-xl">

@@ -5,9 +5,8 @@ import {
     Cog6ToothIcon,
     ShieldCheckIcon,
     QuestionMarkCircleIcon,
-    Bars3Icon,
-    XMarkIcon,
 } from '@heroicons/react/24/outline'
+import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
 
 interface DocNavItem {
     id: string
@@ -56,13 +55,14 @@ export function DocsLayout() {
     const isActive = (href: string) => location.pathname === href
 
     return (
-        <div className="flex min-h-screen bg-base-100">
-            {/* Sidebar */}
-            <aside
-                className={`fixed inset-0 z-40 w-64 overflow-y-auto border-r border-base-300 bg-base-200/50 transition-transform lg:static lg:z-auto lg:translate-x-0 ${
-                    sidebarOpen ? 'translate-x-0' : '-translate-x-full'
-                }`}
-            >
+        <ResponsiveSidebarLayout
+            mobileTitle="Documentation"
+            sidebarOpen={sidebarOpen}
+            onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+            onCloseSidebar={() => setSidebarOpen(false)}
+            asideClassName="fixed inset-0 z-40 w-64 overflow-y-auto border-r border-base-300 bg-base-200/50 lg:static lg:z-auto"
+            contentWrapperClassName="mx-auto max-w-4xl px-6 py-12 lg:px-10"
+            sidebar={
                 <nav className="space-y-1 p-4">
                     <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">
                         Documentation
@@ -86,38 +86,9 @@ export function DocsLayout() {
                         )
                     })}
                 </nav>
-            </aside>
-
-            {/* Main Content */}
-            <div className="w-full flex-1">
-                {/* Mobile Header */}
-                <div className="sticky top-0 z-30 flex items-center justify-between border-b border-base-300 bg-base-100 px-4 py-3 lg:hidden">
-                    <h1 className="font-semibold">Documentation</h1>
-                    <button
-                        onClick={() => setSidebarOpen(!sidebarOpen)}
-                        className="btn btn-ghost btn-sm btn-square"
-                    >
-                        {sidebarOpen ? (
-                            <XMarkIcon className="h-5 w-5" />
-                        ) : (
-                            <Bars3Icon className="h-5 w-5" />
-                        )}
-                    </button>
-                </div>
-
-                {/* Content */}
-                <div className="mx-auto max-w-4xl px-6 py-12 lg:px-10">
-                    <Outlet />
-                </div>
-            </div>
-
-            {/* Mobile Overlay */}
-            {sidebarOpen && (
-                <div
-                    className="fixed inset-0 z-30 bg-black/50 lg:hidden"
-                    onClick={() => setSidebarOpen(false)}
-                ></div>
-            )}
-        </div>
+            }
+        >
+            <Outlet />
+        </ResponsiveSidebarLayout>
     )
 }

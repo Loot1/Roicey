@@ -9,6 +9,10 @@ import { CommandsPage } from './routes/docs/CommandsPage'
 import { ConfigurationPage } from './routes/docs/ConfigurationPage'
 import { ModerationPage } from './routes/docs/ModerationPage'
 import { FAQPage } from './routes/docs/FAQPage'
+import { DashboardLayout } from './routes/dashboard/DashboardLayout'
+import { DashboardOverviewPage } from './routes/dashboard/DashboardOverviewPage'
+import { DashboardSettingsPage } from './routes/dashboard/DashboardSettingsPage'
+import { DashboardProvider } from './routes/dashboard/DashboardContext'
 
 export function App() {
   return (
@@ -16,6 +20,17 @@ export function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <DashboardProvider>
+              <DashboardLayout />
+            </DashboardProvider>
+          }
+        >
+          <Route index element={<DashboardOverviewPage />} />
+          <Route path="settings" element={<DashboardSettingsPage />} />
+        </Route>
         <Route path="/legal" element={<LegalPage />} />
         <Route path="/docs" element={<DocsLayout />}>
           <Route index element={<GettingStartedPage />} />

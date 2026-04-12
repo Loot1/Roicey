@@ -1,9 +1,14 @@
+import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { Bars3Icon, UserCircleIcon } from '@heroicons/react/24/outline'
-import logoSansFond from '../assets/images/sansfond.png'
+import logoSansFond from '../../assets/images/sansfond.png'
+import { getDiscordSession, logoutDiscord, onAuthChanged, startDiscordLogin, type DiscordUser } from '../../services/discordAuth'
 
 export function Header() {
     const location = useLocation()
+    const [user, setUser] = useState<DiscordUser | null>(null)
+    const [loadingUser, setLoadingUser] = useState(true)
+    const currentPath = `${location.pathname}${location.search}`
     
     const isActive = (path: string) => location.pathname === path
 
@@ -12,6 +17,47 @@ export function Header() {
         { label: 'À propos', href: '/about' },
         { label: 'Documentation', href: '/docs' },
     ]
+
+    useEffect(() => {
+        let ignore = false
+
+        const loadSession = async () => {
+            try {
+                const sessionUser = await getDiscordSession()
+                if (!ignore) {
+                    setUser(sessionUser)
+                }
+            } catch {
+                if (!ignore) {
+                    setUser(null)
+                }
+            } finally {
+                if (!ignore) {
+                    setLoadingUser(false)
+                }
+            }
+        }
+
+        void loadSession()
+
+        return () => {
+            ignore = true
+        }
+    }, [location.pathname])
+
+    useEffect(() => {
+        return onAuthChanged(() => {
+            void (async () => {
+                const sessionUser = await getDiscordSession()
+                setUser(sessionUser)
+            })()
+        })
+    }, [])
+
+    const handleLogout = async () => {
+        await logoutDiscord()
+        setUser(null)
+    }
 
     return (
         <div className="navbar bg-base-100 shadow-md border-b border-base-200/50">
@@ -63,7 +109,20 @@ export function Header() {
                 </ul>
             </div>
             <div className="navbar-end gap-4">
-                <button className="btn btn-primary btn-sm">Ajouter au serveur</button>
+                {user ? (
+                    <Link
+                        to="/dashboard"
+                        className="hidden items-center gap-2 rounded-box border border-base-300 bg-base-200/40 px-3 py-1.5 transition hover:bg-base-300/40 md:flex"
+                    >
+                        <span className="text-sm font-semibold">{user.global_name ?? user.username}</span>
+                    </Link>
+                ) : null}
+
+                {!user && !loadingUser ? (
+                    <button className="btn btn-primary btn-sm" onClick={() => void startDiscordLogin(currentPath).catch(console.error)}>
+                        Se connecter
+                    </button>
+                ) : null}
                 <div className="dropdown dropdown-end">
                     <button
                         tabIndex={0}
@@ -71,16 +130,30 @@ export function Header() {
                         className="btn btn-ghost btn-circle"
                         title="Menu utilisateur"
                     >
-                        <UserCircleIcon className="h-6 w-6" />
+                        {user ? (
+                            <img
+                                src={user.avatarUrl}
+                                alt={user.username}
+                                className="h-8 w-8 rounded-full border border-base-300 object-cover"
+                            />
+                        ) : (
+                            <UserCircleIcon className="h-6 w-6" />
+                        )}
                     </button>
                     <ul
                         tabIndex={0}
                         className="dropdown-content z-50 menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200"
                     >
-                        <li><a href="#dashboard">Dashboard</a></li>
-                        <li><a href="#settings">Paramètres</a></li>
-                        <li><div className="divider my-0"></div></li>
-                        <li><a href="#logout">Déconnexion</a></li>
+                        {user ? (
+                            <li className="menu-title px-2 py-1">
+                                <span>{user.global_name ?? user.username}</span>
+                            </li>
+                        ) : null}
+                        {user ? (
+                            <li><button onClick={() => void handleLogout().catch(console.error)}>Déconnexion</button></li>
+                        ) : (
+                            <li><button onClick={() => void startDiscordLogin(currentPath).catch(console.error)}>Connexion Discord</button></li>
+                        )}
                     </ul>
                 </div>
             </div>

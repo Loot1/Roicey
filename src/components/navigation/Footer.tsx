@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import logoSansFond from '../assets/images/sansfond.png'
+import logoSansFond from '../../assets/images/sansfond.png'
 
 export function Footer() {
     return (
