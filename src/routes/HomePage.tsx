@@ -1,6 +1,6 @@
 import { BoltIcon, ShieldCheckIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/outline'
-import logoSansFond from '../assets/images/sansfond.png'
-import { startDiscordLogin } from '../services/discordAuth'
+import logoSansFond from '../assets/images/voicey-logo.png'
+import { startDiscordLogin } from '../api/discordAuth'
 
 export function HomePage() {
     return (

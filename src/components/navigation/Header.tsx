@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { Bars3Icon, UserCircleIcon } from '@heroicons/react/24/outline'
-import logoSansFond from '../../assets/images/sansfond.png'
-import { getDiscordSession, logoutDiscord, onAuthChanged, startDiscordLogin, type DiscordUser } from '../../services/discordAuth'
+import logoSansFond from '../../assets/images/voicey-logo.png'
+import { getDiscordSession, logoutDiscord, onAuthChanged, startDiscordLogin, type DiscordUser } from '../../api/discordAuth'
 
 export function Header() {
     const location = useLocation()

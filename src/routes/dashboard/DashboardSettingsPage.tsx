@@ -8,7 +8,7 @@ import {
     saveGuildDashboardConfig,
     type GuildDashboardConfigInput,
     type GuildDashboardOptions,
-} from '../../services/discordAuth'
+} from '../../api/discordAuth'
 import type { DashboardLayoutContextValue } from './DashboardLayout'
 
 const emptyOptions: GuildDashboardOptions = {

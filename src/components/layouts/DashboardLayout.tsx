@@ -2,7 +2,7 @@ import { ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon } from '@heroic
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
 import { ResponsiveSidebarLayout } from '../../components/layouts/ResponsiveSidebarLayout'
-import { getDashboardGuilds, getDiscordSession, startDiscordLogin, type DiscordGuild, type DiscordUser } from '../../services/discordAuth'
+import { getDashboardGuilds, getDiscordSession, startDiscordLogin, type DiscordGuild, type DiscordUser } from '../../api/discordAuth'
 import { useDashboardGuildSelection } from '../../contexts/DashboardContext'
 
 export interface DashboardLayoutContextValue {
