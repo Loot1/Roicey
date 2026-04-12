@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    @apply font-semibold antialiased;
+  }
+  p, span, a, button, li {
+    @apply font-semibold;
+    letter-spacing: 0.01em;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.18);
+  }
+}
+
+@plugin "daisyui" {
+  themes: light --default, dark --prefersdark;
+  root: ":root";
+  include: ;
+  exclude: ;
+  prefix: ;
+  logs: true;
+}
+
+@plugin "daisyui/theme" {
+  name: "voicey";
+  default: true;
+  prefersdark: true;
+  color-scheme: "light";
+  --color-base-100: #89C9EC;
+  --color-base-200: #a8daf5;
+  --color-base-300: #c7eaf9;
+  --color-base-content: #ffffff;
+  --color-primary: #CF2D2D;
+  --color-primary-content: #ffffff;
+  --color-secondary: #CF2D2D;
+  --color-secondary-content: #ffffff;
+  --color-accent: #CF2D2D;
+  --color-accent-content: #ffffff;
+  --color-neutral: #CF2D2D;
+  --color-neutral-content: #ffffff;
+  --color-info: #CF2D2D;
+  --color-info-content: #ffffff;
+  --color-success: #4CAF50;
+  --color-success-content: #ffffff;
+  --color-warning: #FFC107;
+  --color-warning-content: #000000;
+  --color-error: #F44336;
+  --color-error-content: #ffffff;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
