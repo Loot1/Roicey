@@ -143,6 +143,136 @@ export function HomePage() {
                 </div>
             </section>
 
+            <section className="py-10">
+                <div className="mx-auto max-w-7xl px-6 lg:px-10">
+                    <h2 className="text-3xl font-extrabold sm:text-4xl">Serveurs qui nous font confiance</h2>
+                    <p className="mt-2 max-w-2xl text-base-content/70">
+                        Rejoins les centaines de communautés Discord qui utilisent Voicey pour gérer leurs salons vocaux.
+                    </p>
+                </div>
+
+                <div className="mt-8 w-screen overflow-x-auto scrollbar-hide">
+                    <div className="flex gap-4 pb-4 pl-6 pr-6 lg:pl-10 lg:pr-10">
+                        <div className="flex-shrink-0 w-72">
+                            <div className="card border border-base-300 bg-base-100 shadow-md h-full">
+                                <div className="card-body items-center text-center">
+                                    <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-primary/20 text-3xl font-black text-primary">
+                                        GG
+                                    </div>
+                                    <h3 className="card-title text-lg">Gaming Guild</h3>
+                                    <p className="text-base-content/70">2,450 membres</p>
+                                    <div className="card-actions">
+                                        <div className="badge badge-primary">FPS</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex-shrink-0 w-72">
+                            <div className="card border border-base-300 bg-base-100 shadow-md h-full">
+                                <div className="card-body items-center text-center">
+                                    <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-secondary/20 text-3xl font-black text-secondary">
+                                        DC
+                                    </div>
+                                    <h3 className="card-title text-lg">Dev Community</h3>
+                                    <p className="text-base-content/70">1,890 membres</p>
+                                    <div className="card-actions">
+                                        <div className="badge badge-secondary">Coding</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex-shrink-0 w-72">
+                            <div className="card border border-base-300 bg-base-100 shadow-md h-full">
+                                <div className="card-body items-center text-center">
+                                    <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-accent/20 text-3xl font-black text-accent">
+                                        MC
+                                    </div>
+                                    <h3 className="card-title text-lg">Minecraft Central</h3>
+                                    <p className="text-base-content/70">3,120 membres</p>
+                                    <div className="card-actions">
+                                        <div className="badge badge-accent">Gaming</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex-shrink-0 w-72">
+                            <div className="card border border-base-300 bg-base-100 shadow-md h-full">
+                                <div className="card-body items-center text-center">
+                                    <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-info/20 text-3xl font-black text-info">
+                                        FC
+                                    </div>
+                                    <h3 className="card-title text-lg">French Campus</h3>
+                                    <p className="text-base-content/70">1,650 membres</p>
+                                    <div className="card-actions">
+                                        <div className="badge badge-info">Education</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex-shrink-0 w-72">
+                            <div className="card border border-base-300 bg-base-100 shadow-md h-full">
+                                <div className="card-body items-center text-center">
+                                    <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-success/20 text-3xl font-black text-success">
+                                        ER
+                                    </div>
+                                    <h3 className="card-title text-lg">Esports Rising</h3>
+                                    <p className="text-base-content/70">2,200 membres</p>
+                                    <div className="card-actions">
+                                        <div className="badge badge-success">Esports</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex-shrink-0 w-72">
+                            <div className="card border border-base-300 bg-base-100 shadow-md h-full">
+                                <div className="card-body items-center text-center">
+                                    <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-warning/20 text-3xl font-black text-warning">
+                                        ST
+                                    </div>
+                                    <h3 className="card-title text-lg">Streaming Team</h3>
+                                    <p className="text-base-content/70">980 membres</p>
+                                    <div className="card-actions">
+                                        <div className="badge badge-warning">Twitch</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex-shrink-0 w-72">
+                            <div className="card border border-base-300 bg-base-100 shadow-md h-full">
+                                <div className="card-body items-center text-center">
+                                    <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-error/20 text-3xl font-black text-error">
+                                        AM
+                                    </div>
+                                    <h3 className="card-title text-lg">Art Makers</h3>
+                                    <p className="text-base-content/70">1,450 membres</p>
+                                    <div className="card-actions">
+                                        <div className="badge badge-error">Creative</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="flex-shrink-0 w-72">
+                            <div className="card border border-base-300 bg-base-100 shadow-md h-full">
+                                <div className="card-body items-center justify-center text-center">
+                                    <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-base-300 text-4xl font-black text-base-content">
+                                        +
+                                    </div>
+                                    <h3 className="card-title text-lg">Et 880+ autres</h3>
+                                    <p className="text-base-content/70">serveurs actifs</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section className="mx-auto max-w-7xl px-6 pb-16 pt-6 lg:px-10">
                 <div className="hero rounded-box border border-primary/20 bg-gradient-to-r from-primary/20 via-base-200 to-secondary/20 p-2">
                     <div className="hero-content text-center">
