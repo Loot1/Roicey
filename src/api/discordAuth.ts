@@ -1,59 +1,7 @@
 import axios from 'axios'
+import type { DiscordGuild, DiscordUser, GuildDashboardConfigInput, GuildDashboardOptions } from '../types'
 
 const AUTH_CHANGED_EVENT = 'voicey-auth-changed'
-
-export interface DiscordUser {
-    id: string
-    username: string
-    global_name: string | null
-    avatar: string | null
-    discriminator: string
-    avatarUrl: string
-}
-
-export interface DiscordGuild {
-    id: string
-    name: string
-    icon: string | null
-    owner: boolean
-    permissions: string
-    botInGuild: boolean
-    iconUrl: string | null
-}
-
-export interface GuildDashboardConfig {
-    guildId: string
-    categoryId: string | null
-    createChannelId: string | null
-    logChannelId: string | null
-    defaultMaxMembers: number
-    adminRolesIds: string[]
-}
-
-export interface GuildDashboardConfigInput {
-    categoryId: string
-    createChannelId: string
-    logChannelId: string
-    defaultMaxMembers: number
-    adminRolesIds: string[]
-}
-
-export interface GuildChannelOption {
-    id: string
-    name: string
-}
-
-export interface GuildRoleOption {
-    id: string
-    name: string
-}
-
-export interface GuildDashboardOptions {
-    categories: GuildChannelOption[]
-    voiceChannels: GuildChannelOption[]
-    logChannels: GuildChannelOption[]
-    roles: GuildRoleOption[]
-}
 
 interface MeResponse {
     user: DiscordUser
@@ -66,6 +14,15 @@ interface GuildsResponse {
 
 interface GuildConfigResponse {
     config: GuildDashboardConfig
+}
+
+interface GuildDashboardConfig {
+    guildId: string
+    categoryId: string | null
+    createChannelId: string | null
+    logChannelId: string | null
+    defaultMaxMembers: number
+    adminRolesIds: string[]
 }
 
 interface GuildOptionsResponse {

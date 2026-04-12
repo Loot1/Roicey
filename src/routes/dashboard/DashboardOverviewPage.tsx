@@ -1,6 +1,6 @@
 import { Link, useOutletContext } from 'react-router'
 import { Cog6ToothIcon, GlobeAltIcon, ShieldCheckIcon, SparklesIcon } from '@heroicons/react/24/outline'
-import type { DashboardLayoutContextValue } from './DashboardLayout'
+import type { DashboardLayoutContextValue } from '../../types'
 
 function checkPermissions(permissions: string): { hasPerm: boolean; reason: string } {
     try {

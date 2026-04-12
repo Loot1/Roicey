@@ -1,7 +1,6 @@
 export { Header } from './navigation/Header'
 export { Footer } from './navigation/Footer'
 export { DashboardSelectField } from './DashboardSelectField'
-export { emptyConfigForm, type ConfigFormState } from './dashboard'
 export { Layout } from './layouts/Layout'
 export { DocsLayout } from './layouts/DocsLayout'
 export { ResponsiveSidebarLayout } from './layouts/ResponsiveSidebarLayout'

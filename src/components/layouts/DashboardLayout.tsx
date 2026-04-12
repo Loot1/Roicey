@@ -2,14 +2,9 @@ import { ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon } from '@heroic
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
 import { ResponsiveSidebarLayout } from '../../components/layouts/ResponsiveSidebarLayout'
-import { getDashboardGuilds, getDiscordSession, startDiscordLogin, type DiscordGuild, type DiscordUser } from '../../api/discordAuth'
+import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
 import { useDashboardGuildSelection } from '../../contexts/DashboardContext'
-
-export interface DashboardLayoutContextValue {
-    selectedGuild: DiscordGuild | null
-    selectedGuildId: string | null
-    user: DiscordUser
-}
+import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
 
 export function DashboardLayout() {
     const location = useLocation()

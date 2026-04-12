@@ -1,15 +1,25 @@
 import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { useOutletContext } from 'react-router'
 import { DashboardSelectField } from '../../components/DashboardSelectField'
-import { emptyConfigForm, type ConfigFormState } from '../../components/dashboard'
-import {
-    getGuildDashboardConfig,
-    getGuildDashboardOptions,
-    saveGuildDashboardConfig,
-    type GuildDashboardConfigInput,
-    type GuildDashboardOptions,
-} from '../../api/discordAuth'
-import type { DashboardLayoutContextValue } from './DashboardLayout'
+import { getGuildDashboardConfig, getGuildDashboardOptions, saveGuildDashboardConfig } from '../../api/discordAuth'
+import type { DashboardLayoutContextValue, GuildDashboardConfigInput, GuildDashboardOptions } from '../../types'
+
+interface ConfigFormState {
+    categoryId: string
+    createChannelId: string
+    logChannelId: string
+    defaultMaxMembers: string
+    adminRolesIds: string[]
+}
+
+const defaultFormValues: ConfigFormState = {
+    categoryId: '',
+    createChannelId: '',
+    logChannelId: '',
+    defaultMaxMembers: '7',
+    adminRolesIds: [],
+}
 
 const emptyOptions: GuildDashboardOptions = {
     categories: [],
@@ -20,7 +30,10 @@ const emptyOptions: GuildDashboardOptions = {
 
 export function DashboardSettingsPage() {
     const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
-    const [configForm, setConfigForm] = useState<ConfigFormState>(emptyConfigForm)
+    const form = useForm<ConfigFormState>({
+        defaultValues: defaultFormValues,
+        mode: 'onChange',
+    })
     const [options, setOptions] = useState<GuildDashboardOptions>(emptyOptions)
     const [configLoading, setConfigLoading] = useState(false)
     const [configSaving, setConfigSaving] = useState(false)
@@ -31,7 +44,7 @@ export function DashboardSettingsPage() {
 
         const loadGuildData = async () => {
             if (!selectedGuildId) {
-                setConfigForm(emptyConfigForm)
+                form.reset(defaultFormValues)
                 setOptions(emptyOptions)
                 return
             }
@@ -45,7 +58,7 @@ export function DashboardSettingsPage() {
                 ])
 
                 if (!ignore) {
-                    setConfigForm({
+                    form.reset({
                         categoryId: config.categoryId ?? '',
                         createChannelId: config.createChannelId ?? '',
                         logChannelId: config.logChannelId ?? '',
@@ -70,48 +83,42 @@ export function DashboardSettingsPage() {
         return () => {
             ignore = true
         }
-    }, [selectedGuildId])
-
-    const setField = (field: keyof ConfigFormState, value: string) => {
-        setConfigForm((previous) => ({ ...previous, [field]: value }))
-    }
+    }, [selectedGuildId, form])
 
     const toggleRole = (roleId: string) => {
-        setConfigForm((previous) => {
-            const hasRole = previous.adminRolesIds.includes(roleId)
-            return {
-                ...previous,
-                adminRolesIds: hasRole
-                    ? previous.adminRolesIds.filter((id) => id !== roleId)
-                    : [...previous.adminRolesIds, roleId],
-            }
-        })
+        const currentRoles = form.getValues('adminRolesIds')
+        const hasRole = currentRoles.includes(roleId)
+        const updatedRoles = hasRole
+            ? currentRoles.filter((id) => id !== roleId)
+            : [...currentRoles, roleId]
+
+        form.setValue('adminRolesIds', updatedRoles, { shouldValidate: true, shouldDirty: true })
     }
 
-    const handleSaveConfig = async () => {
+    const handleSaveConfig = async (data: ConfigFormState) => {
         if (!selectedGuildId) {
             return
         }
 
-        const maxMembers = Number(configForm.defaultMaxMembers)
+        const maxMembers = Number(data.defaultMaxMembers)
         if (!Number.isInteger(maxMembers) || maxMembers < 1 || maxMembers > 99) {
             setConfigMessage('Le nombre de places par défaut doit être compris entre 1 et 99.')
             return
         }
 
         const payload: GuildDashboardConfigInput = {
-            categoryId: configForm.categoryId,
-            createChannelId: configForm.createChannelId,
-            logChannelId: configForm.logChannelId,
+            categoryId: data.categoryId,
+            createChannelId: data.createChannelId,
+            logChannelId: data.logChannelId,
             defaultMaxMembers: maxMembers,
-            adminRolesIds: configForm.adminRolesIds,
+            adminRolesIds: data.adminRolesIds,
         }
 
         try {
             setConfigSaving(true)
             setConfigMessage(null)
             const savedConfig = await saveGuildDashboardConfig(selectedGuildId, payload)
-            setConfigForm({
+            form.reset({
                 categoryId: savedConfig.categoryId ?? '',
                 createChannelId: savedConfig.createChannelId ?? '',
                 logChannelId: savedConfig.logChannelId ?? '',
@@ -134,6 +141,9 @@ export function DashboardSettingsPage() {
         )
     }
 
+    const adminRolesIds = form.watch('adminRolesIds')
+    const isDisabled = configLoading || configSaving
+
     return (
         <section className="space-y-6">
             <div className="rounded-box border border-base-300 bg-base-100 p-6 shadow-lg">
@@ -143,81 +153,82 @@ export function DashboardSettingsPage() {
                     </div>
                 ) : null}
 
-                <div className="grid gap-4 md:grid-cols-2">
-                    <DashboardSelectField
-                        label="Catégorie vocale"
-                        value={configForm.categoryId}
-                        placeholder="Aucune catégorie"
-                        options={options.categories}
-                        onChange={(value) => setField('categoryId', value)}
-                        disabled={configLoading || configSaving}
-                    />
-
-                    <DashboardSelectField
-                        label="Salon créateur"
-                        value={configForm.createChannelId}
-                        placeholder="Aucun salon"
-                        options={options.voiceChannels}
-                        onChange={(value) => setField('createChannelId', value)}
-                        disabled={configLoading || configSaving}
-                    />
-
-                    <DashboardSelectField
-                        label="Salon de logs"
-                        value={configForm.logChannelId}
-                        placeholder="Aucun salon"
-                        options={options.logChannels}
-                        onChange={(value) => setField('logChannelId', value)}
-                        disabled={configLoading || configSaving}
-                    />
-
-                    <label className="form-control flex flex-col">
-                        <span className="label-text mb-1">Limite par défaut (1-99)</span>
-                        <input
-                            type="number"
-                            min={1}
-                            max={99}
-                            className="input input-bordered w-full"
-                            value={configForm.defaultMaxMembers}
-                            onChange={(event) => setField('defaultMaxMembers', event.target.value)}
-                            disabled={configLoading || configSaving}
+                <form onSubmit={form.handleSubmit(handleSaveConfig)} className="space-y-4">
+                    <div className="grid gap-4 md:grid-cols-2">
+                        <DashboardSelectField
+                            control={form.control}
+                            name="categoryId"
+                            label="Catégorie vocale"
+                            placeholder="Aucune catégorie"
+                            options={options.categories}
+                            disabled={isDisabled}
                         />
-                    </label>
-                </div>
 
-                <div className="form-control mt-5">
-                    <span className="label-text mb-1">Rôles administrateurs</span>
-                    {options.roles.length === 0 ? (
-                        <div className="rounded-box border border-dashed border-base-300 p-3 text-sm text-base-content/65">
-                            Aucun rôle disponible pour ce serveur.
-                        </div>
-                    ) : (
-                        <div className="max-h-56 w-full space-y-2 overflow-y-auto rounded-box border border-base-300 bg-base-200/30 p-3 mt-1">
-                            {options.roles.map((role) => (
-                                <label key={role.id} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-base-300/40">
-                                    <input
-                                        type="checkbox"
-                                        className="checkbox checkbox-sm"
-                                        checked={configForm.adminRolesIds.includes(role.id)}
-                                        onChange={() => toggleRole(role.id)}
-                                        disabled={configLoading || configSaving}
-                                    />
-                                    <span className="text-sm">{role.name}</span>
-                                </label>
-                            ))}
-                        </div>
-                    )}
-                </div>
+                        <DashboardSelectField
+                            control={form.control}
+                            name="createChannelId"
+                            label="Salon créateur"
+                            placeholder="Aucun salon"
+                            options={options.voiceChannels}
+                            disabled={isDisabled}
+                        />
 
-                <div className="mt-5 flex flex-wrap gap-3">
-                    <button
-                        className="btn btn-primary"
-                        onClick={() => void handleSaveConfig()}
-                        disabled={configLoading || configSaving}
-                    >
-                        {configLoading ? 'Chargement...' : configSaving ? 'Sauvegarde...' : 'Sauvegarder'}
-                    </button>
-                </div>
+                        <DashboardSelectField
+                            control={form.control}
+                            name="logChannelId"
+                            label="Salon de logs"
+                            placeholder="Aucun salon"
+                            options={options.logChannels}
+                            disabled={isDisabled}
+                        />
+
+                        <label className="form-control flex flex-col">
+                            <span className="label-text mb-1">Limite par défaut (1-99)</span>
+                            <input
+                                type="number"
+                                min={1}
+                                max={99}
+                                className="input input-bordered w-full"
+                                {...form.register('defaultMaxMembers')}
+                                disabled={isDisabled}
+                            />
+                        </label>
+                    </div>
+
+                    <div className="form-control mt-5">
+                        <span className="label-text mb-1">Rôles administrateurs</span>
+                        {options.roles.length === 0 ? (
+                            <div className="rounded-box border border-dashed border-base-300 p-3 text-sm text-base-content/65">
+                                Aucun rôle disponible pour ce serveur.
+                            </div>
+                        ) : (
+                            <div className="mt-1 max-h-56 w-full space-y-2 overflow-y-auto rounded-box border border-base-300 bg-base-200/30 p-3">
+                                {options.roles.map((role) => (
+                                    <label key={role.id} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-base-300/40">
+                                        <input
+                                            type="checkbox"
+                                            className="checkbox checkbox-sm"
+                                            checked={adminRolesIds.includes(role.id)}
+                                            onChange={() => toggleRole(role.id)}
+                                            disabled={isDisabled}
+                                        />
+                                        <span className="text-sm">{role.name}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="mt-5 flex flex-wrap gap-3">
+                        <button
+                            type="submit"
+                            className="btn btn-primary"
+                            disabled={isDisabled}
+                        >
+                            {configLoading ? 'Chargement...' : configSaving ? 'Sauvegarde...' : 'Sauvegarder'}
+                        </button>
+                    </div>
+                </form>
             </div>
         </section>
     )
