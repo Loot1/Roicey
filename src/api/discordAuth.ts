@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { DiscordGuild, DiscordUser, GuildDashboardConfigInput, GuildDashboardOptions } from '../types'
+import type { DiscordGuild, DiscordUser, FeaturedServer, GuildDashboardConfigInput, GuildDashboardOptions } from '../types'
 
 const AUTH_CHANGED_EVENT = 'voicey-auth-changed'
 
@@ -27,6 +27,10 @@ interface GuildDashboardConfig {
 
 interface GuildOptionsResponse {
     options: GuildDashboardOptions
+}
+
+interface FeaturedServersResponse {
+    servers: FeaturedServer[]
 }
 
 const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
@@ -82,6 +86,11 @@ export async function saveGuildDashboardConfig(
 export async function getGuildDashboardOptions(guildId: string): Promise<GuildDashboardOptions> {
     const { data } = await discordApi.get<GuildOptionsResponse>(`/api/dashboard/guilds/${guildId}/options`)
     return data.options
+}
+
+export async function getFeaturedServers(): Promise<FeaturedServer[]> {
+    const { data } = await discordApi.get<FeaturedServersResponse>('/api/public/featured-servers')
+    return data.servers
 }
 
 export async function logoutDiscord(): Promise<void> {
