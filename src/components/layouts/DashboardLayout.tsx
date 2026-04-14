@@ -222,6 +222,17 @@ export function DashboardLayout() {
                         >
                             Configuration
                         </NavLink>
+                        <NavLink
+                            to="/dashboard/logs"
+                            className={({ isActive }) => `mt-1 flex rounded-lg px-3 py-2 text-sm transition ${
+                                isActive
+                                    ? 'bg-primary/20 text-primary font-semibold'
+                                    : 'text-base-content/75 hover:bg-base-300/50'
+                            }`}
+                            onClick={() => setSidebarOpen(false)}
+                        >
+                            Logs
+                        </NavLink>
                     </div>
                 </nav>
             }

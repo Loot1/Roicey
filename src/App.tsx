@@ -13,6 +13,7 @@ import { DashboardLayout } from './components/layouts/DashboardLayout'
 import { DashboardOverviewPage } from './routes/dashboard/DashboardOverviewPage'
 import { DashboardSettingsPage } from './routes/dashboard/DashboardSettingsPage'
 import { DashboardProvider } from './contexts/DashboardContext'
+import { DashboardLogsViewerPage } from './routes/dashboard/DashboardLogsViewerPage'
 
 export function App() {
   return (
@@ -30,6 +31,7 @@ export function App() {
         >
           <Route index element={<DashboardOverviewPage />} />
           <Route path="settings" element={<DashboardSettingsPage />} />
+          <Route path="logs" element={<DashboardLogsViewerPage />} />
         </Route>
         <Route path="/legal" element={<LegalPage />} />
         <Route path="/docs" element={<DocsLayout />}>
