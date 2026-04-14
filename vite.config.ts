@@ -10,4 +10,9 @@ export default defineConfig({
     tailwindcss(),
     babel({ presets: [reactCompilerPreset()] })
   ],
+  base: '/Roicey/',
+  server: {
+    port: 5173,
+    open: true
+  }
 })
