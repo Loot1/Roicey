@@ -1,7 +1,6 @@
 name: Deploy Gh-Pages
 on:
-  # propose moi d'autres événements que je pourrais utiliser pour déclencher le workflow
-  
+  workflow_dispatch:
   push:
     branches:
       - master
