@@ -33,7 +33,11 @@ function FeaturedServerCard({ server }: { server: FeaturedServer }) {
         <div className="flex-shrink-0 w-72">
             <div className="card h-full border border-base-300 bg-base-100 shadow-md">
                 <div className="card-body items-center text-center">
-                    <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-lg bg-primary/20 text-3xl font-black text-primary">
+                    <div
+                        className={`flex h-20 w-20 items-center justify-center overflow-hidden rounded-lg text-3xl font-black text-primary ${
+                            server.iconUrl ? '' : 'bg-primary/20'
+                        }`}
+                    >
                         {server.iconUrl ? (
                             <img src={server.iconUrl} alt={server.name} className="h-20 w-20 object-cover" />
                         ) : (

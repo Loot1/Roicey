@@ -134,7 +134,7 @@ export function DashboardLayout() {
                                     onClick={() => setGuildPickerOpen((previous) => !previous)}
                                     aria-expanded={guildPickerOpen}
                                 >
-                                    <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-primary/15 text-xs font-black text-primary">
+                                    <div className={`flex h-10 w-10 flex-none items-center justify-center rounded-lg text-xs font-black text-primary ${selectedGuild?.iconUrl ? '' : 'bg-primary/15'}`}>
                                         {selectedGuild?.iconUrl ? (
                                             <img src={selectedGuild.iconUrl} alt={selectedGuild.name} className="h-10 w-10 rounded-lg object-cover" />
                                         ) : (
@@ -175,7 +175,13 @@ export function DashboardLayout() {
                                                     }`}
                                                 >
                                                     <div className={`flex h-10 w-10 flex-none items-center justify-center rounded-lg text-xs font-black ${
-                                                        isSelected ? 'bg-primary/15 text-primary' : 'bg-base-300/40 text-base-content'
+                                                        guild.iconUrl
+                                                            ? isSelected
+                                                                ? 'text-primary'
+                                                                : 'text-base-content'
+                                                            : isSelected
+                                                                ? 'bg-primary/15 text-primary'
+                                                                : 'bg-base-300/40 text-base-content'
                                                     }`}>
                                                         {guild.iconUrl ? (
                                                             <img src={guild.iconUrl} alt={guild.name} className="h-10 w-10 rounded-lg object-cover" />

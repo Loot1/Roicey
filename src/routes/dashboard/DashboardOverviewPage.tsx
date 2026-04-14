@@ -44,7 +44,11 @@ export function DashboardOverviewPage() {
             <div className="rounded-box border border-base-300 bg-base-100 p-6 shadow-lg">
                 <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
                     <div className="flex items-center gap-4">
-                        <div className="flex h-16 w-16 flex-none items-center justify-center overflow-hidden rounded-2xl bg-primary/15 text-2xl font-black text-primary">
+                        <div
+                            className={`flex h-16 w-16 flex-none items-center justify-center overflow-hidden rounded-2xl text-2xl font-black text-primary ${
+                                selectedGuild.iconUrl ? '' : 'bg-primary/15'
+                            }`}
+                        >
                             {selectedGuild.iconUrl ? (
                                 <img
                                     src={selectedGuild.iconUrl}
