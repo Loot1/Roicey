@@ -114,6 +114,14 @@ export async function downloadGuildRecordingFile(guildId: string, recordingId: n
     return data
 }
 
+export async function downloadGuildRecordingUserMix(guildId: string, recordingId: number, userId: string): Promise<Blob> {
+    const { data } = await discordApi.get(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}/users/${userId}/mix`, {
+        responseType: 'blob',
+    })
+
+    return data
+}
+
 export async function deleteGuildRecording(guildId: string, recordingId: number): Promise<void> {
     await discordApi.delete(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}`)
 }

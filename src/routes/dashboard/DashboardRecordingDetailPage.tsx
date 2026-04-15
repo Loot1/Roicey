@@ -1,10 +1,10 @@
 import { ArrowDownTrayIcon, ArrowLeftIcon, ArrowPathIcon, ExclamationTriangleIcon, TrashIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useOutletContext, useParams } from 'react-router'
-import { deleteGuildRecording, downloadGuildRecordingFile, getGuildDashboardRecording } from '../../api/discordAuth'
+import { deleteGuildRecording, downloadGuildRecordingUserMix, getGuildDashboardRecording } from '../../api/discordAuth'
 import { ButtonOne, DashboardPageHeader, RecordingSessionPlayer } from '../../components'
-import type { DashboardLayoutContextValue, DashboardRecording, DashboardRecordingFile } from '../../types'
-import { buildMixedAudioBlob, canDeleteRecording, formatDateTime, formatDuration, getActualRecordingDurationSeconds, getApproximateFileOffsetMs, getFileCacheKey, groupFilesByUser, type PreparedAudioSource, sortFilesByTimeline } from './recordingsShared'
+import type { DashboardLayoutContextValue, DashboardRecording } from '../../types'
+import { canDeleteRecording, formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from './recordingsShared'
 
 export function DashboardRecordingDetailPage() {
     const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
@@ -18,7 +18,6 @@ export function DashboardRecordingDetailPage() {
     const [downloadLoadingKey, setDownloadLoadingKey] = useState<string | null>(null)
     const [deleteLoading, setDeleteLoading] = useState(false)
     const preparedSourcesRef = useRef<Record<string, PreparedAudioSource>>({})
-    const fileBlobCacheRef = useRef<Record<string, Blob>>({})
 
     const recordingId = Number.parseInt(params.recordingId ?? '', 10)
 
@@ -48,7 +47,6 @@ export function DashboardRecordingDetailPage() {
         let ignore = false
 
         clearPreparedSources()
-        fileBlobCacheRef.current = {}
 
         if (!selectedGuildId || !Number.isInteger(recordingId) || recordingId < 1) {
             setRecording(null)
@@ -84,21 +82,12 @@ export function DashboardRecordingDetailPage() {
 
     const userGroups = useMemo(() => (recording ? groupFilesByUser(recording) : []), [recording])
 
-    const ensureFileBlob = async (file: DashboardRecordingFile): Promise<Blob> => {
+    const ensureUserMixBlob = async (userId: string): Promise<Blob> => {
         if (!selectedGuildId || !recording) {
             throw new Error('Aucune guilde sélectionnée.')
         }
 
-        const cacheKey = getFileCacheKey(recording.id, file.index)
-        const cachedBlob = fileBlobCacheRef.current[cacheKey]
-
-        if (cachedBlob) {
-            return cachedBlob
-        }
-
-        const blob = await downloadGuildRecordingFile(selectedGuildId, recording.id, file.index)
-        fileBlobCacheRef.current[cacheKey] = blob
-        return blob
+        return downloadGuildRecordingUserMix(selectedGuildId, recording.id, userId)
     }
 
     const prepareAllUserSources = async () => {
@@ -117,13 +106,7 @@ export function DashboardRecordingDetailPage() {
             setError(null)
 
             const nextEntries = await Promise.all(groupsToPrepare.map(async (group) => {
-                const sortedFiles = sortFilesByTimeline(recording, group.files)
-                const mixInputs = await Promise.all(sortedFiles.map(async (file) => ({
-                    blob: await ensureFileBlob(file),
-                    offsetMs: getApproximateFileOffsetMs(recording, file),
-                })))
-
-                const mixedAudioBlob = await buildMixedAudioBlob(mixInputs)
+                const mixedAudioBlob = await ensureUserMixBlob(group.userId)
                 const objectUrl = URL.createObjectURL(mixedAudioBlob)
                 const sourceKey = `user:${recording.id}:${group.userId}`
 
@@ -160,13 +143,7 @@ export function DashboardRecordingDetailPage() {
             throw new Error('Participant introuvable.')
         }
 
-        const sortedFiles = sortFilesByTimeline(recording, group.files)
-        const mixInputs = await Promise.all(sortedFiles.map(async (file) => ({
-            blob: await ensureFileBlob(file),
-            offsetMs: getApproximateFileOffsetMs(recording, file),
-        })))
-
-        const mixedAudioBlob = await buildMixedAudioBlob(mixInputs)
+        const mixedAudioBlob = await ensureUserMixBlob(userId)
         const objectUrl = URL.createObjectURL(mixedAudioBlob)
         const source = {
             label: `${group.username} • Demande #${recording.id}`,
@@ -196,7 +173,7 @@ export function DashboardRecordingDetailPage() {
             const source = await ensureUserSource(userId)
             const anchor = document.createElement('a')
             anchor.href = source.objectUrl
-            anchor.download = `${group.username}-${recording.id}.wav`
+            anchor.download = `${group.username}-${recording.id}.ogg`
             document.body.appendChild(anchor)
             anchor.click()
             anchor.remove()
