@@ -14,6 +14,8 @@ import { DashboardOverviewPage } from './routes/dashboard/DashboardOverviewPage'
 import { DashboardSettingsPage } from './routes/dashboard/DashboardSettingsPage'
 import { DashboardProvider } from './contexts/DashboardContext'
 import { DashboardLogsViewerPage } from './routes/dashboard/DashboardLogsViewerPage'
+import { DashboardRecordingsPage } from './routes/dashboard/DashboardRecordingsPage'
+import { DashboardRecordingDetailPage } from './routes/dashboard/DashboardRecordingDetailPage'
 
 export function App() {
   return (
@@ -32,6 +34,8 @@ export function App() {
           <Route index element={<DashboardOverviewPage />} />
           <Route path="settings" element={<DashboardSettingsPage />} />
           <Route path="logs" element={<DashboardLogsViewerPage />} />
+          <Route path="recordings" element={<DashboardRecordingsPage />} />
+          <Route path="recordings/:recordingId" element={<DashboardRecordingDetailPage />} />
         </Route>
         <Route path="/legal" element={<LegalPage />} />
         <Route path="/docs" element={<DocsLayout />}>

@@ -1,7 +1,7 @@
 import { ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
-import { ResponsiveSidebarLayout } from '../../components/layouts/ResponsiveSidebarLayout'
+import { ResponsiveSidebarLayout } from '../../components'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
 import { useDashboardGuildSelection } from '../../contexts/DashboardContext'
 import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
@@ -98,8 +98,8 @@ export function DashboardLayout() {
 
     if (loading || !user) {
         return (
-            <main className="min-h-[70vh] bg-base-100 px-6 py-16 lg:px-10">
-                <div className="mx-auto flex max-w-5xl items-center gap-4 rounded-box border border-base-300 bg-base-200/40 p-8 shadow-lg">
+            <main className="flex min-h-screen items-center justify-center bg-base-100 px-6 py-16 lg:px-10">
+                <div className="flex items-center gap-4 text-center lg:text-left">
                     <ArrowPathIcon className="h-6 w-6 animate-spin text-primary" />
                     <div>
                         <h1 className="text-2xl font-black">Connexion au dashboard</h1>
@@ -117,7 +117,7 @@ export function DashboardLayout() {
             onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             onCloseSidebar={() => setSidebarOpen(false)}
             asideClassName="fixed inset-y-0 left-0 z-40 mt-16 w-72 overflow-y-auto border-r border-base-300 bg-base-200 lg:static lg:mt-0 lg:bg-base-200/50"
-            contentWrapperClassName="mx-auto max-w-5xl px-6 py-10 lg:px-10"
+            contentWrapperClassName="py-0"
             sidebar={
                 <nav className="space-y-4 p-4">
                     <div>
@@ -238,6 +238,17 @@ export function DashboardLayout() {
                             onClick={() => setSidebarOpen(false)}
                         >
                             Logs
+                        </NavLink>
+                        <NavLink
+                            to="/dashboard/recordings"
+                            className={({ isActive }) => `mt-1 flex rounded-lg px-3 py-2 text-sm transition ${
+                                isActive
+                                    ? 'bg-primary/20 text-primary font-semibold'
+                                    : 'text-base-content/75 hover:bg-base-300/50'
+                            }`}
+                            onClick={() => setSidebarOpen(false)}
+                        >
+                            Enregistrements
                         </NavLink>
                     </div>
                 </nav>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useOutletContext } from 'react-router'
-import { DashboardSelectField } from '../../components/DashboardSelectField'
+import { ButtonOne, DashboardPageHeader, DashboardSelectField } from '../../components'
 import { getGuildDashboardConfig, getGuildDashboardOptions, saveGuildDashboardConfig } from '../../api/discordAuth'
 import type { DashboardLayoutContextValue, GuildDashboardConfigInput, GuildDashboardOptions } from '../../types'
 
@@ -135,26 +135,41 @@ export function DashboardSettingsPage() {
 
     if (!selectedGuild) {
         return (
-            <div className="rounded-box border border-base-300 bg-base-200/40 p-8 text-base-content/70">
-                Sélectionne un serveur dans la sidebar pour afficher sa configuration.
-            </div>
+            <section className="bg-base-100 px-6 py-8 lg:px-8">
+                <div className="rounded-[1.5rem] border border-base-300 bg-base-200/40 p-8 text-base-content/70 shadow-sm">
+                    Sélectionne un serveur dans la sidebar pour afficher sa configuration.
+                </div>
+            </section>
         )
     }
 
     const adminRolesIds = form.watch('adminRolesIds')
     const isDisabled = configLoading || configSaving
+    const formId = 'dashboard-settings-form'
 
     return (
-        <section className="space-y-6">
-            <div className="rounded-box border border-base-300 bg-base-100 p-6 shadow-lg">
+        <section className="space-y-0 bg-base-100">
+            <DashboardPageHeader
+                title="Configuration"
+                description="Ajuste les paramètres du serveur, les salons utilisés par Voicey et les rôles autorisés à gérer les salons vocaux."
+                actions={<ButtonOne label="Sauvegarder" type="submit" form={formId} loadingLabel={configLoading ? 'Chargement...' : 'Sauvegarde...'} loading={isDisabled} />}
+            />
+
+            <div className="px-6 py-4 lg:px-8">
                 {configMessage ? (
-                    <div className="alert alert-info mb-4 py-2">
+                    <div className="alert alert-info mb-6 py-2 shadow-sm">
                         <span className="text-sm">{configMessage}</span>
                     </div>
                 ) : null}
 
-                <form onSubmit={form.handleSubmit(handleSaveConfig)} className="space-y-4">
-                    <div className="grid gap-4 md:grid-cols-2">
+                <form id={formId} onSubmit={form.handleSubmit(handleSaveConfig)} className="space-y-6">
+                    <div className="rounded-[1.6rem] border border-base-300 bg-base-100 p-5 shadow-sm">
+                        <div className="mb-5">
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-base-content/45">Canaux</p>
+                            <h2 className="mt-1 text-2xl font-black tracking-tight">Structure vocale</h2>
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-2">
                         <DashboardSelectField
                             control={form.control}
                             name="categoryId"
@@ -193,40 +208,37 @@ export function DashboardSettingsPage() {
                                 disabled={isDisabled}
                             />
                         </label>
+                        </div>
                     </div>
 
-                    <div className="form-control mt-5">
-                        <span className="label-text mb-1">Rôles administrateurs</span>
-                        {options.roles.length === 0 ? (
-                            <div className="rounded-box border border-dashed border-base-300 p-3 text-sm text-base-content/65">
-                                Aucun rôle disponible pour ce serveur.
-                            </div>
-                        ) : (
-                            <div className="mt-1 max-h-56 w-full space-y-2 overflow-y-auto rounded-box border border-base-300 bg-base-200/30 p-3">
-                                {options.roles.map((role) => (
-                                    <label key={role.id} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-base-300/40">
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox checkbox-sm"
-                                            checked={adminRolesIds.includes(role.id)}
-                                            onChange={() => toggleRole(role.id)}
-                                            disabled={isDisabled}
-                                        />
-                                        <span className="text-sm">{role.name}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    <div className="rounded-[1.6rem] border border-base-300 bg-base-100 p-5 shadow-sm">
+                        <div className="mb-5">
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-base-content/45">Accès</p>
+                            <h2 className="mt-1 text-2xl font-black tracking-tight">Rôles administrateurs</h2>
+                        </div>
 
-                    <div className="mt-5 flex flex-wrap gap-3">
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={isDisabled}
-                        >
-                            {configLoading ? 'Chargement...' : configSaving ? 'Sauvegarde...' : 'Sauvegarder'}
-                        </button>
+                        <div className="form-control">
+                            {options.roles.length === 0 ? (
+                                <div className="rounded-box border border-dashed border-base-300 p-3 text-sm text-base-content/65">
+                                    Aucun rôle disponible pour ce serveur.
+                                </div>
+                            ) : (
+                                <div className="max-h-72 w-full space-y-2 overflow-y-auto rounded-box border border-base-300 bg-base-200/30 p-3">
+                                    {options.roles.map((role) => (
+                                        <label key={role.id} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-base-300/40">
+                                            <input
+                                                type="checkbox"
+                                                className="checkbox checkbox-sm"
+                                                checked={adminRolesIds.includes(role.id)}
+                                                onChange={() => toggleRole(role.id)}
+                                                disabled={isDisabled}
+                                            />
+                                            <span className="text-sm">{role.name}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </form>
             </div>

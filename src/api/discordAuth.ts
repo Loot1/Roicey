@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { DiscordGuild, DiscordUser, FeaturedServer, GuildDashboardConfigInput, GuildDashboardOptions } from '../types'
+import type { DashboardRecording, DiscordGuild, DiscordUser, FeaturedServer, GuildDashboardConfigInput, GuildDashboardOptions } from '../types'
 
 const AUTH_CHANGED_EVENT = 'voicey-auth-changed'
 
@@ -31,6 +31,14 @@ interface GuildOptionsResponse {
 
 interface FeaturedServersResponse {
     servers: FeaturedServer[]
+}
+
+interface GuildRecordingsResponse {
+    recordings: DashboardRecording[]
+}
+
+interface GuildRecordingResponse {
+    recording: DashboardRecording
 }
 
 const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
@@ -86,6 +94,28 @@ export async function saveGuildDashboardConfig(
 export async function getGuildDashboardOptions(guildId: string): Promise<GuildDashboardOptions> {
     const { data } = await discordApi.get<GuildOptionsResponse>(`/api/dashboard/guilds/${guildId}/options`)
     return data.options
+}
+
+export async function getGuildDashboardRecordings(guildId: string): Promise<DashboardRecording[]> {
+    const { data } = await discordApi.get<GuildRecordingsResponse>(`/api/dashboard/guilds/${guildId}/recordings`)
+    return data.recordings
+}
+
+export async function getGuildDashboardRecording(guildId: string, recordingId: number): Promise<DashboardRecording> {
+    const { data } = await discordApi.get<GuildRecordingResponse>(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}`)
+    return data.recording
+}
+
+export async function downloadGuildRecordingFile(guildId: string, recordingId: number, fileIndex: number): Promise<Blob> {
+    const { data } = await discordApi.get(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}/files/${fileIndex}`, {
+        responseType: 'blob',
+    })
+
+    return data
+}
+
+export async function deleteGuildRecording(guildId: string, recordingId: number): Promise<void> {
+    await discordApi.delete(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}`)
 }
 
 export async function getFeaturedServers(): Promise<FeaturedServer[]> {
