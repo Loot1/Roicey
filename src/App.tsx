@@ -1,22 +1,7 @@
 import { Routes, Route } from 'react-router'
-import { Layout } from './components'
-import { HomePage } from './routes/HomePage'
-import { AboutPage } from './routes/AboutPage'
-import { LegalPage } from './routes/LegalPage'
-import { DocsLayout } from './components/layouts/DocsLayout'
-import { GettingStartedPage } from './routes/docs/GettingStartedPage'
-import { CommandsPage } from './routes/docs/CommandsPage'
-import { ConfigurationPage } from './routes/docs/ConfigurationPage'
-import { ModerationPage } from './routes/docs/ModerationPage'
-import { FAQPage } from './routes/docs/FAQPage'
-import { DashboardLayout } from './components/layouts/DashboardLayout'
-import { DashboardOverviewPage } from './routes/dashboard/DashboardOverviewPage'
-import { DashboardSettingsPage } from './routes/dashboard/DashboardSettingsPage'
+import { HomePage, AboutPage, GuidelinesPage, PrivacyPage, LegalPage, NotFoundPage, DashboardOverviewPage, DashboardSettingsPage, DashboardLogsViewerPage, DashboardRecordingsPage, DashboardRecordingDetailPage, DocsGettingStartedPage, DocsCommandsPage, DocsSettingsPage, DocsModerationPage, DocsFAQPage, DemoRecordingsPage } from './routes'
+import { Layout, DocsLayout, DashboardLayout, DemoLayout } from './components'
 import { DashboardProvider } from './contexts/DashboardContext'
-import { DashboardLogsViewerPage } from './routes/dashboard/DashboardLogsViewerPage'
-import { DashboardRecordingsPage } from './routes/dashboard/DashboardRecordingsPage'
-import { DashboardRecordingDetailPage } from './routes/dashboard/DashboardRecordingDetailPage'
-import { NotFoundPage } from './routes/NotFoundPage'
 
 export function App() {
   return (
@@ -24,6 +9,8 @@ export function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/guidelines" element={<GuidelinesPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPage />} />
         <Route path="/dashboard" element={<DashboardProvider><DashboardLayout /></DashboardProvider>}>
           <Route index element={<DashboardOverviewPage />} />
           <Route path="settings" element={<DashboardSettingsPage />} />
@@ -32,12 +19,15 @@ export function App() {
           <Route path="recordings/:recordingId" element={<DashboardRecordingDetailPage />} />
         </Route>
         <Route path="/legal" element={<LegalPage />} />
+        <Route path="/demo" element={<DemoLayout />}>
+          <Route index element={<DemoRecordingsPage />} />
+        </Route>
         <Route path="/docs" element={<DocsLayout />}>
-          <Route index element={<GettingStartedPage />} />
-          <Route path="commands" element={<CommandsPage />} />
-          <Route path="configuration" element={<ConfigurationPage />} />
-          <Route path="moderation" element={<ModerationPage />} />
-          <Route path="faq" element={<FAQPage />} />
+          <Route index element={<DocsGettingStartedPage />} />
+          <Route path="commands" element={<DocsCommandsPage />} />
+          <Route path="settings" element={<DocsSettingsPage />} />
+          <Route path="moderation" element={<DocsModerationPage />} />
+          <Route path="faq" element={<DocsFAQPage />} />
         </Route>
         <Route path="*" element={<NotFoundPage />} />
       </Routes>

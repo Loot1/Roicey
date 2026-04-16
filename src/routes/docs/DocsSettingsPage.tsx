@@ -1,6 +1,6 @@
 import { DocsCollapse } from '../../components'
 
-export function ConfigurationPage() {
+export function DocsSettingsPage() {
     return (
         <div className="space-y-4">
             <h1 className="text-3xl font-bold">Guide de configuration</h1>

@@ -1,6 +1,6 @@
 import { DocsCard } from '../../components'
 
-export function ModerationPage() {
+export function DocsModerationPage() {
     return (
         <div className="space-y-4">
             <h1 className="text-3xl font-bold">Outils de modération</h1>

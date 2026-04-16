@@ -1,4 +1,4 @@
-import { Cog6ToothIcon, CommandLineIcon, QuestionMarkCircleIcon, ShieldCheckIcon } from '@heroicons/react/24/outline'
+import { Cog6ToothIcon, CommandLineIcon, QuestionMarkCircleIcon, ShieldCheckIcon, SpeakerWaveIcon } from '@heroicons/react/24/outline'
 
 type SidebarNavigationItem = {
     id: string
@@ -8,6 +8,10 @@ type SidebarNavigationItem = {
 }
 
 type SidebarDocumentationNavigationItem = SidebarNavigationItem & {
+    icon: typeof CommandLineIcon
+}
+
+type SidebarDemoNavigationItem = SidebarNavigationItem & {
     icon: typeof CommandLineIcon
 }
 
@@ -49,9 +53,9 @@ export const docsSidebarNavigation = [
         icon: CommandLineIcon,
     },
     {
-        id: 'configuration',
+        id: 'settings',
         title: 'Configuration',
-        href: '/docs/configuration',
+        href: '/docs/settings',
         icon: Cog6ToothIcon,
     },
     {
@@ -68,5 +72,16 @@ export const docsSidebarNavigation = [
     },
 ] satisfies SidebarDocumentationNavigationItem[]
 
+export const demoSidebarNavigation = [
+    {
+        id: 'recordings',
+        title: 'Enregistrements',
+        href: '/demo',
+        icon: SpeakerWaveIcon,
+        end: true,
+    },
+] satisfies SidebarDemoNavigationItem[]
+
 export type DashboardSidebarNavigationItem = (typeof dashboardSidebarNavigation)[number]
 export type DocsSidebarNavigationItem = (typeof docsSidebarNavigation)[number]
+export type DemoSidebarNavigationItem = (typeof demoSidebarNavigation)[number]

@@ -1,6 +1,6 @@
 import { DocsCard } from '../../components'
 
-export function CommandsPage() {
+export function DocsCommandsPage() {
     return (
         <div className="space-y-4">
             <h1 className="text-3xl font-bold">Commandes disponibles</h1>

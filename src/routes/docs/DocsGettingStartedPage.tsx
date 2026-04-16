@@ -1,7 +1,7 @@
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 import { DocsStep } from '../../components'
 
-export function GettingStartedPage() {
+export function DocsGettingStartedPage() {
     return (
         <div className="space-y-4">
             <h1 className="text-3xl font-bold">Démarrage rapide</h1>
