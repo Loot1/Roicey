@@ -1,56 +1,11 @@
 import { Outlet, useLocation } from 'react-router'
 import { useState } from 'react'
-import {
-    CommandLineIcon,
-    Cog6ToothIcon,
-    ShieldCheckIcon,
-    QuestionMarkCircleIcon,
-} from '@heroicons/react/24/outline'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
-
-interface DocNavItem {
-    id: string
-    title: string
-    href: string
-    icon: typeof CommandLineIcon
-}
+import { docsSidebarNavigation } from '../../constants'
 
 export function DocsLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const location = useLocation()
-
-    const docItems: DocNavItem[] = [
-        {
-            id: 'getting-started',
-            title: 'Démarrage rapide',
-            href: '/docs',
-            icon: CommandLineIcon,
-        },
-        {
-            id: 'commands',
-            title: 'Commandes',
-            href: '/docs/commands',
-            icon: CommandLineIcon,
-        },
-        {
-            id: 'configuration',
-            title: 'Configuration',
-            href: '/docs/configuration',
-            icon: Cog6ToothIcon,
-        },
-        {
-            id: 'moderation',
-            title: 'Modération',
-            href: '/docs/moderation',
-            icon: ShieldCheckIcon,
-        },
-        {
-            id: 'faq',
-            title: 'FAQ',
-            href: '/docs/faq',
-            icon: QuestionMarkCircleIcon,
-        },
-    ]
 
     const isActive = (href: string) => location.pathname === href
 
@@ -67,7 +22,7 @@ export function DocsLayout() {
                     <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">
                         Documentation
                     </p>
-                    {docItems.map((item) => {
+                    {docsSidebarNavigation.map((item) => {
                         const IconComponent = item.icon
                         return (
                             <a

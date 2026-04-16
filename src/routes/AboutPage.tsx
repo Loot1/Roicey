@@ -1,9 +1,4 @@
-import {
-    SparklesIcon,
-    UserGroupIcon,
-    CodeBracketIcon,
-    HeartIcon,
-} from '@heroicons/react/24/outline'
+import { SparklesIcon, UserGroupIcon, CodeBracketIcon, HeartIcon } from '@heroicons/react/24/outline'
 
 interface TeamMember {
     name: string

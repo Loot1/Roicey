@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
 import { ResponsiveSidebarLayout } from '../../components'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
+import { dashboardSidebarNavigation } from '../../constants'
 import { useDashboardGuildSelection } from '../../contexts/DashboardContext'
 import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
 
@@ -130,7 +131,7 @@ export function DashboardLayout() {
                             <div ref={guildPickerRef} className="space-y-2">
                                 <button
                                     type="button"
-                                    className="flex w-full items-center gap-3 rounded-lg bg-primary/20 px-3 py-3 text-left text-primary transition hover:bg-primary/25"
+                                    className="flex w-full items-center gap-3 rounded-lg border border-base-300 bg-base-100 px-3 py-3 text-left text-base-content transition hover:border-base-300 hover:bg-base-100"
                                     onClick={() => setGuildPickerOpen((previous) => !previous)}
                                     aria-expanded={guildPickerOpen}
                                 >
@@ -151,7 +152,7 @@ export function DashboardLayout() {
                                         ) : null}
                                     </div>
 
-                                    <ChevronDownIcon className={`h-4 w-4 flex-none text-primary/70 transition ${guildPickerOpen ? 'rotate-180' : ''}`} />
+                                    <ChevronDownIcon className={`h-4 w-4 flex-none text-base-content/60 transition ${guildPickerOpen ? 'rotate-180' : ''}`} />
                                 </button>
 
                                 {guildPickerOpen ? (
@@ -171,16 +172,16 @@ export function DashboardLayout() {
                                                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition ${
                                                         isSelected
                                                             ? 'bg-primary/20 text-primary'
-                                                            : 'bg-base-200/40 text-base-content/75 hover:bg-base-300/50'
+                                                            : 'bg-base-100 text-base-content/75 hover:bg-base-300/50'
                                                     }`}
                                                 >
                                                     <div className={`flex h-10 w-10 flex-none items-center justify-center rounded-lg text-xs font-black ${
                                                         guild.iconUrl
                                                             ? isSelected
-                                                                ? 'text-primary'
+                                                                ? 'text-base-content'
                                                                 : 'text-base-content'
                                                             : isSelected
-                                                                ? 'bg-primary/15 text-primary'
+                                                                ? 'bg-base-200 text-base-content'
                                                                 : 'bg-base-300/40 text-base-content'
                                                     }`}>
                                                         {guild.iconUrl ? (
@@ -205,51 +206,21 @@ export function DashboardLayout() {
 
                     <div>
                         <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">Navigation</p>
-                        <NavLink
-                            to="/dashboard"
-                            end
-                            className={({ isActive }) => `flex rounded-lg px-3 py-2 text-sm transition ${
-                                isActive
-                                    ? 'bg-primary/20 text-primary font-semibold'
-                                    : 'text-base-content/75 hover:bg-base-300/50'
-                            }`}
-                            onClick={() => setSidebarOpen(false)}
-                        >
-                            Vue d’ensemble
-                        </NavLink>
-                        <NavLink
-                            to="/dashboard/settings"
-                            className={({ isActive }) => `mt-1 flex rounded-lg px-3 py-2 text-sm transition ${
-                                isActive
-                                    ? 'bg-primary/20 text-primary font-semibold'
-                                    : 'text-base-content/75 hover:bg-base-300/50'
-                            }`}
-                            onClick={() => setSidebarOpen(false)}
-                        >
-                            Configuration
-                        </NavLink>
-                        <NavLink
-                            to="/dashboard/logs"
-                            className={({ isActive }) => `mt-1 flex rounded-lg px-3 py-2 text-sm transition ${
-                                isActive
-                                    ? 'bg-primary/20 text-primary font-semibold'
-                                    : 'text-base-content/75 hover:bg-base-300/50'
-                            }`}
-                            onClick={() => setSidebarOpen(false)}
-                        >
-                            Logs
-                        </NavLink>
-                        <NavLink
-                            to="/dashboard/recordings"
-                            className={({ isActive }) => `mt-1 flex rounded-lg px-3 py-2 text-sm transition ${
-                                isActive
-                                    ? 'bg-primary/20 text-primary font-semibold'
-                                    : 'text-base-content/75 hover:bg-base-300/50'
-                            }`}
-                            onClick={() => setSidebarOpen(false)}
-                        >
-                            Enregistrements
-                        </NavLink>
+                        {dashboardSidebarNavigation.map((item, index) => (
+                            <NavLink
+                                key={item.id}
+                                to={item.href}
+                                end={item.end}
+                                className={({ isActive }) => `${index > 0 ? 'mt-1 ' : ''}flex rounded-lg px-3 py-2 text-sm transition ${
+                                    isActive
+                                        ? 'bg-primary/20 text-primary font-semibold'
+                                        : 'text-base-content/75 hover:bg-base-300/50'
+                                }`}
+                                onClick={() => setSidebarOpen(false)}
+                            >
+                                {item.title}
+                            </NavLink>
+                        ))}
                     </div>
                 </nav>
             }
