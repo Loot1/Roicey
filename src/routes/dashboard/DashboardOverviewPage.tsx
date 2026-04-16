@@ -1,6 +1,6 @@
 import { Cog6ToothIcon, GlobeAltIcon, ShieldCheckIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import { useOutletContext } from 'react-router'
-import { DashboardPageHeader, DashboardStatCard } from '../../components'
+import { DashboardPageHeader } from '../../components'
 import type { DashboardLayoutContextValue } from '../../types'
 
 function checkPermissions(permissions: string): { hasPerm: boolean; reason: string } {
@@ -33,47 +33,63 @@ export function DashboardOverviewPage() {
         return (
             <section className="bg-base-100 px-6 py-8 lg:px-8">
                 <div className="rounded-[1.5rem] border border-base-300 bg-base-200/40 p-8 text-base-content/70 shadow-sm">
-                    Sélectionne une guilde pour afficher sa vue d’ensemble.
+                    Sélectionne une guilde pour afficher sa vue d'ensemble.
                 </div>
             </section>
         )
     }
 
     const { hasPerm, reason } = checkPermissions(selectedGuild.permissions)
+    const stats = [
+        {
+            id: 'status',
+            icon: <ShieldCheckIcon className="h-5 w-5" />,
+            label: 'Statut',
+            value: selectedGuild.owner ? 'Propriétaire' : 'Gestionnaire',
+            description: 'Accès complet aux actions du dashboard.',
+        },
+        {
+            id: 'bot',
+            icon: <SparklesIcon className="h-5 w-5" />,
+            label: 'Bot',
+            value: selectedGuild.botInGuild ? 'Présent' : 'Absent',
+            description: selectedGuild.botInGuild ? 'Le bot est déjà connecté à cette guilde.' : 'Le bot doit rejoindre cette guilde avant la configuration.',
+        },
+        {
+            id: 'permissions',
+            icon: <GlobeAltIcon className="h-5 w-5" />,
+            label: 'Permissions',
+            value: hasPerm ? '✓ Complètes' : '✗ Insuffisantes',
+            description: reason,
+        },
+        {
+            id: 'access',
+            icon: <Cog6ToothIcon className="h-5 w-5" />,
+            label: 'Accès',
+            value: 'Dashboard prêt',
+            description: 'Passe à la configuration pour modifier les paramètres du serveur.',
+        },
+    ]
 
     return (
         <section className="space-y-0 bg-base-100">
             <DashboardPageHeader
-                title="Vue d’ensemble"
-                description={selectedGuild.owner ? 'Tu es propriétaire de cette guilde.' : 'Tu disposes d’un accès de gestion sur cette guilde.'}
+                title="Vue d'ensemble"
+                description={selectedGuild.owner ? 'Tu es propriétaire de cette guilde.' : "Tu disposes d'un accès de gestion sur cette guilde."}
             />
 
             <div className="px-6 py-6 lg:px-8">
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-                    <DashboardStatCard
-                        icon={<ShieldCheckIcon className="h-5 w-5" />}
-                        label="Statut"
-                        value={selectedGuild.owner ? 'Propriétaire' : 'Gestionnaire'}
-                        description="Accès complet aux actions du dashboard."
-                    />
-                    <DashboardStatCard
-                        icon={<SparklesIcon className="h-5 w-5" />}
-                        label="Bot"
-                        value={selectedGuild.botInGuild ? 'Présent' : 'Absent'}
-                        description={selectedGuild.botInGuild ? 'Le bot est déjà connecté à cette guilde.' : 'Le bot doit rejoindre cette guilde avant la configuration.'}
-                    />
-                    <DashboardStatCard
-                        icon={<GlobeAltIcon className="h-5 w-5" />}
-                        label="Permissions"
-                        value={hasPerm ? '✓ Complètes' : '✗ Insuffisantes'}
-                        description={reason}
-                    />
-                    <DashboardStatCard
-                        icon={<Cog6ToothIcon className="h-5 w-5" />}
-                        label="Accès"
-                        value="Dashboard prêt"
-                        description="Passe à la configuration pour modifier les paramètres du serveur."
-                    />
+                    {stats.map((stat) => (
+                        <div key={stat.id} className="rounded-[1.4rem] border border-base-300 bg-base-100 p-5 shadow-sm">
+                            <div className="mb-3 flex items-center gap-3 text-primary">
+                                {stat.icon}
+                                <p className="text-sm font-semibold uppercase tracking-[0.16em] text-base-content/50">{stat.label}</p>
+                            </div>
+                            <p className="text-2xl font-black">{stat.value}</p>
+                            <div className="mt-1 text-sm text-base-content/70">{stat.description}</div>
+                        </div>
+                    ))}
                 </div>
             </div>
         </section>

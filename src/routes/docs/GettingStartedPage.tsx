@@ -1,4 +1,5 @@
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
+import { DocsStep } from '../../components'
 
 export function GettingStartedPage() {
     return (
@@ -9,39 +10,31 @@ export function GettingStartedPage() {
             </p>
 
             <div className="space-y-4">
-                <div className="card border border-base-300 bg-base-200/50">
-                    <div className="card-body">
-                        <h3 className="card-title text-lg">Étape 1 : Invite le bot</h3>
-                        <p className="mb-3 text-sm text-base-content/70">
-                            Clique sur le bouton "Ajouter au serveur" pour inviter Voicey sur ton serveur Discord.
-                        </p>
-                        <button className="btn btn-primary btn-sm w-fit">Inviter Voicey</button>
-                    </div>
-                </div>
+                <DocsStep
+                    step={1}
+                    title="Invite le bot"
+                    description={'Clique sur le bouton "Ajouter au serveur" pour inviter Voicey sur ton serveur Discord.'}
+                    action={<button className="btn btn-primary btn-sm w-fit">Inviter Voicey</button>}
+                />
 
-                <div className="card border border-base-300 bg-base-200/50">
-                    <div className="card-body">
-                        <h3 className="card-title text-lg">Étape 2 : Configure les permissions</h3>
-                        <p className="text-sm text-base-content/70">
-                            Assure-toi que Voicey a les permissions nécessaires :
-                        </p>
-                        <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
-                            <li>Gérer les salons (Create/Delete channels)</li>
-                            <li>Gérer les permissions (Manage permissions)</li>
-                            <li>Déplacer les utilisateurs (Move members)</li>
-                            <li>Éjecter les utilisateurs (Kick members)</li>
-                        </ul>
-                    </div>
-                </div>
+                <DocsStep
+                    step={2}
+                    title="Configure les permissions"
+                    description="Assure-toi que Voicey a les permissions nécessaires :"
+                >
+                    <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
+                        <li>Gérer les salons (Create/Delete channels)</li>
+                        <li>Gérer les permissions (Manage permissions)</li>
+                        <li>Déplacer les utilisateurs (Move members)</li>
+                        <li>Éjecter les utilisateurs (Kick members)</li>
+                    </ul>
+                </DocsStep>
 
-                <div className="card border border-base-300 bg-base-200/50">
-                    <div className="card-body">
-                        <h3 className="card-title text-lg">Étape 3 : Lance la configuration</h3>
-                        <p className="text-sm text-base-content/70">
-                            Utilise la commande <code className="badge badge-ghost">/config</code> pour commencer.
-                        </p>
-                    </div>
-                </div>
+                <DocsStep step={3} title="Lance la configuration">
+                    <p className="text-sm text-base-content/70">
+                        Utilise la commande <code className="badge badge-ghost">/config</code> pour commencer.
+                    </p>
+                </DocsStep>
             </div>
 
             <div className="alert alert-info mt-6">

@@ -1,3 +1,5 @@
+import { DocsCard } from '../../components'
+
 export function CommandsPage() {
     return (
         <div className="space-y-4">
@@ -55,42 +57,12 @@ export function CommandsPage() {
                 </p>
 
                 <div className="grid gap-4 md:grid-cols-2">
-                    <div className="card border border-base-300 bg-base-200/50">
-                        <div className="card-body">
-                            <h3 className="card-title text-lg">🔒 Lock</h3>
-                            <p className="text-sm">Verrouille le salon pour les nouveaux entrants</p>
-                        </div>
-                    </div>
-                    <div className="card border border-base-300 bg-base-200/50">
-                        <div className="card-body">
-                            <h3 className="card-title text-lg">🔓 Unlock</h3>
-                            <p className="text-sm">Déverrouille le salon</p>
-                        </div>
-                    </div>
-                    <div className="card border border-base-300 bg-base-200/50">
-                        <div className="card-body">
-                            <h3 className="card-title text-lg">🎯 Limit</h3>
-                            <p className="text-sm">Ajuste la limite d'utilisateurs</p>
-                        </div>
-                    </div>
-                    <div className="card border border-base-300 bg-base-200/50">
-                        <div className="card-body">
-                            <h3 className="card-title text-lg">👑 Transfer</h3>
-                            <p className="text-sm">Transfère la propriété du salon</p>
-                        </div>
-                    </div>
-                    <div className="card border border-base-300 bg-base-200/50">
-                        <div className="card-body">
-                            <h3 className="card-title text-lg">👢 Kick</h3>
-                            <p className="text-sm">Éjecte un utilisateur</p>
-                        </div>
-                    </div>
-                    <div className="card border border-base-300 bg-base-200/50">
-                        <div className="card-body">
-                            <h3 className="card-title text-lg">🚫 Ban</h3>
-                            <p className="text-sm">Bannit un utilisateur du salon</p>
-                        </div>
-                    </div>
+                    <DocsCard title="🔒 Lock" description="Verrouille le salon pour les nouveaux entrants" />
+                    <DocsCard title="🔓 Unlock" description="Déverrouille le salon" />
+                    <DocsCard title="🎯 Limit" description="Ajuste la limite d'utilisateurs" />
+                    <DocsCard title="👑 Transfer" description="Transfère la propriété du salon" />
+                    <DocsCard title="👢 Kick" description="Éjecte un utilisateur" />
+                    <DocsCard title="🚫 Ban" description="Bannit un utilisateur du salon" />
                 </div>
             </div>
         </div>

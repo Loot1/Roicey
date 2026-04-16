@@ -1,3 +1,5 @@
+import { DocsCard } from '../../components'
+
 export function ModerationPage() {
     return (
         <div className="space-y-4">
@@ -7,45 +9,33 @@ export function ModerationPage() {
             </p>
 
             <div className="grid gap-4 md:grid-cols-2">
-                <div className="card border border-base-300 bg-base-200/50">
-                    <div className="card-body">
-                        <h3 className="card-title text-lg">📜 Historique des bans</h3>
-                        <p className="text-sm text-base-content/70">
-                            Chaque ban est tracé avec la date, l'auteur et la raison. Consulte l'historique 
-                            à tout moment.
-                        </p>
-                    </div>
-                </div>
+                <DocsCard title="📜 Historique des bans">
+                    <p className="text-sm text-base-content/70">
+                        Chaque ban est tracé avec la date, l'auteur et la raison. Consulte l'historique 
+                        à tout moment.
+                    </p>
+                </DocsCard>
 
-                <div className="card border border-base-300 bg-base-200/50">
-                    <div className="card-body">
-                        <h3 className="card-title text-lg">📝 Logs d'actions</h3>
-                        <p className="text-sm text-base-content/70">
-                            Toutes les actions (kick, lock, transfer) sont enregistrées pour traçabilité 
-                            et audit.
-                        </p>
-                    </div>
-                </div>
+                <DocsCard title="📝 Logs d'actions">
+                    <p className="text-sm text-base-content/70">
+                        Toutes les actions (kick, lock, transfer) sont enregistrées pour traçabilité 
+                        et audit.
+                    </p>
+                </DocsCard>
 
-                <div className="card border border-base-300 bg-base-200/50">
-                    <div className="card-body">
-                        <h3 className="card-title text-lg">👮 Répartition des rôles</h3>
-                        <p className="text-sm text-base-content/70">
-                            Contrôle qui peut ban, kick, ou transférer la propriété selon les rôles 
-                            Discord.
-                        </p>
-                    </div>
-                </div>
+                <DocsCard title="👮 Répartition des rôles">
+                    <p className="text-sm text-base-content/70">
+                        Contrôle qui peut ban, kick, ou transférer la propriété selon les rôles 
+                        Discord.
+                    </p>
+                </DocsCard>
 
-                <div className="card border border-base-300 bg-base-200/50">
-                    <div className="card-body">
-                        <h3 className="card-title text-lg">🧹 Auto-cleanup</h3>
-                        <p className="text-sm text-base-content/70">
-                            Les salons vides sont nettoyés automatiquement. Pas de salon mort sur ton 
-                            serveur !
-                        </p>
-                    </div>
-                </div>
+                <DocsCard title="🧹 Auto-cleanup">
+                    <p className="text-sm text-base-content/70">
+                        Les salons vides sont nettoyés automatiquement. Pas de salon mort sur ton 
+                        serveur !
+                    </p>
+                </DocsCard>
             </div>
 
             <h2 className="text-2xl font-bold mt-6">Actions modérées</h2>
