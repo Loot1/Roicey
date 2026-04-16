@@ -1,13 +1,10 @@
-import { Outlet, useLocation } from 'react-router'
+import { NavLink, Outlet } from 'react-router'
 import { useState } from 'react'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
 import { docsSidebarNavigation } from '../../constants'
 
 export function DocsLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
-    const location = useLocation()
-
-    const isActive = (href: string) => location.pathname === href
 
     return (
         <ResponsiveSidebarLayout
@@ -22,22 +19,24 @@ export function DocsLayout() {
                     <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">
                         Documentation
                     </p>
-                    {docsSidebarNavigation.map((item) => {
+                    {docsSidebarNavigation.map((item, index) => {
                         const IconComponent = item.icon
+
                         return (
-                            <a
+                            <NavLink
                                 key={item.id}
-                                href={item.href}
+                                to={item.href}
+                                end={item.href === '/docs'}
                                 onClick={() => setSidebarOpen(false)}
-                                className={`flex items-center gap-3 rounded-lg px-3 py-2 transition ${
-                                    isActive(item.href)
+                                className={({ isActive }) => `${index > 0 ? 'mt-1 ' : ''}flex items-center gap-3 rounded-lg px-3 py-2 transition ${
+                                    isActive
                                         ? 'bg-primary/20 text-primary font-semibold'
                                         : 'text-base-content/70 hover:bg-base-300/50'
                                 }`}
                             >
                                 <IconComponent className="h-5 w-5" />
                                 <span>{item.title}</span>
-                            </a>
+                            </NavLink>
                         )
                     })}
                 </nav>
