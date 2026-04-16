@@ -1,0 +1,85 @@
+import type { DashboardRecording } from '../types'
+
+export const demoRecording = {
+    id: 301,
+    channelId: '1189200012345678901',
+    channelName: 'Ranked Trio',
+    requesterId: '290100000000000001',
+    requesterName: 'Lina',
+    durationSeconds: 82,
+    status: 'COMPLETED',
+    errorMessage: null,
+    requestedAt: '2026-04-12T20:14:00.000Z',
+    startedAt: '2026-04-12T20:14:05.000Z',
+    finishedAt: '2026-04-12T20:15:27.000Z',
+    outputFiles: [
+        {
+            index: 0,
+            userId: '290100000000000001',
+            username: 'Lina',
+            fileName: 'lina-001.ogg',
+            sizeBytes: 1984,
+            startOffsetMs: 0,
+            durationSeconds: 8,
+            streamPath: '/demo/audio/segments/lina-001.ogg',
+        },
+        {
+            index: 1,
+            userId: '290100000000000002',
+            username: 'Milo',
+            fileName: 'milo-001.ogg',
+            sizeBytes: 2665,
+            startOffsetMs: 7_000,
+            durationSeconds: 11,
+            streamPath: '/demo/audio/segments/milo-001.ogg',
+        },
+        {
+            index: 2,
+            userId: '290100000000000003',
+            username: 'Nora',
+            fileName: 'nora-001.ogg',
+            sizeBytes: 2211,
+            startOffsetMs: 18_000,
+            durationSeconds: 9,
+            streamPath: '/demo/audio/segments/nora-001.ogg',
+        },
+        {
+            index: 3,
+            userId: '290100000000000001',
+            username: 'Lina',
+            fileName: 'lina-002.ogg',
+            sizeBytes: 1757,
+            startOffsetMs: 30_000,
+            durationSeconds: 7,
+            streamPath: '/demo/audio/segments/lina-002.ogg',
+        },
+        {
+            index: 4,
+            userId: '290100000000000002',
+            username: 'Milo',
+            fileName: 'milo-002.ogg',
+            sizeBytes: 2438,
+            startOffsetMs: 39_000,
+            durationSeconds: 10,
+            streamPath: '/demo/audio/segments/milo-002.ogg',
+        },
+        {
+            index: 5,
+            userId: '290100000000000003',
+            username: 'Nora',
+            fileName: 'nora-002.ogg',
+            sizeBytes: 1984,
+            startOffsetMs: 54_000,
+            durationSeconds: 8,
+            streamPath: '/demo/audio/segments/nora-002.ogg',
+        },
+    ],
+} satisfies DashboardRecording
+
+export const demoRecordingUserTrackPaths: Record<string, string> = {
+    '290100000000000001': '/demo/audio/tracks/ranked-trio-lina.ogg',
+    '290100000000000002': '/demo/audio/tracks/ranked-trio-milo.ogg',
+    '290100000000000003': '/demo/audio/tracks/ranked-trio-nora.ogg',
+}
+
+export const demoRecordingMixPath = '/demo/audio/tracks/ranked-trio-mix.ogg'
