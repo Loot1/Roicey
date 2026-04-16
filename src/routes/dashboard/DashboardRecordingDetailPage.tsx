@@ -1,13 +1,14 @@
 import { ArrowDownTrayIcon, ArrowLeftIcon, ArrowPathIcon, ExclamationTriangleIcon, TrashIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useOutletContext, useParams } from 'react-router'
-import { deleteGuildRecording, downloadGuildRecordingMix, downloadGuildRecordingUserMix, getGuildDashboardRecording } from '../../api/discordAuth'
-import { ButtonOne, DashboardPageHeader, RecordingSessionPlayer } from '../../components'
+import { downloadGuildRecordingMix, downloadGuildRecordingUserMix, getGuildDashboardRecording } from '../../api/discordAuth'
+import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingSessionPlayer } from '../../components'
+import { useRecordingDeletion } from '../../hooks'
 import type { DashboardLayoutContextValue, DashboardRecording } from '../../types'
-import { canDeleteRecording, formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from './recordingsShared'
+import { canDeleteRecording, formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
 
 export function DashboardRecordingDetailPage() {
-    const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
+    const { selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
     const params = useParams()
     const navigate = useNavigate()
     const [recording, setRecording] = useState<DashboardRecording | null>(null)
@@ -17,8 +18,8 @@ export function DashboardRecordingDetailPage() {
     const [audioLoadingKey, setAudioLoadingKey] = useState<string | null>(null)
     const [downloadLoadingKey, setDownloadLoadingKey] = useState<string | null>(null)
     const [globalMixDownloadLoading, setGlobalMixDownloadLoading] = useState(false)
-    const [deleteLoading, setDeleteLoading] = useState(false)
     const preparedSourcesRef = useRef<Record<string, PreparedAudioSource>>({})
+    const { deleteRecording, deletingRecordingId } = useRecordingDeletion(selectedGuildId)
 
     const recordingId = Number.parseInt(params.recordingId ?? '', 10)
 
@@ -211,7 +212,7 @@ export function DashboardRecordingDetailPage() {
     }
 
     const handleDeleteRecording = async () => {
-        if (!selectedGuildId || !recording) {
+        if (!recording) {
             return
         }
 
@@ -220,19 +221,16 @@ export function DashboardRecordingDetailPage() {
             return
         }
 
-        const confirmed = window.confirm(`Supprimer définitivement la demande #${recording.id} et toutes ses pistes audio ?`)
-        if (!confirmed) {
+        setError(null)
+        const result = await deleteRecording(recording)
+
+        if (result.success) {
+            navigate('/dashboard/recordings')
             return
         }
 
-        try {
-            setDeleteLoading(true)
-            setError(null)
-            await deleteGuildRecording(selectedGuildId, recording.id)
-            navigate('/dashboard/recordings')
-        } catch {
-            setError("La suppression de l'enregistrement a échoué.")
-            setDeleteLoading(false)
+        if (result.errorMessage) {
+            setError(result.errorMessage)
         }
     }
 
@@ -252,19 +250,21 @@ export function DashboardRecordingDetailPage() {
         void handleDeleteRecording()
     }
 
-    if (!selectedGuild) {
-        return <section className="bg-base-100 px-6 py-8 lg:px-8"><div className="rounded-[1.5rem] border border-base-300 bg-base-200/40 p-8 text-base-content/70 shadow-sm">Sélectionne un serveur dans la sidebar pour consulter ses enregistrements.</div></section>
-    }
-
     if (loading) {
-        return <section className="bg-base-100 px-6 py-8 lg:px-8"><div className="rounded-[1.5rem] border border-base-300 bg-base-100 p-8 shadow-sm"><div className="flex items-center gap-3 text-base-content/70"><ArrowPathIcon className="h-5 w-5 animate-spin text-primary" /><span>Chargement de l'enregistrement en cours...</span></div></div></section>
+        return (
+            <section className="bg-base-100 px-6 py-8 lg:px-8">
+                <DashboardStateCard className="text-base-content/70">
+                    <div className="flex items-center gap-3 text-base-content/70"><ArrowPathIcon className="h-5 w-5 animate-spin text-primary" /><span>Chargement de l'enregistrement en cours...</span></div>
+                </DashboardStateCard>
+            </section>
+        )
     }
 
     if (!recording) {
         return (
             <section className="space-y-4 bg-base-100 px-6 py-8 lg:px-8">
                 <Link to="/dashboard/recordings" className="btn btn-ghost btn-sm self-start"><ArrowLeftIcon className="h-4 w-4" />Retour aux enregistrements</Link>
-                <div className="rounded-[1.5rem] border border-base-300 bg-base-100 p-8 shadow-sm"><div className="flex items-start gap-3 text-base-content/70"><ExclamationTriangleIcon className="mt-0.5 h-5 w-5 text-warning" /><span>{error ?? 'Enregistrement introuvable.'}</span></div></div>
+                <DashboardStateCard className="text-base-content/70"><div className="flex items-start gap-3 text-base-content/70"><ExclamationTriangleIcon className="mt-0.5 h-5 w-5 text-warning" /><span>{error ?? 'Enregistrement introuvable.'}</span></div></DashboardStateCard>
             </section>
         )
     }
@@ -290,7 +290,6 @@ export function DashboardRecordingDetailPage() {
                     <div className="space-y-3">
                         <p>Demandé par {recording.requesterName ?? recording.requesterId} ({recording.requesterId}) le {formatDateTime(recording.requestedAt)}.</p>
                         <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-base-content/60">
-                            <span>Date: <span className="font-semibold text-base-content/80">{formatDateTime(recording.requestedAt)}</span></span>
                             <span>Durée: <span className="font-semibold text-base-content/80">{`${actualDurationSeconds ? formatDuration(actualDurationSeconds) : 'Indisponible'} / ${formatDuration(recording.durationSeconds)}`}</span></span>
                             <span>Participants: <span className="font-semibold text-base-content/80">{userGroups.length}</span></span>
                             <span>Segments: <span className="font-semibold text-base-content/80">{recording.outputFiles.length}</span></span>
@@ -315,14 +314,14 @@ export function DashboardRecordingDetailPage() {
                             variant="danger"
                             Icon={TrashIcon}
                             onClick={handleDeleteButtonClick}
-                            loading={deleteLoading}
+                            loading={deletingRecordingId === recording.id}
                             disabled={!canDeleteRecording(recording)}
                         />
                     </>
                 }
             />
 
-            {error ? <div className="alert alert-warning mx-6 mt-6 lg:mx-8"><ExclamationTriangleIcon className="h-5 w-5" /><span>{error}</span></div> : null}
+            {error ? <DashboardAlert tone="warning" icon={<ExclamationTriangleIcon className="h-5 w-5" />} className="mx-6 mt-6 lg:mx-8">{error}</DashboardAlert> : null}
 
             <RecordingSessionPlayer
                 recording={recording}

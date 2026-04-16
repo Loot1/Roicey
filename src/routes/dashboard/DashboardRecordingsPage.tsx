@@ -1,10 +1,11 @@
 import { ArrowPathIcon, EyeIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useOutletContext } from 'react-router'
-import { deleteGuildRecording, getGuildDashboardRecordings } from '../../api/discordAuth'
-import { ButtonOne, DashboardPageHeader } from '../../components'
+import { getGuildDashboardRecordings } from '../../api/discordAuth'
+import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardStateCard } from '../../components'
+import { useRecordingDeletion } from '../../hooks'
 import type { DashboardLayoutContextValue, DashboardRecording } from '../../types'
-import { canDeleteRecording, formatDateTime, formatDuration, getActualRecordingDurationSeconds, getRecordingStatusLabel, groupFilesByUser } from './recordingsShared'
+import { canDeleteRecording, formatDateTime, formatDuration, getActualRecordingDurationSeconds, getRecordingStatusLabel, groupFilesByUser } from '../../utils'
 
 type StatusFilter = 'ALL' | DashboardRecording['status']
 
@@ -22,14 +23,14 @@ function getStatusClassName(status: DashboardRecording['status']): string {
 }
 
 export function DashboardRecordingsPage() {
-    const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
+    const { selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
     const [recordings, setRecordings] = useState<DashboardRecording[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [searchTerm, setSearchTerm] = useState('')
     const [dateFilter, setDateFilter] = useState('')
     const [statusFilter, setStatusFilter] = useState<StatusFilter>('ALL')
-    const [deleteLoadingId, setDeleteLoadingId] = useState<number | null>(null)
+    const { deleteRecording, deletingRecordingId } = useRecordingDeletion(selectedGuildId)
 
     const loadRecordings = async (guildId: string) => {
         setLoading(true)
@@ -98,29 +99,21 @@ export function DashboardRecordingsPage() {
     }
 
     const handleDeleteRecording = async (recording: DashboardRecording) => {
-        if (!selectedGuildId || !canDeleteRecording(recording)) {
+        if (!canDeleteRecording(recording)) {
             return
         }
 
-        const confirmed = window.confirm(`Supprimer définitivement la demande #${recording.id} et toutes ses pistes audio ?`)
-        if (!confirmed) {
-            return
-        }
+        setError(null)
+        const result = await deleteRecording(recording)
 
-        try {
-            setDeleteLoadingId(recording.id)
-            setError(null)
-            await deleteGuildRecording(selectedGuildId, recording.id)
+        if (result.success) {
             setRecordings((currentRecordings) => currentRecordings.filter((item) => item.id !== recording.id))
-        } catch {
-            setError("La suppression de l'enregistrement a échoué.")
-        } finally {
-            setDeleteLoadingId((currentId) => (currentId === recording.id ? null : currentId))
+            return
         }
-    }
 
-    if (!selectedGuild) {
-        return <section className="bg-base-100 px-6 py-8 lg:px-8"><div className="rounded-[1.5rem] border border-base-300 bg-base-200/40 p-8 text-base-content/70 shadow-sm">Sélectionne un serveur dans la sidebar pour consulter ses enregistrements.</div></section>
+        if (result.errorMessage) {
+            setError(result.errorMessage)
+        }
     }
 
     return (
@@ -149,15 +142,15 @@ export function DashboardRecordingsPage() {
                 }
             />
 
-            {error ? <div className="alert alert-warning mx-6 mt-6 lg:mx-8"><span>{error}</span></div> : null}
+            {error ? <DashboardAlert tone="warning" className="mx-6 mt-6 lg:mx-8">{error}</DashboardAlert> : null}
 
             <div className="px-6 py-4 lg:px-8">
             {loading ? (
-                <div className="rounded-[1.5rem] border border-base-300 bg-base-100 p-6 shadow-sm">
+                <DashboardStateCard className="p-6 text-base-content/70">
                     <div className="flex items-center gap-3 text-base-content/70"><ArrowPathIcon className="h-5 w-5 animate-spin text-primary" /><span>Chargement des enregistrements...</span></div>
-                </div>
+                </DashboardStateCard>
             ) : filteredRecordings.length === 0 ? (
-                <div className="rounded-[1.5rem] border border-dashed border-base-300 bg-base-100 p-8 text-base-content/70 shadow-sm">Aucun enregistrement ne correspond au filtre actuel.</div>
+                <DashboardStateCard tone="dashed" className="text-base-content/70">Aucun enregistrement ne correspond au filtre actuel.</DashboardStateCard>
             ) : (
                 <div className="space-y-4">
                     {filteredRecordings.map((recording) => {
@@ -198,7 +191,7 @@ export function DashboardRecordingsPage() {
                                             size="sm"
                                             Icon={TrashIcon}
                                             onClick={() => { void handleDeleteRecording(recording) }}
-                                            loading={deleteLoadingId === recording.id}
+                                            loading={deletingRecordingId === recording.id}
                                             disabled={!canDeleteRecording(recording)}
                                         />
                                     </div>

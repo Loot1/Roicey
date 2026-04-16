@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router'
-import { Layout } from './components/layouts/Layout'
+import { Layout } from './components'
 import { HomePage } from './routes/HomePage'
 import { AboutPage } from './routes/AboutPage'
 import { LegalPage } from './routes/LegalPage'
@@ -16,6 +16,7 @@ import { DashboardProvider } from './contexts/DashboardContext'
 import { DashboardLogsViewerPage } from './routes/dashboard/DashboardLogsViewerPage'
 import { DashboardRecordingsPage } from './routes/dashboard/DashboardRecordingsPage'
 import { DashboardRecordingDetailPage } from './routes/dashboard/DashboardRecordingDetailPage'
+import { NotFoundPage } from './routes/NotFoundPage'
 
 export function App() {
   return (
@@ -23,14 +24,7 @@ export function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
-        <Route
-          path="/dashboard"
-          element={
-            <DashboardProvider>
-              <DashboardLayout />
-            </DashboardProvider>
-          }
-        >
+        <Route path="/dashboard" element={<DashboardProvider><DashboardLayout /></DashboardProvider>}>
           <Route index element={<DashboardOverviewPage />} />
           <Route path="settings" element={<DashboardSettingsPage />} />
           <Route path="logs" element={<DashboardLogsViewerPage />} />
@@ -45,6 +39,7 @@ export function App() {
           <Route path="moderation" element={<ModerationPage />} />
           <Route path="faq" element={<FAQPage />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Layout>
   )

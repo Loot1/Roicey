@@ -1,7 +1,7 @@
-import { ArrowDownTrayIcon, ArrowPathIcon, BackwardIcon, ForwardIcon, MicrophoneIcon, PauseIcon, PlayIcon } from '@heroicons/react/24/outline'
+import { ArrowDownTrayIcon, ArrowPathIcon, BackwardIcon, BellAlertIcon, ForwardIcon, MicrophoneIcon, PauseIcon, PlayIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from 'react'
 import type { DashboardRecording } from '../../types'
-import { formatPlaybackClock, formatSize, getActiveSpeakerIds, getApproximateFileOffsetMs, getRecordingFileDurationMs, getRecordingTimelineDurationMs, type PreparedAudioSource, type UserRecordingGroup } from '../../routes/dashboard/recordingsShared'
+import { formatPlaybackClock, formatSize, getActiveSpeakerIds, getApproximateFileOffsetMs, getRecordingFileDurationMs, getRecordingTimelineDurationMs, type PreparedAudioSource, type UserRecordingGroup } from '../../utils'
 
 type SessionPlayerButtonVariant = 'primary' | 'ghost' | 'danger'
 type SessionPlayerButtonSize = 'md' | 'sm'
@@ -248,99 +248,102 @@ export function RecordingSessionPlayer({
     return (
         <section className="bg-base-100">
             <div className="px-6 py-5 lg:px-8">
-                <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] xl:items-start xl:gap-6">
-                    <div>
+                <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] xl:items-stretch xl:gap-6">
+                    <div className="flex flex-col xl:min-h-full">
                         <p className="text-xs font-black uppercase tracking-[0.24em] text-base-content/45">Lecteur de session</p>
                         <h2 className="mt-1 text-2xl font-black tracking-tight">Pistes utilisateurs synchronisées</h2>
-                        <p className="mt-3 max-w-sm text-sm text-base-content/65">Muter un participant masque sa voix de l'écoute. Le curseur avance sur la timeline et met en évidence les prises de parole en cours.</p>
+                        <p className="mt-4 hidden px-1 text-xs font-black uppercase tracking-[0.18em] text-base-content/45 xl:mt-auto xl:block">Participants</p>
                     </div>
-                    <div
-                        className="relative rounded-[1.2rem] border border-base-300 bg-base-100 px-4 py-4 shadow-sm xl:mt-6"
-                        role="slider"
-                        tabIndex={0}
-                        aria-label="Position de lecture"
-                        aria-valuemin={0}
-                        aria-valuemax={Math.round(timelineDurationSeconds)}
-                        aria-valuenow={Math.round(currentTimeSeconds)}
-                        onKeyDown={(event) => {
-                            if (event.key === 'ArrowLeft') {
-                                event.preventDefault()
-                                seekTo(currentTimeSeconds - 5)
-                            }
-
-                            if (event.key === 'ArrowRight') {
-                                event.preventDefault()
-                                seekTo(currentTimeSeconds + 5)
-                            }
-                        }}
-                    >
-                        <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
-                            <div className="flex flex-wrap items-start gap-2 sm:gap-3">
-                                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-base-content/45">Piste globale</p>
-                                <SessionPlayerButton
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    className="btn-square border border-base-300"
-                                    onClick={() => seekTo(currentTimeSeconds - 10)}
-                                    disabled={!hasPreparedSources}
-                                    aria-label="Reculer de 10 secondes"
-                                    title="Reculer de 10 secondes"
-                                >
-                                    <BackwardIcon className="h-4 w-4" />
-                                </SessionPlayerButton>
-                                <SessionPlayerButton
-                                    type="button"
-                                    variant="primary"
-                                    size="sm"
-                                    className="btn-square"
-                                    onClick={() => { void togglePlayback() }}
-                                    disabled={isPreparing}
-                                    aria-label={hasPreparedSources ? (isPlaying ? 'Mettre en pause' : 'Lire la session') : 'Préparer les pistes'}
-                                    title={hasPreparedSources ? (isPlaying ? 'Mettre en pause' : 'Lire la session') : 'Préparer les pistes'}
-                                >
-                                    {isPreparing ? <ArrowPathIcon className="h-4 w-4 animate-spin" /> : isPlaying ? <PauseIcon className="h-4 w-4" /> : <PlayIcon className="h-4 w-4" />}
-                                </SessionPlayerButton>
-                                <SessionPlayerButton
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    className="btn-square border border-base-300"
-                                    onClick={() => seekTo(currentTimeSeconds + 10)}
-                                    disabled={!hasPreparedSources}
-                                    aria-label="Avancer de 10 secondes"
-                                    title="Avancer de 10 secondes"
-                                >
-                                    <ForwardIcon className="h-4 w-4" />
-                                </SessionPlayerButton>
-                                <SessionPlayerButton
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    className="border border-base-300"
-                                    onClick={() => onDownloadGlobalMix(mutedUserIds)}
-                                    disabled={downloadLoadingGlobalMix || downloadEligibleGroups.length === 0}
-                                    aria-label="Télécharger le mix global courant"
-                                    title={downloadEligibleGroups.length === 0 ? 'Aucun participant audible à inclure dans le mix' : 'Télécharger le mix global courant'}
-                                >
-                                    {downloadLoadingGlobalMix ? <ArrowPathIcon className="h-4 w-4 animate-spin" /> : <ArrowDownTrayIcon className="h-4 w-4" />}
-                                    Mix actuel
-                                </SessionPlayerButton>
-                            </div>
-                            <p className="text-sm font-black tabular-nums text-base-content/70">{formatPlaybackClock(currentTimeSeconds)} <span className="text-base-content/35">/ {formatPlaybackClock(timelineDurationSeconds)}</span></p>
-                        </div>
+                    <div>
+                        <p className="mb-3 w-full text-sm text-base-content/65">Muter un participant masque sa voix de l'écoute. Le curseur avance sur la timeline et met en évidence les prises de parole en cours.</p>
                         <div
-                            className="relative h-2 cursor-pointer rounded-full bg-base-300/80"
-                            onClick={(event) => {
-                                const bounds = event.currentTarget.getBoundingClientRect()
-                                const relativeX = Math.max(0, Math.min(bounds.width, event.clientX - bounds.left))
-                                const ratio = bounds.width > 0 ? relativeX / bounds.width : 0
-                                seekTo(ratio * timelineDurationSeconds)
+                            className="relative rounded-[1.2rem] border border-base-300 bg-base-100 px-4 py-4 shadow-sm"
+                            role="slider"
+                            tabIndex={0}
+                            aria-label="Position de lecture"
+                            aria-valuemin={0}
+                            aria-valuemax={Math.round(timelineDurationSeconds)}
+                            aria-valuenow={Math.round(currentTimeSeconds)}
+                            onKeyDown={(event) => {
+                                if (event.key === 'ArrowLeft') {
+                                    event.preventDefault()
+                                    seekTo(currentTimeSeconds - 5)
+                                }
+
+                                if (event.key === 'ArrowRight') {
+                                    event.preventDefault()
+                                    seekTo(currentTimeSeconds + 5)
+                                }
                             }}
                         >
-                            <div className="h-full rounded-full bg-primary" style={{ width: `${progressPercent}%` }} />
-                            <div className="absolute bottom-1/2 w-px translate-y-1/2 bg-primary-content/70" style={{ left: `${progressPercent}%` }}>
-                                <div className="absolute -top-1.5 left-1/2 h-3.5 w-3.5 -translate-x-1/2 rounded-full border border-primary/30 bg-primary shadow-[0_0_16px_rgba(0,0,0,0.18)]" />
+                            <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+                                <div className="flex flex-wrap items-start gap-2 sm:gap-3">
+                                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-base-content/45">Piste globale</p>
+                                    <SessionPlayerButton
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        className="btn-square border border-base-300"
+                                        onClick={() => seekTo(currentTimeSeconds - 10)}
+                                        disabled={!hasPreparedSources}
+                                        aria-label="Reculer de 10 secondes"
+                                        title="Reculer de 10 secondes"
+                                    >
+                                        <BackwardIcon className="h-4 w-4" />
+                                    </SessionPlayerButton>
+                                    <SessionPlayerButton
+                                        type="button"
+                                        variant="primary"
+                                        size="sm"
+                                        className="btn-square"
+                                        onClick={() => { void togglePlayback() }}
+                                        disabled={isPreparing}
+                                        aria-label={hasPreparedSources ? (isPlaying ? 'Mettre en pause' : 'Lire la session') : 'Préparer les pistes'}
+                                        title={hasPreparedSources ? (isPlaying ? 'Mettre en pause' : 'Lire la session') : 'Préparer les pistes'}
+                                    >
+                                        {isPreparing ? <ArrowPathIcon className="h-4 w-4 animate-spin" /> : isPlaying ? <PauseIcon className="h-4 w-4" /> : <PlayIcon className="h-4 w-4" />}
+                                    </SessionPlayerButton>
+                                    <SessionPlayerButton
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        className="btn-square border border-base-300"
+                                        onClick={() => seekTo(currentTimeSeconds + 10)}
+                                        disabled={!hasPreparedSources}
+                                        aria-label="Avancer de 10 secondes"
+                                        title="Avancer de 10 secondes"
+                                    >
+                                        <ForwardIcon className="h-4 w-4" />
+                                    </SessionPlayerButton>
+                                    <SessionPlayerButton
+                                        type="button"
+                                        variant="ghost"
+                                        size="sm"
+                                        className="border border-base-300"
+                                        onClick={() => onDownloadGlobalMix(mutedUserIds)}
+                                        disabled={downloadLoadingGlobalMix || downloadEligibleGroups.length === 0}
+                                        aria-label="Télécharger le mix global courant"
+                                        title={downloadEligibleGroups.length === 0 ? 'Aucun participant audible à inclure dans le mix' : 'Télécharger le mix global courant'}
+                                    >
+                                        {downloadLoadingGlobalMix ? <ArrowPathIcon className="h-4 w-4 animate-spin" /> : <ArrowDownTrayIcon className="h-4 w-4" />}
+                                        Mix actuel
+                                    </SessionPlayerButton>
+                                </div>
+                                <p className="text-sm font-black tabular-nums text-base-content/70">{formatPlaybackClock(currentTimeSeconds)} <span className="text-base-content/35">/ {formatPlaybackClock(timelineDurationSeconds)}</span></p>
+                            </div>
+                            <div
+                                className="relative h-2 cursor-pointer rounded-full bg-base-300/80"
+                                onClick={(event) => {
+                                    const bounds = event.currentTarget.getBoundingClientRect()
+                                    const relativeX = Math.max(0, Math.min(bounds.width, event.clientX - bounds.left))
+                                    const ratio = bounds.width > 0 ? relativeX / bounds.width : 0
+                                    seekTo(ratio * timelineDurationSeconds)
+                                }}
+                            >
+                                <div className="h-full rounded-full bg-primary" style={{ width: `${progressPercent}%` }} />
+                                <div className="absolute bottom-1/2 w-px translate-y-1/2 bg-primary-content/70" style={{ left: `${progressPercent}%` }}>
+                                    <div className="absolute -top-1.5 left-1/2 h-3.5 w-3.5 -translate-x-1/2 rounded-full border border-primary/30 bg-primary shadow-[0_0_16px_rgba(0,0,0,0.18)]" />
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -349,12 +352,13 @@ export function RecordingSessionPlayer({
 
             <div className="px-6 lg:px-8">
                 <div className="space-y-3">
-                    <p className="px-1 text-xs font-black uppercase tracking-[0.18em] text-base-content/45">Participants</p>
+                    <p className="px-1 text-xs font-black uppercase tracking-[0.18em] text-base-content/45 xl:hidden">Participants</p>
                     <div className="space-y-3">
                             {userGroups.map((group, index) => {
                                 const isMuted = mutedUserIds.includes(group.userId)
                                 const isActive = activeSpeakerIds.includes(group.userId)
                                 const isReady = Boolean(sourcesByUserId[group.userId])
+                                const isRequester = group.userId === recording.requesterId
                                 const metrics = userMetrics[group.userId]
 
                                 return (
@@ -365,6 +369,11 @@ export function RecordingSessionPlayer({
                                                     <div className="flex items-center gap-2">
                                                         <span className="h-3 w-3 rounded-full border border-white/60" style={{ background: getLaneGradient(index) }} />
                                                         <p className="truncate text-base font-black">{group.username}</p>
+                                                        {isRequester ? (
+                                                            <span className="inline-flex items-center text-error" title="Demandeur de l'enregistrement" aria-label="Demandeur de l'enregistrement">
+                                                                <BellAlertIcon className="h-4 w-4" />
+                                                            </span>
+                                                        ) : null}
                                                     </div>
                                                     <p className="mt-1 text-xs text-base-content/50">ID Discord: {group.userId}</p>
                                                 </div>

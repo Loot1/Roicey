@@ -1,7 +1,7 @@
 import { ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
-import { ResponsiveSidebarLayout } from '../../components'
+import { DashboardAlert, DashboardStateCard, ResponsiveSidebarLayout } from '../../components'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
 import { dashboardSidebarNavigation } from '../../constants'
 import { useDashboardGuildSelection } from '../../contexts/DashboardContext'
@@ -226,13 +226,20 @@ export function DashboardLayout() {
             }
         >
             {error ? (
-                <div className="alert alert-warning mb-6">
-                    <ExclamationTriangleIcon className="h-5 w-5" />
-                    <span>{error}</span>
-                </div>
+                <DashboardAlert tone="warning" icon={<ExclamationTriangleIcon className="h-5 w-5" />} className="mb-6">
+                    {error}
+                </DashboardAlert>
             ) : null}
 
+            {!selectedGuild ? (
+                <section className="bg-base-100 px-6 py-8 lg:px-8">
+                    <DashboardStateCard tone="muted" className="text-base-content/70">
+                        Sélectionne un serveur dans la sidebar pour accéder à cette section du dashboard.
+                    </DashboardStateCard>
+                </section>
+            ) : (
             <Outlet context={{ selectedGuild, selectedGuildId, user } satisfies DashboardLayoutContextValue} />
+            )}
         </ResponsiveSidebarLayout>
     )
 }

@@ -28,32 +28,23 @@ function checkPermissions(permissions: string): { hasPerm: boolean; reason: stri
 
 export function DashboardOverviewPage() {
     const { selectedGuild } = useOutletContext<DashboardLayoutContextValue>()
+    const guild = selectedGuild!
 
-    if (!selectedGuild) {
-        return (
-            <section className="bg-base-100 px-6 py-8 lg:px-8">
-                <div className="rounded-[1.5rem] border border-base-300 bg-base-200/40 p-8 text-base-content/70 shadow-sm">
-                    Sélectionne une guilde pour afficher sa vue d'ensemble.
-                </div>
-            </section>
-        )
-    }
-
-    const { hasPerm, reason } = checkPermissions(selectedGuild.permissions)
+    const { hasPerm, reason } = checkPermissions(guild.permissions)
     const stats = [
         {
             id: 'status',
             icon: <ShieldCheckIcon className="h-5 w-5" />,
             label: 'Statut',
-            value: selectedGuild.owner ? 'Propriétaire' : 'Gestionnaire',
+            value: guild.owner ? 'Propriétaire' : 'Gestionnaire',
             description: 'Accès complet aux actions du dashboard.',
         },
         {
             id: 'bot',
             icon: <SparklesIcon className="h-5 w-5" />,
             label: 'Bot',
-            value: selectedGuild.botInGuild ? 'Présent' : 'Absent',
-            description: selectedGuild.botInGuild ? 'Le bot est déjà connecté à cette guilde.' : 'Le bot doit rejoindre cette guilde avant la configuration.',
+            value: guild.botInGuild ? 'Présent' : 'Absent',
+            description: guild.botInGuild ? 'Le bot est déjà connecté à cette guilde.' : 'Le bot doit rejoindre cette guilde avant la configuration.',
         },
         {
             id: 'permissions',
@@ -75,7 +66,7 @@ export function DashboardOverviewPage() {
         <section className="space-y-0 bg-base-100">
             <DashboardPageHeader
                 title="Vue d'ensemble"
-                description={selectedGuild.owner ? 'Tu es propriétaire de cette guilde.' : "Tu disposes d'un accès de gestion sur cette guilde."}
+                description={guild.owner ? 'Tu es propriétaire de cette guilde.' : "Tu disposes d'un accès de gestion sur cette guilde."}
             />
 
             <div className="px-6 py-6 lg:px-8">

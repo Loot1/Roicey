@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useOutletContext } from 'react-router'
-import { ButtonOne, DashboardPageHeader, DashboardSelectField } from '../../components'
+import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardSelectField } from '../../components'
 import { getGuildDashboardConfig, getGuildDashboardOptions, saveGuildDashboardConfig } from '../../api/discordAuth'
 import type { DashboardLayoutContextValue, GuildDashboardConfigInput, GuildDashboardOptions } from '../../types'
 
@@ -29,7 +29,7 @@ const emptyOptions: GuildDashboardOptions = {
 }
 
 export function DashboardSettingsPage() {
-    const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
+    const { selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
     const form = useForm<ConfigFormState>({
         defaultValues: defaultFormValues,
         mode: 'onChange',
@@ -133,16 +133,6 @@ export function DashboardSettingsPage() {
         }
     }
 
-    if (!selectedGuild) {
-        return (
-            <section className="bg-base-100 px-6 py-8 lg:px-8">
-                <div className="rounded-[1.5rem] border border-base-300 bg-base-200/40 p-8 text-base-content/70 shadow-sm">
-                    Sélectionne un serveur dans la sidebar pour afficher sa configuration.
-                </div>
-            </section>
-        )
-    }
-
     const adminRolesIds = form.watch('adminRolesIds')
     const isDisabled = configLoading || configSaving
     const formId = 'dashboard-settings-form'
@@ -157,9 +147,7 @@ export function DashboardSettingsPage() {
 
             <div className="px-6 py-4 lg:px-8">
                 {configMessage ? (
-                    <div className="alert alert-info mb-6 py-2 shadow-sm">
-                        <span className="text-sm">{configMessage}</span>
-                    </div>
+                    <DashboardAlert className="mb-6 py-2 shadow-sm">{configMessage}</DashboardAlert>
                 ) : null}
 
                 <form id={formId} onSubmit={form.handleSubmit(handleSaveConfig)} className="space-y-6">

@@ -1,4 +1,4 @@
-import type { DashboardRecording, DashboardRecordingFile } from '../../types'
+import type { DashboardRecording, DashboardRecordingFile } from '../types'
 
 export type PreparedAudioSource = {
     label: string
