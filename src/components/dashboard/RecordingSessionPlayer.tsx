@@ -44,7 +44,9 @@ type RecordingSessionPlayerProps = {
     sourcesByUserId: Record<string, PreparedAudioSource>
     isPreparing: boolean
     onPrepare: () => void
+    onDownloadGlobalMix: (mutedUserIds: string[]) => void
     onDownloadUserTrack: (userId: string) => void
+    downloadLoadingGlobalMix: boolean
     downloadLoadingUserId: string | null
 }
 
@@ -59,10 +61,11 @@ export function RecordingSessionPlayer({
     sourcesByUserId,
     isPreparing,
     onPrepare,
+    onDownloadGlobalMix,
     onDownloadUserTrack,
+    downloadLoadingGlobalMix,
     downloadLoadingUserId,
 }: RecordingSessionPlayerProps) {
-    const timelineRef = useRef<HTMLDivElement | null>(null)
     const audioRefs = useRef<Record<string, HTMLAudioElement | null>>({})
     const [mutedUserIds, setMutedUserIds] = useState<string[]>([])
     const [currentTimeSeconds, setCurrentTimeSeconds] = useState(0)
@@ -71,6 +74,10 @@ export function RecordingSessionPlayer({
     const playableGroups = useMemo(
         () => userGroups.filter((group) => sourcesByUserId[group.userId]),
         [sourcesByUserId, userGroups],
+    )
+    const downloadEligibleGroups = useMemo(
+        () => userGroups.filter((group) => !mutedUserIds.includes(group.userId)),
+        [mutedUserIds, userGroups],
     )
 
     const primaryUserId = playableGroups[0]?.userId ?? null
@@ -232,18 +239,6 @@ export function RecordingSessionPlayer({
         syncAllAudios(boundedTime)
     }
 
-    const seekFromPointer = (clientX: number) => {
-        const timeline = timelineRef.current
-        if (!timeline) {
-            return
-        }
-
-        const bounds = timeline.getBoundingClientRect()
-        const relativeX = Math.max(0, Math.min(bounds.width, clientX - bounds.left))
-        const ratio = bounds.width > 0 ? relativeX / bounds.width : 0
-        seekTo(ratio * timelineDurationSeconds)
-    }
-
     const toggleUserMute = (userId: string) => {
         setMutedUserIds((currentIds) => currentIds.includes(userId)
             ? currentIds.filter((currentId) => currentId !== userId)
@@ -253,58 +248,14 @@ export function RecordingSessionPlayer({
     return (
         <section className="bg-base-100">
             <div className="px-6 py-5 lg:px-8">
-                <div className="flex flex-col gap-4 xl:flex-row xl:items-end xl:justify-between">
+                <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] xl:items-start xl:gap-6">
                     <div>
                         <p className="text-xs font-black uppercase tracking-[0.24em] text-base-content/45">Lecteur de session</p>
                         <h2 className="mt-1 text-2xl font-black tracking-tight">Pistes utilisateurs synchronisées</h2>
-                    </div>
-
-                    <div className="flex flex-wrap items-end gap-3">
-                        <SessionPlayerButton
-                            type="button"
-                            variant="ghost"
-                            className="h-[52px] w-[52px] rounded-[1.1rem] border border-base-300 bg-base-100 p-0"
-                            onClick={() => seekTo(currentTimeSeconds - 10)}
-                            disabled={!hasPreparedSources}
-                            aria-label="Reculer de 10 secondes"
-                            title="Reculer de 10 secondes"
-                        >
-                            <BackwardIcon className="h-5 w-5" />
-                        </SessionPlayerButton>
-                        <SessionPlayerButton
-                            type="button"
-                            variant="primary"
-                            className="h-[52px] w-[52px] rounded-[1.1rem] p-0"
-                            onClick={() => { void togglePlayback() }}
-                            disabled={isPreparing}
-                            aria-label={hasPreparedSources ? (isPlaying ? 'Mettre en pause' : 'Lire la session') : 'Préparer les pistes'}
-                            title={hasPreparedSources ? (isPlaying ? 'Mettre en pause' : 'Lire la session') : 'Préparer les pistes'}
-                        >
-                            {isPreparing ? <ArrowPathIcon className="h-5 w-5 animate-spin" /> : isPlaying ? <PauseIcon className="h-5 w-5" /> : <PlayIcon className="h-5 w-5" />}
-                        </SessionPlayerButton>
-                        <SessionPlayerButton
-                            type="button"
-                            variant="ghost"
-                            className="h-[52px] w-[52px] rounded-[1.1rem] border border-base-300 bg-base-100 p-0"
-                            onClick={() => seekTo(currentTimeSeconds + 10)}
-                            disabled={!hasPreparedSources}
-                            aria-label="Avancer de 10 secondes"
-                            title="Avancer de 10 secondes"
-                        >
-                            <ForwardIcon className="h-5 w-5" />
-                        </SessionPlayerButton>
-                    </div>
-                </div>
-
-                <div className="mt-4 grid grid-cols-1 gap-4 xl:grid-cols-[minmax(320px,360px)_minmax(0,1fr)] xl:items-end">
-                    <div className="px-1">
-                        <p className="max-w-sm text-sm text-base-content/65">Muter un participant masque sa voix de l’écoute. Le curseur avance sur la timeline et met en évidence les prises de parole en cours.</p>
-                        <p className="mt-3 text-xs font-black uppercase tracking-[0.18em] text-base-content/45">Participants</p>
+                        <p className="mt-3 max-w-sm text-sm text-base-content/65">Muter un participant masque sa voix de l'écoute. Le curseur avance sur la timeline et met en évidence les prises de parole en cours.</p>
                     </div>
                     <div
-                        ref={timelineRef}
-                        className="relative rounded-[1.2rem] border border-base-300 bg-base-100 px-4 py-4 shadow-sm"
-                        onClick={(event) => seekFromPointer(event.clientX)}
+                        className="relative rounded-[1.2rem] border border-base-300 bg-base-100 px-4 py-4 shadow-sm xl:mt-6"
                         role="slider"
                         tabIndex={0}
                         aria-label="Position de lecture"
@@ -323,11 +274,70 @@ export function RecordingSessionPlayer({
                             }
                         }}
                     >
-                        <div className="mb-3 flex items-start justify-between gap-3">
-                            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-base-content/45">Piste globale</p>
+                        <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+                            <div className="flex flex-wrap items-start gap-2 sm:gap-3">
+                                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-base-content/45">Piste globale</p>
+                                <SessionPlayerButton
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="btn-square border border-base-300"
+                                    onClick={() => seekTo(currentTimeSeconds - 10)}
+                                    disabled={!hasPreparedSources}
+                                    aria-label="Reculer de 10 secondes"
+                                    title="Reculer de 10 secondes"
+                                >
+                                    <BackwardIcon className="h-4 w-4" />
+                                </SessionPlayerButton>
+                                <SessionPlayerButton
+                                    type="button"
+                                    variant="primary"
+                                    size="sm"
+                                    className="btn-square"
+                                    onClick={() => { void togglePlayback() }}
+                                    disabled={isPreparing}
+                                    aria-label={hasPreparedSources ? (isPlaying ? 'Mettre en pause' : 'Lire la session') : 'Préparer les pistes'}
+                                    title={hasPreparedSources ? (isPlaying ? 'Mettre en pause' : 'Lire la session') : 'Préparer les pistes'}
+                                >
+                                    {isPreparing ? <ArrowPathIcon className="h-4 w-4 animate-spin" /> : isPlaying ? <PauseIcon className="h-4 w-4" /> : <PlayIcon className="h-4 w-4" />}
+                                </SessionPlayerButton>
+                                <SessionPlayerButton
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="btn-square border border-base-300"
+                                    onClick={() => seekTo(currentTimeSeconds + 10)}
+                                    disabled={!hasPreparedSources}
+                                    aria-label="Avancer de 10 secondes"
+                                    title="Avancer de 10 secondes"
+                                >
+                                    <ForwardIcon className="h-4 w-4" />
+                                </SessionPlayerButton>
+                                <SessionPlayerButton
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="border border-base-300"
+                                    onClick={() => onDownloadGlobalMix(mutedUserIds)}
+                                    disabled={downloadLoadingGlobalMix || downloadEligibleGroups.length === 0}
+                                    aria-label="Télécharger le mix global courant"
+                                    title={downloadEligibleGroups.length === 0 ? 'Aucun participant audible à inclure dans le mix' : 'Télécharger le mix global courant'}
+                                >
+                                    {downloadLoadingGlobalMix ? <ArrowPathIcon className="h-4 w-4 animate-spin" /> : <ArrowDownTrayIcon className="h-4 w-4" />}
+                                    Mix actuel
+                                </SessionPlayerButton>
+                            </div>
                             <p className="text-sm font-black tabular-nums text-base-content/70">{formatPlaybackClock(currentTimeSeconds)} <span className="text-base-content/35">/ {formatPlaybackClock(timelineDurationSeconds)}</span></p>
                         </div>
-                        <div className="relative h-2 rounded-full bg-base-300/80">
+                        <div
+                            className="relative h-2 cursor-pointer rounded-full bg-base-300/80"
+                            onClick={(event) => {
+                                const bounds = event.currentTarget.getBoundingClientRect()
+                                const relativeX = Math.max(0, Math.min(bounds.width, event.clientX - bounds.left))
+                                const ratio = bounds.width > 0 ? relativeX / bounds.width : 0
+                                seekTo(ratio * timelineDurationSeconds)
+                            }}
+                        >
                             <div className="h-full rounded-full bg-primary" style={{ width: `${progressPercent}%` }} />
                             <div className="absolute bottom-1/2 w-px translate-y-1/2 bg-primary-content/70" style={{ left: `${progressPercent}%` }}>
                                 <div className="absolute -top-1.5 left-1/2 h-3.5 w-3.5 -translate-x-1/2 rounded-full border border-primary/30 bg-primary shadow-[0_0_16px_rgba(0,0,0,0.18)]" />
@@ -337,8 +347,9 @@ export function RecordingSessionPlayer({
                 </div>
             </div>
 
-            <div className="px-6 py-4 lg:px-8">
+            <div className="px-6 lg:px-8">
                 <div className="space-y-3">
+                    <p className="px-1 text-xs font-black uppercase tracking-[0.18em] text-base-content/45">Participants</p>
                     <div className="space-y-3">
                             {userGroups.map((group, index) => {
                                 const isMuted = mutedUserIds.includes(group.userId)
@@ -363,7 +374,7 @@ export function RecordingSessionPlayer({
                                                         type="button"
                                                         variant={isMuted ? 'danger' : 'ghost'}
                                                         size="sm"
-                                                        className={`btn-square ${isMuted ? 'btn-outline border-error bg-transparent text-error hover:bg-error/10' : 'border border-base-300'}`}
+                                                        className={`btn-square ${isMuted ? 'border-error bg-error text-error-content hover:bg-error/90' : 'border border-base-300'}`}
                                                         onClick={() => toggleUserMute(group.userId)}
                                                         disabled={!isReady}
                                                         aria-label={isMuted ? `Réactiver ${group.username}` : `Muter ${group.username}`}
@@ -390,12 +401,9 @@ export function RecordingSessionPlayer({
                                                 <span>{metrics?.segmentsCount ?? 0} piste{(metrics?.segmentsCount ?? 0) > 1 ? 's' : ''}</span>
                                             </div>
 
-                                            <div className="mt-3 flex items-center justify-end text-xs font-semibold text-base-content/55">
-                                                <span>{isMuted ? 'Muet' : isActive ? 'Parle actuellement' : 'En attente'}</span>
-                                            </div>
                                         </article>
 
-                                        <div className="relative flex items-center py-1">
+                                        <div className="py-1">
                                             <div className={`relative h-12 w-full overflow-hidden rounded-full border ${isActive ? 'border-primary/35 bg-primary/5' : 'border-base-300 bg-base-200/35'}`}>
                                                 {group.files.map((file) => {
                                                     const offsetMs = getApproximateFileOffsetMs(recording, file)
@@ -416,6 +424,10 @@ export function RecordingSessionPlayer({
                                                         />
                                                     )
                                                 })}
+                                            </div>
+
+                                            <div className="mt-3 flex items-center justify-start text-xs font-semibold text-base-content/55">
+                                                <span>{isMuted ? 'Muet' : isActive ? 'Parle actuellement' : 'En attente'}</span>
                                             </div>
                                         </div>
                                     </div>

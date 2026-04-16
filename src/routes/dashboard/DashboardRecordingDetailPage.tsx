@@ -1,7 +1,7 @@
 import { ArrowDownTrayIcon, ArrowLeftIcon, ArrowPathIcon, ExclamationTriangleIcon, TrashIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useOutletContext, useParams } from 'react-router'
-import { deleteGuildRecording, downloadGuildRecordingUserMix, getGuildDashboardRecording } from '../../api/discordAuth'
+import { deleteGuildRecording, downloadGuildRecordingMix, downloadGuildRecordingUserMix, getGuildDashboardRecording } from '../../api/discordAuth'
 import { ButtonOne, DashboardPageHeader, RecordingSessionPlayer } from '../../components'
 import type { DashboardLayoutContextValue, DashboardRecording } from '../../types'
 import { canDeleteRecording, formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from './recordingsShared'
@@ -16,6 +16,7 @@ export function DashboardRecordingDetailPage() {
     const [preparedSources, setPreparedSources] = useState<Record<string, PreparedAudioSource>>({})
     const [audioLoadingKey, setAudioLoadingKey] = useState<string | null>(null)
     const [downloadLoadingKey, setDownloadLoadingKey] = useState<string | null>(null)
+    const [globalMixDownloadLoading, setGlobalMixDownloadLoading] = useState(false)
     const [deleteLoading, setDeleteLoading] = useState(false)
     const preparedSourcesRef = useRef<Record<string, PreparedAudioSource>>({})
 
@@ -50,7 +51,7 @@ export function DashboardRecordingDetailPage() {
 
         if (!selectedGuildId || !Number.isInteger(recordingId) || recordingId < 1) {
             setRecording(null)
-            setError(Number.isInteger(recordingId) ? null : 'Identifiant d’enregistrement invalide.')
+            setError(Number.isInteger(recordingId) ? null : "Identifiant d'enregistrement invalide.")
             return
         }
 
@@ -184,6 +185,31 @@ export function DashboardRecordingDetailPage() {
         }
     }
 
+    const downloadGlobalMix = async (mutedUserIds: string[]) => {
+        if (!recording || !selectedGuildId) {
+            return
+        }
+
+        try {
+            setGlobalMixDownloadLoading(true)
+            setError(null)
+
+            const mixBlob = await downloadGuildRecordingMix(selectedGuildId, recording.id, mutedUserIds)
+            const objectUrl = URL.createObjectURL(mixBlob)
+            const anchor = document.createElement('a')
+            anchor.href = objectUrl
+            anchor.download = `mix-${recording.id}.ogg`
+            document.body.appendChild(anchor)
+            anchor.click()
+            anchor.remove()
+            URL.revokeObjectURL(objectUrl)
+        } catch {
+            setError('Le téléchargement du mix global a échoué.')
+        } finally {
+            setGlobalMixDownloadLoading(false)
+        }
+    }
+
     const handleDeleteRecording = async () => {
         if (!selectedGuildId || !recording) {
             return
@@ -205,7 +231,7 @@ export function DashboardRecordingDetailPage() {
             await deleteGuildRecording(selectedGuildId, recording.id)
             navigate('/dashboard/recordings')
         } catch {
-            setError('La suppression de l’enregistrement a échoué.')
+            setError("La suppression de l'enregistrement a échoué.")
             setDeleteLoading(false)
         }
     }
@@ -218,6 +244,10 @@ export function DashboardRecordingDetailPage() {
         void downloadUserTrack(userId)
     }
 
+    const handleDownloadGlobalMix = (mutedUserIds: string[]) => {
+        void downloadGlobalMix(mutedUserIds)
+    }
+
     const handleDeleteButtonClick = () => {
         void handleDeleteRecording()
     }
@@ -227,7 +257,7 @@ export function DashboardRecordingDetailPage() {
     }
 
     if (loading) {
-        return <section className="bg-base-100 px-6 py-8 lg:px-8"><div className="rounded-[1.5rem] border border-base-300 bg-base-100 p-8 shadow-sm"><div className="flex items-center gap-3 text-base-content/70"><ArrowPathIcon className="h-5 w-5 animate-spin text-primary" /><span>Chargement de l’enregistrement en cours...</span></div></div></section>
+        return <section className="bg-base-100 px-6 py-8 lg:px-8"><div className="rounded-[1.5rem] border border-base-300 bg-base-100 p-8 shadow-sm"><div className="flex items-center gap-3 text-base-content/70"><ArrowPathIcon className="h-5 w-5 animate-spin text-primary" /><span>Chargement de l'enregistrement en cours...</span></div></div></section>
     }
 
     if (!recording) {
@@ -250,10 +280,15 @@ export function DashboardRecordingDetailPage() {
     return (
         <section className="space-y-0 bg-base-100">
             <DashboardPageHeader
-                title={recording.channelName ?? `Salon ${recording.channelId}`}
+                title={
+                    <span className="flex w-full min-w-0 items-center justify-between gap-3 leading-none sm:inline-flex sm:w-auto sm:max-w-full sm:flex-wrap sm:justify-start">
+                        <span className="block min-w-0 flex-1 truncate leading-tight sm:max-w-[32rem] sm:flex-none lg:max-w-[40rem]">{recording.channelName ?? `Salon ${recording.channelId}`}</span>
+                        <span className="inline-flex items-center justify-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-black uppercase leading-none tracking-[0.16em] text-primary">Demande #{recording.id}</span>
+                    </span>
+                }
                 description={
                     <div className="space-y-3">
-                        <p>Demandé par {recording.requesterName ?? recording.requesterId} le {formatDateTime(recording.requestedAt)}.</p>
+                        <p>Demandé par {recording.requesterName ?? recording.requesterId} ({recording.requesterId}) le {formatDateTime(recording.requestedAt)}.</p>
                         <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-base-content/60">
                             <span>Date: <span className="font-semibold text-base-content/80">{formatDateTime(recording.requestedAt)}</span></span>
                             <span>Durée: <span className="font-semibold text-base-content/80">{`${actualDurationSeconds ? formatDuration(actualDurationSeconds) : 'Indisponible'} / ${formatDuration(recording.durationSeconds)}`}</span></span>
@@ -285,9 +320,6 @@ export function DashboardRecordingDetailPage() {
                         />
                     </>
                 }
-                meta={
-                    <span className="rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-black uppercase tracking-[0.16em] text-primary">Demande #{recording.id}</span>
-                }
             />
 
             {error ? <div className="alert alert-warning mx-6 mt-6 lg:mx-8"><ExclamationTriangleIcon className="h-5 w-5" /><span>{error}</span></div> : null}
@@ -298,11 +330,13 @@ export function DashboardRecordingDetailPage() {
                 sourcesByUserId={userSources}
                 isPreparing={audioLoadingKey === `session:${recording.id}`}
                 onPrepare={handlePrepareTracks}
+                onDownloadGlobalMix={handleDownloadGlobalMix}
                 onDownloadUserTrack={handleDownloadUserTrack}
+                downloadLoadingGlobalMix={globalMixDownloadLoading}
                 downloadLoadingUserId={downloadLoadingKey}
             />
 
-            {hasApproximateSync ? <div className="mx-6 mt-6 rounded-2xl border border-warning/30 bg-warning/10 p-4 text-sm text-warning-content/80 lg:mx-8">Certains segments ne possèdent pas encore d’offset exact. La timeline reste lisible, mais la synchronisation peut être approximative sur les anciens enregistrements.</div> : null}
+            {hasApproximateSync ? <div className="mx-6 mt-6 rounded-2xl border border-warning/30 bg-warning/10 p-4 text-sm text-warning-content/80 lg:mx-8">Certains segments ne possèdent pas encore d'offset exact. La timeline reste lisible, mais la synchronisation peut être approximative sur les anciens enregistrements.</div> : null}
 
             {recording.errorMessage ? <div className="mx-6 mt-6 rounded-2xl border border-error/30 bg-error/8 p-4 text-sm text-error lg:mx-8"><div className="flex items-center gap-2 font-semibold"><XCircleIcon className="h-5 w-5" />Échec de traitement</div><p className="mt-2 text-error/85">{recording.errorMessage}</p></div> : null}
         </section>
