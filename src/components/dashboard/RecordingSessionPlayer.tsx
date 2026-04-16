@@ -428,7 +428,7 @@ export function RecordingSessionPlayer({
                                                                 left: `${leftPercent}%`,
                                                                 width: `${Math.min(widthPercent, Math.max(1.5, 100 - leftPercent))}%`,
                                                                 background: getLaneGradient(index),
-                                                                opacity: isMuted ? 0.18 : isActive ? 1 : 0.72,
+                                                                opacity: isMuted ? 0.30 : isActive ? 1 : 0.72,
                                                             }}
                                                         />
                                                     )
