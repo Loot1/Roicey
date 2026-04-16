@@ -113,7 +113,7 @@ export function DashboardRecordingsPage() {
             await deleteGuildRecording(selectedGuildId, recording.id)
             setRecordings((currentRecordings) => currentRecordings.filter((item) => item.id !== recording.id))
         } catch {
-            setError('La suppression de l’enregistrement a échoué.')
+            setError("La suppression de l'enregistrement a échoué.")
         } finally {
             setDeleteLoadingId((currentId) => (currentId === recording.id ? null : currentId))
         }

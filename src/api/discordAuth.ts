@@ -122,6 +122,15 @@ export async function downloadGuildRecordingUserMix(guildId: string, recordingId
     return data
 }
 
+export async function downloadGuildRecordingMix(guildId: string, recordingId: number, excludedUserIds: string[] = []): Promise<Blob> {
+    const { data } = await discordApi.get(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}/mix`, {
+        params: excludedUserIds.length > 0 ? { excludedUserIds: excludedUserIds.join(',') } : undefined,
+        responseType: 'blob',
+    })
+
+    return data
+}
+
 export async function deleteGuildRecording(guildId: string, recordingId: number): Promise<void> {
     await discordApi.delete(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}`)
 }
