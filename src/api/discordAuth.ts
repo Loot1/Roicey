@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { DashboardRecording, DiscordGuild, DiscordUser, FeaturedServer, GuildDashboardConfigInput, GuildDashboardOptions } from '../types'
+import type { DashboardRecordRestriction, DashboardRecording, DiscordGuild, DiscordUser, FeaturedServer, GuildDashboardConfigInput, GuildDashboardOptions } from '../types'
 
 const AUTH_CHANGED_EVENT = 'voicey-auth-changed'
 
@@ -40,6 +40,14 @@ interface GuildRecordingsResponse {
 
 interface GuildRecordingResponse {
     recording: DashboardRecording
+}
+
+interface GuildRecordRestrictionsResponse {
+    restrictions: DashboardRecordRestriction[]
+}
+
+interface GuildRecordRestrictionResponse {
+    restriction: DashboardRecordRestriction
 }
 
 const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
@@ -100,6 +108,16 @@ export async function getGuildDashboardOptions(guildId: string): Promise<GuildDa
 export async function getGuildDashboardRecordings(guildId: string): Promise<DashboardRecording[]> {
     const { data } = await discordApi.get<GuildRecordingsResponse>(`/api/dashboard/guilds/${guildId}/recordings`)
     return data.recordings
+}
+
+export async function getGuildDashboardRecordRestrictions(guildId: string): Promise<DashboardRecordRestriction[]> {
+    const { data } = await discordApi.get<GuildRecordRestrictionsResponse>(`/api/dashboard/guilds/${guildId}/record-restrictions`)
+    return data.restrictions
+}
+
+export async function deleteGuildDashboardRecordRestriction(guildId: string, restrictionId: number): Promise<DashboardRecordRestriction> {
+    const { data } = await discordApi.delete<GuildRecordRestrictionResponse>(`/api/dashboard/guilds/${guildId}/record-restrictions/${restrictionId}`)
+    return data.restriction
 }
 
 export async function getGuildDashboardRecording(guildId: string, recordingId: number): Promise<DashboardRecording> {

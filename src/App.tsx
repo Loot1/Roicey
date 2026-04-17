@@ -1,5 +1,5 @@
 import { Routes, Route } from 'react-router'
-import { HomePage, AboutPage, GuidelinesPage, PrivacyPage, LegalPage, NotFoundPage, DashboardOverviewPage, DashboardSettingsPage, DashboardLogsViewerPage, DashboardRecordingsPage, DashboardRecordingDetailPage, DocsGettingStartedPage, DocsCommandsPage, DocsSettingsPage, DocsModerationPage, DocsFAQPage, DemoRecordingsPage } from './routes'
+import { HomePage, AboutPage, GuidelinesPage, PrivacyPage, LegalPage, NotFoundPage, DashboardOverviewPage, DashboardSettingsPage, DashboardLogsViewerPage, DashboardRecordingsPage, DashboardRecordingDetailPage, DashboardRecordRestrictionsPage, DocsGettingStartedPage, DocsCommandsPage, DocsSettingsPage, DocsModerationPage, DocsFAQPage, DemoRecordingsPage } from './routes'
 import { Layout, DocsLayout, DashboardLayout, DemoLayout } from './components'
 import { DashboardProvider } from './contexts/DashboardContext'
 
@@ -15,6 +15,7 @@ export function App() {
           <Route index element={<DashboardOverviewPage />} />
           <Route path="settings" element={<DashboardSettingsPage />} />
           <Route path="logs" element={<DashboardLogsViewerPage />} />
+          <Route path="record-restrictions" element={<DashboardRecordRestrictionsPage />} />
           <Route path="recordings" element={<DashboardRecordingsPage />} />
           <Route path="recordings/:recordingId" element={<DashboardRecordingDetailPage />} />
         </Route>

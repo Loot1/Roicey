@@ -33,6 +33,11 @@ export const dashboardSidebarNavigation = [
         href: '/dashboard/logs',
     },
     {
+        id: 'record-restrictions',
+        title: 'Bannissement des enregistrements',
+        href: '/dashboard/record-restrictions',
+    },
+    {
         id: 'recordings',
         title: 'Enregistrements',
         href: '/dashboard/recordings',
