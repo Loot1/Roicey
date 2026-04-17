@@ -22,6 +22,7 @@ interface GuildDashboardConfig {
     createChannelId: string | null
     logChannelId: string | null
     defaultMaxMembers: number
+    defaultRecordingDurationSeconds: number
     adminRolesIds: string[]
 }
 

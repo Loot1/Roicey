@@ -3,5 +3,6 @@ export interface GuildDashboardConfigInput {
     createChannelId: string
     logChannelId: string
     defaultMaxMembers: number
+    defaultRecordingDurationSeconds: number
     adminRolesIds: string[]
 }

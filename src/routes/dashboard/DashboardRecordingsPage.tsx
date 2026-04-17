@@ -77,6 +77,8 @@ export function DashboardRecordingsPage() {
                 recording.channelName,
                 recording.requesterId,
                 recording.requesterName,
+                recording.voiceRoomId,
+                recording.reason,
             ].join(' ').toLowerCase()
 
             return searchableText.includes(normalizedSearch)
@@ -169,6 +171,7 @@ export function DashboardRecordingsPage() {
                                         <div>
                                             <h2 className="text-xl font-black tracking-tight">{recording.channelName ?? 'Salon inconnu'}</h2>
                                             <p className="mt-1 text-sm text-base-content/60">Demandé par {recording.requesterName ?? recording.requesterId} le {formatDateTime(recording.requestedAt)}</p>
+                                            <p className="mt-1 text-sm text-base-content/70">Raison: {recording.reason}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -177,6 +180,7 @@ export function DashboardRecordingsPage() {
                                     <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-base-content/60">
                                         <span>Durée: <span className="font-semibold text-base-content/80">{actualDurationSeconds ? formatDuration(actualDurationSeconds) : 'Indisponible'}</span></span>
                                         <span>Demandée: <span className="font-semibold text-base-content/80">{formatDuration(recording.durationSeconds)}</span></span>
+                                        <span>VoiceRoom: <span className="font-semibold text-base-content/80">{recording.voiceRoomId ? 'Liée' : 'Aucune'}</span></span>
                                         <span>Participants: <span className="font-semibold text-base-content/80">{usersCount}</span></span>
                                         <span>Segments: <span className="font-semibold text-base-content/80">{recording.outputFiles.length}</span></span>
                                     </div>

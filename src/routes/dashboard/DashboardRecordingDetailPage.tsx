@@ -289,8 +289,10 @@ export function DashboardRecordingDetailPage() {
                 description={
                     <div className="space-y-3">
                         <p>Demandé par {recording.requesterName ?? recording.requesterId} ({recording.requesterId}) le {formatDateTime(recording.requestedAt)}.</p>
+                        <p>Raison: <span className="font-semibold text-base-content/80">{recording.reason}</span></p>
                         <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-base-content/60">
                             <span>Durée: <span className="font-semibold text-base-content/80">{`${actualDurationSeconds ? formatDuration(actualDurationSeconds) : 'Indisponible'} / ${formatDuration(recording.durationSeconds)}`}</span></span>
+                            <span>VoiceRoom: <span className="font-semibold text-base-content/80">{recording.voiceRoomId ? `#${recording.voiceRoomId}` : 'Aucune'}</span></span>
                             <span>Participants: <span className="font-semibold text-base-content/80">{userGroups.length}</span></span>
                             <span>Segments: <span className="font-semibold text-base-content/80">{recording.outputFiles.length}</span></span>
                         </div>

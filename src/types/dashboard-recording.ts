@@ -15,6 +15,8 @@ export interface DashboardRecording {
     channelName: string | null
     requesterId: string
     requesterName: string | null
+    voiceRoomId: string | null
+    reason: string
     durationSeconds: number
     status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED'
     errorMessage: string | null

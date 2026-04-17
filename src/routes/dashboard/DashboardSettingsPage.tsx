@@ -10,6 +10,7 @@ interface ConfigFormState {
     createChannelId: string
     logChannelId: string
     defaultMaxMembers: string
+    defaultRecordingDurationSeconds: string
     adminRolesIds: string[]
 }
 
@@ -18,6 +19,7 @@ const defaultFormValues: ConfigFormState = {
     createChannelId: '',
     logChannelId: '',
     defaultMaxMembers: '7',
+    defaultRecordingDurationSeconds: '60',
     adminRolesIds: [],
 }
 
@@ -63,6 +65,7 @@ export function DashboardSettingsPage() {
                         createChannelId: config.createChannelId ?? '',
                         logChannelId: config.logChannelId ?? '',
                         defaultMaxMembers: String(config.defaultMaxMembers),
+                        defaultRecordingDurationSeconds: String(config.defaultRecordingDurationSeconds),
                         adminRolesIds: config.adminRolesIds,
                     })
                     setOptions(guildOptions)
@@ -106,11 +109,18 @@ export function DashboardSettingsPage() {
             return
         }
 
+        const recordingDurationSeconds = Number(data.defaultRecordingDurationSeconds)
+        if (!Number.isInteger(recordingDurationSeconds) || recordingDurationSeconds < 10 || recordingDurationSeconds > 180) {
+            setConfigMessage("La durée d'enregistrement par défaut doit être comprise entre 10 et 180 secondes.")
+            return
+        }
+
         const payload: GuildDashboardConfigInput = {
             categoryId: data.categoryId,
             createChannelId: data.createChannelId,
             logChannelId: data.logChannelId,
             defaultMaxMembers: maxMembers,
+            defaultRecordingDurationSeconds: recordingDurationSeconds,
             adminRolesIds: data.adminRolesIds,
         }
 
@@ -123,6 +133,7 @@ export function DashboardSettingsPage() {
                 createChannelId: savedConfig.createChannelId ?? '',
                 logChannelId: savedConfig.logChannelId ?? '',
                 defaultMaxMembers: String(savedConfig.defaultMaxMembers),
+                defaultRecordingDurationSeconds: String(savedConfig.defaultRecordingDurationSeconds),
                 adminRolesIds: savedConfig.adminRolesIds,
             })
             setConfigMessage('Configuration sauvegardée avec succès.')
@@ -193,6 +204,18 @@ export function DashboardSettingsPage() {
                                 max={99}
                                 className="input input-bordered w-full"
                                 {...form.register('defaultMaxMembers')}
+                                disabled={isDisabled}
+                            />
+                        </label>
+
+                        <label className="form-control flex flex-col">
+                            <span className="label-text mb-1">Durée d'enregistrement par défaut (10-180s)</span>
+                            <input
+                                type="number"
+                                min={10}
+                                max={180}
+                                className="input input-bordered w-full"
+                                {...form.register('defaultRecordingDurationSeconds')}
                                 disabled={isDisabled}
                             />
                         </label>

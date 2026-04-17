@@ -6,6 +6,8 @@ export const demoRecording = {
     channelName: 'Ranked Trio',
     requesterId: '290100000000000001',
     requesterName: 'Lina',
+    voiceRoomId: '1189200012345678901',
+    reason: 'Analyse d\'une séquence classée après signalement vocal.',
     durationSeconds: 82,
     status: 'COMPLETED',
     errorMessage: null,
