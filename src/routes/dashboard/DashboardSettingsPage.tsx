@@ -8,7 +8,7 @@ import type { DashboardLayoutContextValue, GuildDashboardConfigInput, GuildDashb
 interface ConfigFormState {
     categoryId: string
     createChannelId: string
-    logChannelId: string
+    modChannelId: string
     defaultMaxMembers: string
     defaultRecordingDurationSeconds: string
     adminRolesIds: string[]
@@ -17,7 +17,7 @@ interface ConfigFormState {
 const defaultFormValues: ConfigFormState = {
     categoryId: '',
     createChannelId: '',
-    logChannelId: '',
+    modChannelId: '',
     defaultMaxMembers: '7',
     defaultRecordingDurationSeconds: '60',
     adminRolesIds: [],
@@ -26,7 +26,7 @@ const defaultFormValues: ConfigFormState = {
 const emptyOptions: GuildDashboardOptions = {
     categories: [],
     voiceChannels: [],
-    logChannels: [],
+    modChannels: [],
     roles: [],
 }
 
@@ -63,7 +63,7 @@ export function DashboardSettingsPage() {
                     form.reset({
                         categoryId: config.categoryId ?? '',
                         createChannelId: config.createChannelId ?? '',
-                        logChannelId: config.logChannelId ?? '',
+                        modChannelId: config.modChannelId ?? '',
                         defaultMaxMembers: String(config.defaultMaxMembers),
                         defaultRecordingDurationSeconds: String(config.defaultRecordingDurationSeconds),
                         adminRolesIds: config.adminRolesIds,
@@ -118,7 +118,7 @@ export function DashboardSettingsPage() {
         const payload: GuildDashboardConfigInput = {
             categoryId: data.categoryId,
             createChannelId: data.createChannelId,
-            logChannelId: data.logChannelId,
+            modChannelId: data.modChannelId,
             defaultMaxMembers: maxMembers,
             defaultRecordingDurationSeconds: recordingDurationSeconds,
             adminRolesIds: data.adminRolesIds,
@@ -131,7 +131,7 @@ export function DashboardSettingsPage() {
             form.reset({
                 categoryId: savedConfig.categoryId ?? '',
                 createChannelId: savedConfig.createChannelId ?? '',
-                logChannelId: savedConfig.logChannelId ?? '',
+                modChannelId: savedConfig.modChannelId ?? '',
                 defaultMaxMembers: String(savedConfig.defaultMaxMembers),
                 defaultRecordingDurationSeconds: String(savedConfig.defaultRecordingDurationSeconds),
                 adminRolesIds: savedConfig.adminRolesIds,
@@ -189,10 +189,10 @@ export function DashboardSettingsPage() {
 
                         <DashboardSelectField
                             control={form.control}
-                            name="logChannelId"
-                            label="Salon de logs"
+                            name="modChannelId"
+                            label="Salon de modération"
                             placeholder="Aucun salon"
-                            options={options.logChannels}
+                            options={options.modChannels}
                             disabled={isDisabled}
                         />
 

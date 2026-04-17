@@ -11,6 +11,6 @@ interface GuildRoleOption {
 export interface GuildDashboardOptions {
     categories: GuildChannelOption[]
     voiceChannels: GuildChannelOption[]
-    logChannels: GuildChannelOption[]
+    modChannels: GuildChannelOption[]
     roles: GuildRoleOption[]
 }
