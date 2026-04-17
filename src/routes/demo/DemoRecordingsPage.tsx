@@ -54,7 +54,7 @@ export function DemoRecordingsPage() {
         }
     }
 
-    const handleDownloadGlobalMix = (_mutedUserIds: string[]) => {
+    const handleDownloadGlobalMix = () => {
         setDownloadLoadingGlobalMix(true)
 
         try {

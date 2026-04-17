@@ -3,12 +3,13 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
 import { DashboardAlert, DashboardStateCard, ResponsiveSidebarLayout } from '../../components'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
+import { useDashboardGuildSelection } from '../../hooks'
 import { dashboardSidebarNavigation } from '../../constants'
-import { useDashboardGuildSelection } from '../../contexts/DashboardContext'
 import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
 
 export function DashboardLayout() {
     const location = useLocation()
+    const authError = useMemo(() => new URLSearchParams(location.search).get('authError'), [location.search])
     const { selectedGuildId, setSelectedGuildId } = useDashboardGuildSelection()
     const [user, setUser] = useState<DiscordUser | null>(null)
     const [guilds, setGuilds] = useState<DiscordGuild[]>([])
@@ -31,7 +32,15 @@ export function DashboardLayout() {
                         setUser(null)
                         setGuilds([])
                         setSelectedGuildId(null)
-                        setError(null)
+                        setError(authError === 'access_denied'
+                            ? 'Connexion Discord annulée. Relance la connexion si tu veux accéder au dashboard.'
+                            : authError
+                                ? 'La connexion Discord a échoué. Réessaie pour continuer.'
+                                : null)
+                    }
+
+                    if (authError) {
+                        return
                     }
 
                     await startDiscordLogin(`${location.pathname}${location.search}`)
@@ -67,7 +76,7 @@ export function DashboardLayout() {
         return () => {
             ignore = true
         }
-    }, [location.pathname, location.search, selectedGuildId, setSelectedGuildId])
+    }, [authError, location.pathname, location.search, selectedGuildId, setSelectedGuildId])
 
     const selectedGuild = useMemo(() => guilds.find((guild) => guild.id === selectedGuildId) ?? null, [guilds, selectedGuildId])
 
@@ -97,7 +106,7 @@ export function DashboardLayout() {
         }
     }, [guildPickerOpen])
 
-    if (loading || !user) {
+    if (loading) {
         return (
             <main className="flex min-h-screen items-center justify-center bg-base-100 px-6 py-16 lg:px-10">
                 <div className="flex items-center gap-4 text-center lg:text-left">
@@ -106,6 +115,27 @@ export function DashboardLayout() {
                         <h1 className="text-2xl font-black">Connexion au dashboard</h1>
                         <p className="text-base-content/70">Chargement de ta session Discord en cours...</p>
                     </div>
+                </div>
+            </main>
+        )
+    }
+
+    if (!user) {
+        return (
+            <main className="flex min-h-screen items-center justify-center bg-base-100 px-6 py-16 lg:px-10">
+                <div className="w-full max-w-xl space-y-4">
+                    <DashboardAlert tone="warning" icon={<ExclamationTriangleIcon className="h-5 w-5" />}>
+                        {error ?? 'Aucune session Discord active.'}
+                    </DashboardAlert>
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={() => {
+                            void startDiscordLogin(`${location.pathname}`)
+                        }}
+                    >
+                        Reconnecter Discord
+                    </button>
                 </div>
             </main>
         )

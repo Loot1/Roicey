@@ -1,11 +1,11 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useEffect, useState, type ReactNode } from 'react'
 
-interface DashboardContextType {
+export interface DashboardContextType {
     selectedGuildId: string | null
     setSelectedGuildId: (guildId: string | null) => void
 }
 
-const DashboardContext = createContext<DashboardContextType | undefined>(undefined)
+export const DashboardContext = createContext<DashboardContextType | undefined>(undefined)
 
 const STORAGE_KEY = 'dashboard-selected-guild'
 
@@ -34,12 +34,4 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
             {children}
         </DashboardContext.Provider>
     )
-}
-
-export function useDashboardGuildSelection() {
-    const context = useContext(DashboardContext)
-    if (!context) {
-        throw new Error('useDashboardGuildSelection must be used within a DashboardProvider')
-    }
-    return context
 }

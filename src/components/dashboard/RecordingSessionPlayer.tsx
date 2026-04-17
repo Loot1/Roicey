@@ -56,6 +56,12 @@ function getLaneGradient(index: number): string {
 }
 
 export function RecordingSessionPlayer({
+    ...props
+}: RecordingSessionPlayerProps) {
+    return <RecordingSessionPlayerContent key={props.recording.id} {...props} />
+}
+
+function RecordingSessionPlayerContent({
     recording,
     userGroups,
     sourcesByUserId,
@@ -101,12 +107,6 @@ export function RecordingSessionPlayer({
             segmentsCount: group.files.length,
         }]
     })), [userGroups])
-
-    useEffect(() => {
-        setMutedUserIds([])
-        setCurrentTimeSeconds(0)
-        setIsPlaying(false)
-    }, [recording.id])
 
     useEffect(() => {
         const primaryAudio = primaryUserId ? audioRefs.current[primaryUserId] : null
