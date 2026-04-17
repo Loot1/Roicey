@@ -62,7 +62,7 @@ export function Header() {
     }
 
     return (
-        <div className="navbar bg-base-100 shadow-md border-b border-base-200/50">
+        <div className="navbar bg-base-100 shadow-md border-base-200/50">
             <div className="navbar-start">
                 <div className="dropdown">
                     <button tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

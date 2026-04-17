@@ -1,3 +1,4 @@
+import { Link } from 'react-router'
 import { BoltIcon, ShieldCheckIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/outline'
 import logoSansFond from '../assets/images/voicey-logo.png'
 import { startDiscordLogin } from '../api/discordAuth'
@@ -27,7 +28,9 @@ export function HomePage() {
                         <button className="btn btn-primary btn-wide" onClick={() => void startDiscordLogin('/dashboard').catch(console.error)}>
                             Se connecter au dashboard
                         </button>
-                        <button className="btn btn-outline btn-secondary">Voir les commandes Discord</button>
+                        <Link to="/docs/commands" className="btn btn-outline btn-secondary">
+                            Voir les commandes Discord
+                        </Link>
                     </div>
                     <div className="alert alert-info alert-soft max-w-xl">
                         <ShieldCheckIcon className="h-5 w-5" />
@@ -36,11 +39,23 @@ export function HomePage() {
                 </div>
 
                 <div className="relative mr-0 flex items-center justify-end p-0 md:-mr-8 lg:-mr-12 xl:-mr-16">
-                    <img
-                        src={logoSansFond}
-                        alt="Logo Voicey"
-                        className="relative z-10 w-full max-w-[640px] object-contain"
-                    />
+                    <div className="hover-3d hover-3d-logo w-full max-w-[640px]">
+                        <figure className="w-full max-w-[640px]">
+                            <img
+                                src={logoSansFond}
+                                alt="Logo Voicey"
+                                className="relative z-10 w-full max-w-[640px] object-contain"
+                            />
+                        </figure>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
                 </div>
             </section>
 
@@ -155,7 +170,9 @@ export function HomePage() {
                             </p>
                             <div className="join join-vertical gap-2 sm:join-horizontal">
                                 <button className="btn join-item btn-primary">Ajouter Voicey</button>
-                                <button className="btn join-item btn-outline">Documentation</button>
+                                <Link to="/docs" className="btn join-item btn-outline">
+                                    Documentation
+                                </Link>
                             </div>
                         </div>
                     </div>

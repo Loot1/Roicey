@@ -42,6 +42,11 @@ export function GuidelinesPage() {
                         Roicey est la vitrine et l'interface web de Voicey. Cette charte fixe le cadre d'un usage
                         propre, transparent et conforme aux attentes des communautés qui s'appuient sur le service.
                     </p>
+                    <blockquote className="mt-8 max-w-4xl overflow-hidden rounded-[2rem] border border-primary/20 bg-linear-to-r from-base-100/85 via-base-200/70 to-primary/10 px-6 py-6 shadow-xl shadow-primary/10 backdrop-blur-sm sm:px-8">
+                        <p className="text-2xl font-black italic leading-tight text-base-content sm:text-3xl">
+                            “Un grand pouvoir implique de <span className="text-primary">grandes responsabilités</span>.”
+                        </p>
+                    </blockquote>
                 </div>
             </section>
 

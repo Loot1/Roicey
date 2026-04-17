@@ -29,7 +29,7 @@ export function Footer() {
                     <Link to="/legal" className="link link-hover ml-2 text-sm font-medium text-base-content/80">
                         Mentions légales
                     </Link>
-                    <Link to="/privacy" className="link link-hover text-sm font-medium text-base-content/80">
+                    <Link to="/privacy-policy" className="link link-hover text-sm font-medium text-base-content/80">
                         Politique de confidentialité
                     </Link>
                     <span className="ml-2 text-xs text-base-content/60">© {new Date().getFullYear()}</span>

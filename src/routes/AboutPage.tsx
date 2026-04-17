@@ -1,3 +1,4 @@
+import { Link, NavLink } from 'react-router'
 import { SparklesIcon, UserGroupIcon, CodeBracketIcon, HeartIcon } from '@heroicons/react/24/outline'
 
 interface TeamMember {
@@ -173,9 +174,9 @@ export function AboutPage() {
                                 <a href="#" className="btn join-item btn-primary">
                                     Rejoindre Discord
                                 </a>
-                                <a href="/docs" className="btn join-item btn-outline">
+                                <NavLink to="/docs" className="btn join-item btn-outline">
                                     Voir la documentation
-                                </a>
+                                </NavLink>
                             </div>
                         </div>
                     </div>
