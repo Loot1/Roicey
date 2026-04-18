@@ -34,11 +34,7 @@ interface FeaturedServersResponse {
     servers: FeaturedServer[]
 }
 
-interface GuildRecordingsResponse {
-    recordings: DashboardRecording[]
-}
-
-interface GuildRecordingResponse {
+interface ResolveRecordingResponse {
     recording: DashboardRecording
 }
 
@@ -105,11 +101,6 @@ export async function getGuildDashboardOptions(guildId: string): Promise<GuildDa
     return data.options
 }
 
-export async function getGuildDashboardRecordings(guildId: string): Promise<DashboardRecording[]> {
-    const { data } = await discordApi.get<GuildRecordingsResponse>(`/api/dashboard/guilds/${guildId}/recordings`)
-    return data.recordings
-}
-
 export async function getGuildDashboardRecordRestrictions(guildId: string): Promise<DashboardRecordRestriction[]> {
     const { data } = await discordApi.get<GuildRecordRestrictionsResponse>(`/api/dashboard/guilds/${guildId}/record-restrictions`)
     return data.restrictions
@@ -120,40 +111,31 @@ export async function deleteGuildDashboardRecordRestriction(guildId: string, res
     return data.restriction
 }
 
-export async function getGuildDashboardRecording(guildId: string, recordingId: number): Promise<DashboardRecording> {
-    const { data } = await discordApi.get<GuildRecordingResponse>(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}`)
+export async function resolveDashboardRecordingSource(source: string): Promise<DashboardRecording> {
+    const { data } = await discordApi.post<ResolveRecordingResponse>('/api/dashboard/recordings/resolve', { source })
     return data.recording
 }
 
-export async function downloadGuildRecordingFile(guildId: string, recordingId: number, fileIndex: number): Promise<Blob> {
-    const { data } = await discordApi.get(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}/files/${fileIndex}`, {
+export async function downloadRecordingSourceUserMix(source: string, userId: string): Promise<Blob> {
+    const { data } = await discordApi.post(`/api/dashboard/recordings/users/${userId}/mix`, {
+        source,
+    }, {
         responseType: 'blob',
     })
 
     return data
 }
 
-export async function downloadGuildRecordingUserMix(guildId: string, recordingId: number, userId: string): Promise<Blob> {
-    const { data } = await discordApi.get(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}/users/${userId}/mix`, {
+export async function downloadRecordingSourceMix(source: string, excludedUserIds: string[] = []): Promise<Blob> {
+    const { data } = await discordApi.post('/api/dashboard/recordings/mix', {
+        source,
+        excludedUserIds,
+    }, {
         responseType: 'blob',
     })
 
     return data
 }
-
-export async function downloadGuildRecordingMix(guildId: string, recordingId: number, excludedUserIds: string[] = []): Promise<Blob> {
-    const { data } = await discordApi.get(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}/mix`, {
-        params: excludedUserIds.length > 0 ? { excludedUserIds: excludedUserIds.join(',') } : undefined,
-        responseType: 'blob',
-    })
-
-    return data
-}
-
-export async function deleteGuildRecording(guildId: string, recordingId: number): Promise<void> {
-    await discordApi.delete(`/api/dashboard/guilds/${guildId}/recordings/${recordingId}`)
-}
-
 export async function getFeaturedServers(): Promise<FeaturedServer[]> {
     const { data } = await discordApi.get<FeaturedServersResponse>('/api/public/featured-servers')
     return data.servers

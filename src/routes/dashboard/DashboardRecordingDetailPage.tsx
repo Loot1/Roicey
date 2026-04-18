@@ -1,16 +1,13 @@
-import { ArrowDownTrayIcon, ArrowLeftIcon, ArrowPathIcon, ExclamationTriangleIcon, TrashIcon, XCircleIcon } from '@heroicons/react/24/outline'
+import { ArrowDownTrayIcon, ArrowLeftIcon, ArrowPathIcon, ExclamationTriangleIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useNavigate, useOutletContext, useParams } from 'react-router'
-import { downloadGuildRecordingMix, downloadGuildRecordingUserMix, getGuildDashboardRecording } from '../../api/discordAuth'
+import { Link, useSearchParams } from 'react-router'
+import { downloadRecordingSourceMix, downloadRecordingSourceUserMix, resolveDashboardRecordingSource } from '../../api/discordAuth'
 import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingSessionPlayer } from '../../components'
-import { useRecordingDeletion } from '../../hooks'
-import type { DashboardLayoutContextValue, DashboardRecording } from '../../types'
-import { canDeleteRecording, formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
+import type { DashboardRecording } from '../../types'
+import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
 
 export function DashboardRecordingDetailPage() {
-    const { selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
-    const params = useParams()
-    const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
     const [recording, setRecording] = useState<DashboardRecording | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -19,9 +16,7 @@ export function DashboardRecordingDetailPage() {
     const [downloadLoadingKey, setDownloadLoadingKey] = useState<string | null>(null)
     const [globalMixDownloadLoading, setGlobalMixDownloadLoading] = useState(false)
     const preparedSourcesRef = useRef<Record<string, PreparedAudioSource>>({})
-    const { deleteRecording, deletingRecordingId } = useRecordingDeletion(selectedGuildId)
-
-    const recordingId = Number.parseInt(params.recordingId ?? '', 10)
+    const source = searchParams.get('source')?.trim() ?? ''
 
     const clearPreparedSources = () => {
         setPreparedSources((currentSources) => {
@@ -50,9 +45,9 @@ export function DashboardRecordingDetailPage() {
 
         clearPreparedSources()
 
-        if (!selectedGuildId || !Number.isInteger(recordingId) || recordingId < 1) {
+        if (!source) {
             setRecording(null)
-            setError(Number.isInteger(recordingId) ? null : "Identifiant d'enregistrement invalide.")
+            setError('Aucune source d\'archive fournie.')
             return
         }
 
@@ -60,7 +55,7 @@ export function DashboardRecordingDetailPage() {
             try {
                 setLoading(true)
                 setError(null)
-                const nextRecording = await getGuildDashboardRecording(selectedGuildId, recordingId)
+                const nextRecording = await resolveDashboardRecordingSource(source)
 
                 if (!ignore) {
                     setRecording(nextRecording)
@@ -80,16 +75,16 @@ export function DashboardRecordingDetailPage() {
         return () => {
             ignore = true
         }
-    }, [recordingId, selectedGuildId])
+    }, [source])
 
     const userGroups = useMemo(() => (recording ? groupFilesByUser(recording) : []), [recording])
 
     const ensureUserMixBlob = async (userId: string): Promise<Blob> => {
-        if (!selectedGuildId || !recording) {
-            throw new Error('Aucune guilde sélectionnée.')
+        if (!source || !recording) {
+            throw new Error('Aucune source d\'archive disponible.')
         }
 
-        return downloadGuildRecordingUserMix(selectedGuildId, recording.id, userId)
+        return downloadRecordingSourceUserMix(source, userId)
     }
 
     const prepareAllUserSources = async () => {
@@ -187,7 +182,7 @@ export function DashboardRecordingDetailPage() {
     }
 
     const downloadGlobalMix = async (mutedUserIds: string[]) => {
-        if (!recording || !selectedGuildId) {
+        if (!recording || !source) {
             return
         }
 
@@ -195,7 +190,7 @@ export function DashboardRecordingDetailPage() {
             setGlobalMixDownloadLoading(true)
             setError(null)
 
-            const mixBlob = await downloadGuildRecordingMix(selectedGuildId, recording.id, mutedUserIds)
+            const mixBlob = await downloadRecordingSourceMix(source, mutedUserIds)
             const objectUrl = URL.createObjectURL(mixBlob)
             const anchor = document.createElement('a')
             anchor.href = objectUrl
@@ -211,29 +206,6 @@ export function DashboardRecordingDetailPage() {
         }
     }
 
-    const handleDeleteRecording = async () => {
-        if (!recording) {
-            return
-        }
-
-        if (!canDeleteRecording(recording)) {
-            setError('Seuls les enregistrements terminés ou échoués peuvent être supprimés.')
-            return
-        }
-
-        setError(null)
-        const result = await deleteRecording(recording)
-
-        if (result.success) {
-            navigate('/dashboard/recordings')
-            return
-        }
-
-        if (result.errorMessage) {
-            setError(result.errorMessage)
-        }
-    }
-
     const handlePrepareTracks = () => {
         void prepareAllUserSources()
     }
@@ -244,10 +216,6 @@ export function DashboardRecordingDetailPage() {
 
     const handleDownloadGlobalMix = (mutedUserIds: string[]) => {
         void downloadGlobalMix(mutedUserIds)
-    }
-
-    const handleDeleteButtonClick = () => {
-        void handleDeleteRecording()
     }
 
     if (loading) {
@@ -310,14 +278,6 @@ export function DashboardRecordingDetailPage() {
                             onClick={handlePrepareTracks}
                             loading={audioLoadingKey === `session:${recording.id}`}
                             disabled={areTracksPrepared || recording.outputFiles.length === 0}
-                        />
-                        <ButtonOne
-                            label="Supprimer"
-                            variant="danger"
-                            Icon={TrashIcon}
-                            onClick={handleDeleteButtonClick}
-                            loading={deletingRecordingId === recording.id}
-                            disabled={!canDeleteRecording(recording)}
                         />
                     </>
                 }

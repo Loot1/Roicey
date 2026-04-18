@@ -1,4 +1,4 @@
-import { Link, NavLink } from 'react-router'
+import { NavLink } from 'react-router'
 import { SparklesIcon, UserGroupIcon, CodeBracketIcon, HeartIcon } from '@heroicons/react/24/outline'
 
 interface TeamMember {

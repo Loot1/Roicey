@@ -55,6 +55,16 @@ function getLaneGradient(index: number): string {
     return `linear-gradient(135deg, hsla(${hue} 88% 54% / 0.9), hsla(${(hue + 24) % 360} 88% 64% / 0.64))`
 }
 
+function getInitials(name: string): string {
+    return name
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part[0]?.toUpperCase() ?? '')
+        .join('')
+        || '?'
+}
+
 export function RecordingSessionPlayer({
     ...props
 }: RecordingSessionPlayerProps) {
@@ -366,7 +376,20 @@ function RecordingSessionPlayerContent({
                                         <article className={`${isActive ? 'text-base-content' : ''} p-1`}>
                                             <div className="flex items-start justify-between gap-3">
                                                 <div className="min-w-0">
-                                                    <div className="flex items-center gap-2">
+                                                    <div className="flex items-center gap-3">
+                                                        <div className="avatar">
+                                                            <div className="h-10 w-10 rounded-full border border-base-300 bg-base-200 text-base-content/60 shadow-sm">
+                                                                {group.avatarUrl ? (
+                                                                    <img src={group.avatarUrl} alt={`Avatar de ${group.username}`} loading="lazy" />
+                                                                ) : (
+                                                                    <div className="flex h-full w-full items-center justify-center text-xs font-black uppercase tracking-[0.12em]">
+                                                                        {getInitials(group.username)}
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        </div>
+                                                        <div className="min-w-0">
+                                                            <div className="flex items-center gap-2">
                                                         <span className="h-3 w-3 rounded-full border border-white/60" style={{ background: getLaneGradient(index) }} />
                                                         <p className="truncate text-base font-black">{group.username}</p>
                                                         {isRequester ? (
@@ -374,8 +397,10 @@ function RecordingSessionPlayerContent({
                                                                 <BellAlertIcon className="h-4 w-4" />
                                                             </span>
                                                         ) : null}
+                                                            </div>
+                                                            <p className="mt-1 text-xs text-base-content/50">{group.userId}</p>
+                                                        </div>
                                                     </div>
-                                                    <p className="mt-1 text-xs text-base-content/50">ID Discord: {group.userId}</p>
                                                 </div>
 
                                                 <div className="flex items-center gap-2">

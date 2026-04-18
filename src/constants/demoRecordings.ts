@@ -14,11 +14,27 @@ export const demoRecording = {
     requestedAt: '2026-04-12T20:14:00.000Z',
     startedAt: '2026-04-12T20:14:05.000Z',
     finishedAt: '2026-04-12T20:15:27.000Z',
+    participants: [
+        {
+            userId: '290100000000000001',
+            username: 'Lina',
+            avatarUrl: null,
+        },
+        {
+            userId: '290100000000000002',
+            username: 'Milo',
+            avatarUrl: null,
+        },
+        {
+            userId: '290100000000000003',
+            username: 'Nora',
+            avatarUrl: null,
+        },
+    ],
     outputFiles: [
         {
             index: 0,
             userId: '290100000000000001',
-            username: 'Lina',
             fileName: 'lina-001.ogg',
             sizeBytes: 1984,
             startOffsetMs: 0,
@@ -28,7 +44,6 @@ export const demoRecording = {
         {
             index: 1,
             userId: '290100000000000002',
-            username: 'Milo',
             fileName: 'milo-001.ogg',
             sizeBytes: 2665,
             startOffsetMs: 7_000,
@@ -38,7 +53,6 @@ export const demoRecording = {
         {
             index: 2,
             userId: '290100000000000003',
-            username: 'Nora',
             fileName: 'nora-001.ogg',
             sizeBytes: 2211,
             startOffsetMs: 18_000,
@@ -48,7 +62,6 @@ export const demoRecording = {
         {
             index: 3,
             userId: '290100000000000001',
-            username: 'Lina',
             fileName: 'lina-002.ogg',
             sizeBytes: 1757,
             startOffsetMs: 30_000,
@@ -58,7 +71,6 @@ export const demoRecording = {
         {
             index: 4,
             userId: '290100000000000002',
-            username: 'Milo',
             fileName: 'milo-002.ogg',
             sizeBytes: 2438,
             startOffsetMs: 39_000,
@@ -68,7 +80,6 @@ export const demoRecording = {
         {
             index: 5,
             userId: '290100000000000003',
-            username: 'Nora',
             fileName: 'nora-002.ogg',
             sizeBytes: 1984,
             startOffsetMs: 54_000,

@@ -1,4 +1,4 @@
-import type { DashboardRecording, DashboardRecordingFile } from '../types'
+import type { DashboardRecording, DashboardRecordingFile, DashboardRecordingParticipant } from '../types'
 
 export type PreparedAudioSource = {
     label: string
@@ -8,7 +8,12 @@ export type PreparedAudioSource = {
 export type UserRecordingGroup = {
     userId: string
     username: string
+    avatarUrl: string | null
     files: DashboardRecordingFile[]
+}
+
+function getParticipantByUserId(recording: DashboardRecording, userId: string): DashboardRecordingParticipant | null {
+    return recording.participants?.find((participant) => participant.userId === userId) ?? null
 }
 
 export function formatDateTime(value: string | null): string {
@@ -54,15 +59,6 @@ export function formatSize(bytes: number): string {
     return `${value.toFixed(value >= 10 ? 0 : 1)} ${units[unitIndex]}`
 }
 
-export function getRecordingTiming(recording: DashboardRecording): string {
-    if (recording.startedAt && recording.finishedAt) {
-        const elapsedSeconds = Math.max(1, Math.round((new Date(recording.finishedAt).getTime() - new Date(recording.startedAt).getTime()) / 1_000))
-        return `${formatDuration(elapsedSeconds)} capturées`
-    }
-
-    return `Cible: ${formatDuration(recording.durationSeconds)}`
-}
-
 export function getActualRecordingDurationSeconds(recording: DashboardRecording): number | null {
     if (recording.startedAt && recording.finishedAt) {
         return Math.max(1, Math.round((new Date(recording.finishedAt).getTime() - new Date(recording.startedAt).getTime()) / 1_000))
@@ -77,29 +73,8 @@ export function getActualRecordingDurationSeconds(recording: DashboardRecording)
     return Math.max(1, Math.round(timelineDurationMs / 1_000))
 }
 
-export function getRecordingStatusLabel(status: DashboardRecording['status']): string {
-    switch (status) {
-    case 'COMPLETED':
-        return 'Disponible'
-    case 'PROCESSING':
-        return 'En cours'
-    case 'PENDING':
-        return 'En attente'
-    case 'FAILED':
-        return 'Échoué'
-    }
-}
-
-export function canDeleteRecording(recording: DashboardRecording): boolean {
-    return recording.status === 'COMPLETED' || recording.status === 'FAILED'
-}
-
 export function getPreparedSourceKey(scope: 'room' | 'user', recordingId: number, userId?: string): string {
     return scope === 'room' ? `room:${recordingId}` : `user:${recordingId}:${userId ?? 'unknown'}`
-}
-
-export function getFileCacheKey(recordingId: number, fileIndex: number): string {
-    return `${recordingId}:${fileIndex}`
 }
 
 export function getApproximateFileOffsetMs(recording: DashboardRecording, file: DashboardRecordingFile): number {
@@ -174,7 +149,8 @@ export function groupFilesByUser(recording: DashboardRecording): UserRecordingGr
 
         groups.set(file.userId, {
             userId: file.userId,
-            username: file.username,
+            username: getParticipantByUserId(recording, file.userId)?.username ?? file.userId,
+            avatarUrl: getParticipantByUserId(recording, file.userId)?.avatarUrl ?? null,
             files: [file],
         })
     }

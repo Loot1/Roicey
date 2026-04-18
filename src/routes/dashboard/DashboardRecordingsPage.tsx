@@ -1,210 +1,78 @@
-import { ArrowPathIcon, EyeIcon, MagnifyingGlassIcon, TrashIcon } from '@heroicons/react/24/outline'
-import { useEffect, useMemo, useState } from 'react'
-import { Link, useOutletContext } from 'react-router'
-import { getGuildDashboardRecordings } from '../../api/discordAuth'
+import { ArrowTopRightOnSquareIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { useEffect, useState } from 'react'
+import { useNavigate, useSearchParams } from 'react-router'
 import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardStateCard } from '../../components'
-import { useRecordingDeletion } from '../../hooks'
-import type { DashboardLayoutContextValue, DashboardRecording } from '../../types'
-import { canDeleteRecording, formatDateTime, formatDuration, getActualRecordingDurationSeconds, getRecordingStatusLabel, groupFilesByUser } from '../../utils'
-
-type StatusFilter = 'ALL' | DashboardRecording['status']
-
-function getStatusClassName(status: DashboardRecording['status']): string {
-    switch (status) {
-    case 'COMPLETED':
-        return 'bg-success/10 text-success'
-    case 'PROCESSING':
-        return 'bg-info/10 text-info'
-    case 'PENDING':
-        return 'bg-warning/12 text-warning'
-    case 'FAILED':
-        return 'bg-error/10 text-error'
-    }
-}
 
 export function DashboardRecordingsPage() {
-    const { selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
-    const [recordings, setRecordings] = useState<DashboardRecording[]>([])
-    const [loading, setLoading] = useState(false)
+    const navigate = useNavigate()
+    const [searchParams] = useSearchParams()
+    const [source, setSource] = useState('')
     const [error, setError] = useState<string | null>(null)
-    const [searchTerm, setSearchTerm] = useState('')
-    const [dateFilter, setDateFilter] = useState('')
-    const [statusFilter, setStatusFilter] = useState<StatusFilter>('ALL')
-    const { deleteRecording, deletingRecordingId } = useRecordingDeletion(selectedGuildId)
-
-    const loadRecordings = async (guildId: string) => {
-        setLoading(true)
-        setError(null)
-
-        try {
-            setRecordings(await getGuildDashboardRecordings(guildId))
-        } catch {
-            setError('Impossible de charger les enregistrements de ce serveur.')
-        } finally {
-            setLoading(false)
-        }
-    }
 
     useEffect(() => {
-        if (!selectedGuildId) {
-            setRecordings([])
-            setError(null)
-            return
+        const prefilledSource = searchParams.get('source')
+        if (prefilledSource) {
+            setSource(prefilledSource)
         }
+    }, [searchParams])
 
-        void loadRecordings(selectedGuildId)
-    }, [selectedGuildId])
-
-    const filteredRecordings = useMemo(() => {
-        const normalizedSearch = searchTerm.trim().toLowerCase()
-
-        return recordings.filter((recording) => {
-            if (statusFilter !== 'ALL' && recording.status !== statusFilter) {
-                return false
-            }
-
-            if (dateFilter && recording.requestedAt.slice(0, 10) !== dateFilter) {
-                return false
-            }
-
-            if (!normalizedSearch) {
-                return true
-            }
-
-            const searchableText = [
-                recording.id,
-                recording.channelId,
-                recording.channelName,
-                recording.requesterId,
-                recording.requesterName,
-                recording.voiceRoomId,
-                recording.reason,
-            ].join(' ').toLowerCase()
-
-            return searchableText.includes(normalizedSearch)
-        })
-    }, [dateFilter, recordings, searchTerm, statusFilter])
-
-    const summaryLabel = useMemo(() => {
-        const total = filteredRecordings.length
-        const available = filteredRecordings.filter((recording) => recording.status === 'COMPLETED').length
-
-        return `${total} ligne${total > 1 ? 's' : ''} • ${available} disponible${available > 1 ? 's' : ''}`
-    }, [filteredRecordings])
-
-    const handleRefreshRecordings = () => {
-        if (!selectedGuildId) {
-            return
-        }
-
-        void loadRecordings(selectedGuildId)
-    }
-
-    const handleDeleteRecording = async (recording: DashboardRecording) => {
-        if (!canDeleteRecording(recording)) {
+    const handleSearch = () => {
+        const normalizedSource = source.trim()
+        if (!normalizedSource) {
+            setError('Colle un lien Discord de message ou une URL de pièce jointe ZIP.')
             return
         }
 
         setError(null)
-        const result = await deleteRecording(recording)
-
-        if (result.success) {
-            setRecordings((currentRecordings) => currentRecordings.filter((item) => item.id !== recording.id))
-            return
-        }
-
-        if (result.errorMessage) {
-            setError(result.errorMessage)
-        }
+        navigate(`/dashboard/recordings/detail?source=${encodeURIComponent(normalizedSource)}`)
     }
 
     return (
         <section className="space-y-0 bg-base-100">
             <DashboardPageHeader
-                title="Enregistrements"
-                description={summaryLabel}
-                actions={<ButtonOne label="Actualiser" variant="outline" Icon={ArrowPathIcon} onClick={handleRefreshRecordings} loading={loading} disabled={!selectedGuildId} />}
-                bottom={
-                    <div className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_180px_180px]">
-                    <label className="flex items-center gap-3 rounded-2xl border border-base-300 bg-base-100 px-4 py-3">
-                        <MagnifyingGlassIcon className="h-4 w-4 text-base-content/45" />
-                        <input type="search" value={searchTerm} onChange={(event) => setSearchTerm(event.target.value)} className="w-full bg-transparent text-sm outline-none" placeholder="Salon, demandeur, ID..." />
-                    </label>
-
-                    <select value={statusFilter} onChange={(event) => setStatusFilter(event.target.value as StatusFilter)} className="select rounded-2xl border-base-300 bg-base-100">
-                        <option value="ALL">Tous les statuts</option>
-                        <option value="COMPLETED">Disponibles</option>
-                        <option value="PROCESSING">En cours</option>
-                        <option value="PENDING">En attente</option>
-                        <option value="FAILED">Échoués</option>
-                    </select>
-
-                    <input type="date" value={dateFilter} onChange={(event) => setDateFilter(event.target.value)} className="input rounded-2xl border-base-300 bg-base-100" />
-                    </div>
-                }
+                title="Recherche d'enregistrement"
+                description="Colle un lien de message Discord ou l'URL de la pièce jointe ZIP pour ouvrir la relecture détaillée."
             />
 
             {error ? <DashboardAlert tone="warning" className="mx-6 mt-6 lg:mx-8">{error}</DashboardAlert> : null}
 
             <div className="px-6 py-4 lg:px-8">
-            {loading ? (
-                <DashboardStateCard className="p-6 text-base-content/70">
-                    <div className="flex items-center gap-3 text-base-content/70"><ArrowPathIcon className="h-5 w-5 animate-spin text-primary" /><span>Chargement des enregistrements...</span></div>
+                <DashboardStateCard className="space-y-6 p-6">
+                    <div className="space-y-2">
+                        <p className="text-xs font-black uppercase tracking-[0.2em] text-base-content/45">Source</p>
+                        <label className="flex items-center gap-3 rounded-[1.4rem] border border-base-300 bg-base-100 px-4 py-4 shadow-sm">
+                            <MagnifyingGlassIcon className="h-5 w-5 text-base-content/45" />
+                            <input
+                                type="url"
+                                value={source}
+                                onChange={(event) => setSource(event.target.value)}
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter') {
+                                        event.preventDefault()
+                                        handleSearch()
+                                    }
+                                }}
+                                className="w-full bg-transparent text-sm outline-none"
+                                placeholder="https://discord.com/channels/... ou https://cdn.discordapp.com/attachments/.../recording-123.zip"
+                            />
+                        </label>
+                    </div>
+
+                    <div className="flex flex-wrap gap-3">
+                        <ButtonOne label="Ouvrir le détail" Icon={ArrowTopRightOnSquareIcon} onClick={handleSearch} />
+                    </div>
+
+                    <div className="grid gap-4 lg:grid-cols-2">
+                        <div className="rounded-[1.25rem] border border-base-300 bg-base-100 p-4 text-sm text-base-content/70">
+                            <p className="font-black uppercase tracking-[0.18em] text-base-content/45">Lien accepté</p>
+                            <p className="mt-2">Le dashboard accepte un lien direct vers le message Discord contenant l'archive, ou bien l'URL de la pièce jointe ZIP elle-même.</p>
+                        </div>
+                        <div className="rounded-[1.25rem] border border-base-300 bg-base-100 p-4 text-sm text-base-content/70">
+                            <p className="font-black uppercase tracking-[0.18em] text-base-content/45">Astuce</p>
+                            <p className="mt-2">Le bouton "Ouvrir dans le dashboard" ajouté par le bot sur le message final ouvre directement cette page avec la bonne source.</p>
+                        </div>
+                    </div>
                 </DashboardStateCard>
-            ) : filteredRecordings.length === 0 ? (
-                <DashboardStateCard tone="dashed" className="text-base-content/70">Aucun enregistrement ne correspond au filtre actuel.</DashboardStateCard>
-            ) : (
-                <div className="space-y-4">
-                    {filteredRecordings.map((recording) => {
-                        const usersCount = groupFilesByUser(recording).length
-                        const actualDurationSeconds = getActualRecordingDurationSeconds(recording)
-                        const canOpen = recording.outputFiles.length > 0
-
-                        return (
-                            <article key={recording.id} className="rounded-[1.5rem] border border-base-300 bg-base-100 p-5 shadow-sm">
-                                <div className="flex flex-wrap items-start justify-between gap-3">
-                                    <div className="space-y-2">
-                                        <div className="flex flex-wrap items-center gap-2 text-sm text-base-content/60">
-                                            <span className="rounded-full border border-base-300 bg-base-200/40 px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-base-content/60">Demande #{recording.id}</span>
-                                            <span className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.16em] ${getStatusClassName(recording.status)}`}>{getRecordingStatusLabel(recording.status)}</span>
-                                        </div>
-                                        <div>
-                                            <h2 className="text-xl font-black tracking-tight">{recording.channelName ?? 'Salon inconnu'}</h2>
-                                            <p className="mt-1 text-sm text-base-content/60">Demandé par {recording.requesterName ?? recording.requesterId} le {formatDateTime(recording.requestedAt)}</p>
-                                            <p className="mt-1 text-sm text-base-content/70">Raison: {recording.reason}</p>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
-                                    <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-base-content/60">
-                                        <span>Durée: <span className="font-semibold text-base-content/80">{actualDurationSeconds ? formatDuration(actualDurationSeconds) : 'Indisponible'}</span></span>
-                                        <span>Demandée: <span className="font-semibold text-base-content/80">{formatDuration(recording.durationSeconds)}</span></span>
-                                        <span>VoiceRoom: <span className="font-semibold text-base-content/80">{recording.voiceRoomId ? 'Liée' : 'Aucune'}</span></span>
-                                        <span>Participants: <span className="font-semibold text-base-content/80">{usersCount}</span></span>
-                                        <span>Segments: <span className="font-semibold text-base-content/80">{recording.outputFiles.length}</span></span>
-                                    </div>
-
-                                    <div className="flex flex-wrap gap-2">
-                                        <Link to={`/dashboard/recordings/${recording.id}`} className={`btn btn-sm ${canOpen ? 'btn-ghost border border-base-300' : 'btn-disabled'}`}>
-                                            <EyeIcon className="h-4 w-4" />Détail
-                                        </Link>
-                                        <ButtonOne
-                                            label="Supprimer"
-                                            variant="danger"
-                                            size="sm"
-                                            Icon={TrashIcon}
-                                            onClick={() => { void handleDeleteRecording(recording) }}
-                                            loading={deletingRecordingId === recording.id}
-                                            disabled={!canDeleteRecording(recording)}
-                                        />
-                                    </div>
-                                </div>
-                            </article>
-                        )
-                    })}
-                </div>
-            )}
             </div>
         </section>
     )

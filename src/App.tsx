@@ -17,7 +17,7 @@ export function App() {
           <Route path="logs" element={<DashboardLogsViewerPage />} />
           <Route path="record-restrictions" element={<DashboardRecordRestrictionsPage />} />
           <Route path="recordings" element={<DashboardRecordingsPage />} />
-          <Route path="recordings/:recordingId" element={<DashboardRecordingDetailPage />} />
+          <Route path="recordings/detail" element={<DashboardRecordingDetailPage />} />
         </Route>
         <Route path="/legal" element={<LegalPage />} />
         <Route path="/demo" element={<DemoLayout />}>
