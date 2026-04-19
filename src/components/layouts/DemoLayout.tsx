@@ -18,10 +18,12 @@ export function DemoLayout() {
             sidebar={
                 <nav className="space-y-4 p-4">
                     <div className="rounded-box border border-base-300 bg-base-100 p-4 shadow-sm">
-                        <div className="mb-3 inline-flex rounded-lg bg-primary/15 p-2 text-primary">
-                            <PlayCircleIcon className="h-5 w-5" />
+                        <div className="mb-3 flex items-center gap-3">
+                            <div className="inline-flex rounded-lg bg-primary/15 p-2 text-primary">
+                                <PlayCircleIcon className="h-5 w-5" />
+                            </div>
+                            <h2 className="text-base font-semibold">Démo publique</h2>
                         </div>
-                        <h2 className="text-base font-semibold">Démo publique</h2>
                         <p className="mt-2 text-sm text-base-content/65">
                             Aperçu public du dashboard sans connexion Discord ou installation du bot.
                         </p>
