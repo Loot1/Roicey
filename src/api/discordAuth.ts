@@ -30,9 +30,28 @@ interface GuildOptionsResponse {
     options: GuildDashboardOptions
 }
 
-interface FeaturedServersResponse {
+interface PublicStatsResponse {
     servers: FeaturedServer[]
+    stats: {
+        createdVoiceRoomsToday: number
+        totalVoiceRooms?: number
+        totalActiveServers?: number
+        nonFeaturedActiveServers: number
+    }
 }
+
+export interface PublicHomeStats {
+    servers: FeaturedServer[]
+    stats: {
+        createdVoiceRoomsToday: number
+        totalVoiceRooms: number
+        totalActiveServers: number
+        nonFeaturedActiveServers: number
+    }
+}
+
+let publicHomeStatsCache: PublicHomeStats | null = null
+let publicHomeStatsInflight: Promise<PublicHomeStats> | null = null
 
 interface ResolveRecordingResponse {
     recording: DashboardRecording
@@ -136,9 +155,35 @@ export async function downloadRecordingSourceMix(source: string, excludedUserIds
 
     return data
 }
-export async function getFeaturedServers(): Promise<FeaturedServer[]> {
-    const { data } = await discordApi.get<FeaturedServersResponse>('/api/public/featured-servers')
-    return data.servers
+
+export async function getPublicStats(): Promise<PublicHomeStats> {
+    if (publicHomeStatsCache) {
+        return publicHomeStatsCache
+    }
+
+    if (!publicHomeStatsInflight) {
+        publicHomeStatsInflight = discordApi
+            .get<PublicStatsResponse>('/api/public/stats')
+            .then(({ data }) => {
+                const normalizedData: PublicHomeStats = {
+                    servers: data.servers,
+                    stats: {
+                        createdVoiceRoomsToday: data.stats.createdVoiceRoomsToday,
+                        totalVoiceRooms: data.stats.totalVoiceRooms ?? data.stats.createdVoiceRoomsToday,
+                        totalActiveServers: data.stats.totalActiveServers ?? data.servers.length + data.stats.nonFeaturedActiveServers,
+                        nonFeaturedActiveServers: data.stats.nonFeaturedActiveServers,
+                    },
+                }
+
+                publicHomeStatsCache = normalizedData
+                return normalizedData
+            })
+            .finally(() => {
+                publicHomeStatsInflight = null
+            })
+    }
+
+    return publicHomeStatsInflight
 }
 
 export async function logoutDiscord(): Promise<void> {

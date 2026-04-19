@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react'
-import { getFeaturedServers } from '../api/discordAuth'
 import type { FeaturedServer } from '../types'
 
 const SKELETON_ITEMS = Array.from({ length: 7 }, (_, index) => index)
@@ -46,48 +44,20 @@ function FeaturedServerCard({ server }: { server: FeaturedServer }) {
                     </div>
                     <h3 className="card-title text-lg">{server.name}</h3>
                     <p className="text-base-content/70">{server.memberCount.toLocaleString('fr-FR')} membres</p>
-                    <div className="card-actions">
-                        <div className="badge badge-primary">Featured</div>
-                    </div>
                 </div>
             </div>
         </div>
     )
 }
 
-export function FeaturedServers() {
-    const [servers, setServers] = useState<FeaturedServer[]>([])
-    const [loading, setLoading] = useState(true)
-    const [error, setError] = useState<string | null>(null)
+interface FeaturedServersProps {
+    servers: FeaturedServer[]
+    nonFeaturedActiveServers?: number
+    loading?: boolean
+    error?: string | null
+}
 
-    useEffect(() => {
-        let ignore = false
-
-        const loadFeaturedServers = async () => {
-            try {
-                setLoading(true)
-                const data = await getFeaturedServers()
-                if (!ignore) {
-                    setServers(data)
-                    setError(null)
-                }
-            } catch {
-                if (!ignore) {
-                    setError('Impossible de charger les serveurs featured pour le moment.')
-                }
-            } finally {
-                if (!ignore) {
-                    setLoading(false)
-                }
-            }
-        }
-
-        void loadFeaturedServers()
-
-        return () => {
-            ignore = true
-        }
-    }, [])
+export function FeaturedServers({ servers, nonFeaturedActiveServers = 0, loading = false, error = null }: FeaturedServersProps) {
 
     const shouldShowSkeleton = loading || error !== null
 
@@ -96,7 +66,7 @@ export function FeaturedServers() {
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
                 <h2 className="text-3xl font-extrabold sm:text-4xl">Serveurs qui nous font confiance</h2>
                 <p className="mt-2 max-w-2xl text-base-content/70">
-                    Rejoins les communautes Discord qui utilisent Voicey pour gerer leurs salons vocaux.
+                    Rejoins les serveurs Discord qui utilisent Voicey pour gérer leurs salons vocaux.
                 </p>
             </div>
 
@@ -114,7 +84,7 @@ export function FeaturedServers() {
                                         +
                                     </div>
                                     <h3 className="card-title text-lg">Et encore plus</h3>
-                                    <p className="text-base-content/70">serveurs actifs</p>
+                                    <p className="text-base-content/70">{nonFeaturedActiveServers.toLocaleString('fr-FR')} autres serveurs actifs</p>
                                 </div>
                             </div>
                         </div>

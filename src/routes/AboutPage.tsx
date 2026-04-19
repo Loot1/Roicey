@@ -1,186 +1,175 @@
 import { NavLink } from 'react-router'
-import { SparklesIcon, UserGroupIcon, CodeBracketIcon, HeartIcon } from '@heroicons/react/24/outline'
+import { ShieldCheckIcon, SpeakerWaveIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { VOICEY_HELP_DISCORD_URL } from '../constants/externalLinks'
 
-interface TeamMember {
-    name: string
-    role: string
-    description: string
-    icon: typeof UserGroupIcon
-}
+const principles = [
+    {
+        title: "Un bot Discord né d'un cas concret",
+        text: "Voicey a été créé par un développeur qui a lui-même modéré des serveurs Discord et fait face à la difficulté de gérer les incidents vocaux sans preuve exploitable.",
+        icon: ExclamationTriangleIcon,
+    },
+    {
+        title: "S'intégrer dans l'écosystème du serveur",
+        text: "Les éléments principaux restent dans l'écosystème du serveur : dashboard, règles, historique et accès réservés aux personnes autorisées.",
+        icon: ShieldCheckIcon,
+    },
+    {
+        title: "Le record directement dans Discord",
+        text: "Tout le monde n'a pas la possibilité technique de capturer un salon vocal depuis son PC. Voicey apporte cette capacité au niveau du serveur, sans imposer un setup local aux modérateurs.",
+        icon: SpeakerWaveIcon,
+    },
+]
+
+const roadmapSteps = [
+    {
+        title: 'Étape actuelle',
+        period: "Aujourd'hui",
+        text: "Voicey est déjà dans sa première étape: enregistrements exploitables, consultation via dashboard, archivage, garde-fous et outils concrets pour traiter un incident vocal.",
+    },
+    {
+        title: "Bêta test et stabilité",
+        period: "Étape 2",
+        text: "La prochaine phase consiste à ouvrir davantage les tests pour consolider la stabilité du bot avant une diffusion plus large.",
+    },
+    {
+        title: "Développement continu",
+        period: "Étape 3",
+        text: "Pour la suite s'imagine déjà des logs complètes des salons vocaux temporaires, une retranscription écrite des enregistrements et une internationalisation du bot. Voicey reste en développement continu et s'ouvre aux retours des personnes qui veulent aider.",
+    },
+]
 
 export function AboutPage() {
-    const teamMembers: TeamMember[] = [
-        {
-            name: 'Développeur Principal',
-            role: 'Architecture & Core',
-            description: 'Conception et développement du cœur du bot, gestion des salons vocaux et logique automation.',
-            icon: CodeBracketIcon,
-        },
-        {
-            name: 'Modérateur Communauté',
-            role: 'Support & Tests',
-            description: 'Gestion du serveur Discord, tests des fonctionnalités et support utilisateur en français.',
-            icon: UserGroupIcon,
-        },
-    ]
-
     return (
-        <main className="min-h-screen bg-base-100">
-            {/* Hero Section */}
-            <section className="relative overflow-hidden bg-gradient-to-b from-primary/10 via-base-100 to-base-100 py-20">
-                <div className="pointer-events-none absolute inset-0 -z-10">
-                    <div className="absolute -left-24 top-20 h-64 w-64 rounded-full bg-primary/20 blur-3xl"></div>
-                    <div className="absolute right-0 top-1/2 h-72 w-72 rounded-full bg-secondary/15 blur-3xl"></div>
-                </div>
+        <main className="relative isolate min-h-screen overflow-hidden bg-base-100">
+            <div className="pointer-events-none absolute inset-0 -z-10">
+                <div className="absolute -left-28 top-0 h-80 w-80 rounded-full bg-primary/18 blur-3xl" />
+                <div className="absolute right-0 top-32 h-80 w-80 rounded-full bg-secondary/14 blur-3xl" />
+                <div className="absolute bottom-20 left-1/3 h-64 w-64 rounded-full bg-accent/12 blur-3xl" />
+            </div>
 
-                <div className="mx-auto max-w-5xl px-6 py-12 text-center lg:px-10">
-                    <div className="mb-4 inline-block">
-                        <div className="badge badge-primary badge-outline badge-lg">Notre Histoire</div>
-                    </div>
-                    <h1 className="mb-4 text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
-                        Qui sommes-nous ?
-                    </h1>
-                    <p className="mx-auto max-w-2xl text-lg text-base-content/70">
-                        Voicey est né d'une simple observation : gérer les salons vocaux sur Discord était trop compliqué. 
-                        Nous avons décidé de le rendre automatique, transparent et accessible.
-                    </p>
-                </div>
-            </section>
+            <section>
+                <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)] lg:px-10 lg:py-16">
+                    <div className="space-y-7">
+                        <div className="badge badge-primary badge-outline badge-lg">Origine du projet</div>
 
-            {/* Mission Section */}
-            <section className="mx-auto max-w-5xl px-6 py-16 lg:px-10">
-                <div className="grid gap-8 md:grid-cols-2">
-                    <div className="space-y-4">
-                        <div className="flex gap-3">
-                            <SparklesIcon className="h-6 w-6 flex-shrink-0 text-primary" />
-                            <div>
-                                <h3 className="font-semibold">Notre Mission</h3>
-                                <p className="text-sm text-base-content/70">
-                                    Rendre la gestion des salons vocaux Discord simple, rapide et accessible à tous les 
-                                    serveurs, peu importe leur taille.
-                                </p>
-                            </div>
+                        <div className="max-w-3xl space-y-5">
+                            <h1 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+                                Modérer les salons vocaux est un vrai défi.
+                            </h1>
+                            <p className="max-w-2xl text-base leading-8 text-base-content/75 sm:text-lg">
+                                Combien de fois les modérateurs ont-ils dû faire confiance à des récits contradictoires ou à des enregistrements bricolés pour prendre une décision ? Combien de fois ont-ils dû se contenter d'un report vocal sans preuve exploitable ? Voicey est né de ce constat : la modération vocale mérite mieux que des solutions de fortune.
+                            </p>
                         </div>
 
-                        <div className="flex gap-3">
-                            <HeartIcon className="h-6 w-6 flex-shrink-0 text-secondary" />
-                            <div>
-                                <h3 className="font-semibold">Notre Valeur</h3>
-                                <p className="text-sm text-base-content/70">
-                                    Chaque feature est pensée pour votre communauté. Sécurité, modération, flexibilité : 
-                                    c'est notre fondation.
-                                </p>
-                            </div>
+                        <div className="flex flex-wrap gap-3">
+                            <NavLink to="/docs/recording" className="btn btn-primary">
+                                Voir le record
+                            </NavLink>
+                            <NavLink to="/guidelines" className="btn btn-outline btn-secondary">
+                                Lire la charte
+                            </NavLink>
                         </div>
+
                     </div>
 
-                    <div className="rounded-box border border-base-300 bg-base-200/50 p-6">
-                        <h3 className="mb-4 font-semibold">Statistiques</h3>
-                        <div className="space-y-3">
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm">Serveurs actifs</span>
-                                <span className="font-bold text-lg text-primary">890+</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm">Salons créés / jour</span>
-                                <span className="font-bold text-lg text-secondary">2.4K</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm">Membres impactés</span>
-                                <span className="font-bold text-lg text-accent">50K+</span>
-                            </div>
-                            <div className="flex justify-between items-center">
-                                <span className="text-sm">Uptime</span>
-                                <span className="font-bold text-lg text-success">99.9%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            {/* Team Section */}
-            <section className="mx-auto max-w-5xl px-6 py-16 lg:px-10">
-                <div className="mb-12 text-center">
-                    <h2 className="mb-4 text-3xl font-extrabold sm:text-4xl">L'équipe</h2>
-                    <p className="mx-auto max-w-2xl text-base-content/70">
-                        Une équipe passionnée par Discord et dédiée à améliorer continuellement Voicey.
-                    </p>
-                </div>
-
-                <div className="grid gap-6 md:grid-cols-2">
-                    {teamMembers.map((member, index) => {
-                        const IconComponent = member.icon
-                        return (
-                            <article
-                                key={index}
-                                className="rounded-box border border-base-300 bg-base-200/30 p-6 transition hover:bg-base-200/60 hover:shadow-lg"
-                            >
-                                <div className="mb-4 inline-block rounded-lg bg-primary/10 p-3">
-                                    <IconComponent className="h-6 w-6 text-primary" />
+                    <figure className="diff aspect-[4/3] min-h-[26rem] overflow-hidden lg:min-h-[30rem]" tabIndex={0}>
+                        <div className="diff-item-1" role="img" tabIndex={0} aria-label="Modérateur fatigué sans preuve exploitable">
+                            <div className="flex h-full flex-col justify-between bg-base-100 p-6 text-base-content sm:p-8">
+                                <div className="flex items-center justify-between text-xs font-black uppercase tracking-[0.24em] text-base-content/45">
+                                    <span>Sans Voicey</span>
+                                    <span>Report vocal</span>
                                 </div>
-                                <h3 className="mb-1 text-lg font-semibold">{member.name}</h3>
-                                <p className="mb-3 text-sm font-medium text-primary">{member.role}</p>
-                                <p className="text-sm text-base-content/70">{member.description}</p>
+
+                                <div className="flex-1 content-center py-8">
+                                    <div className="mx-auto max-w-lg space-y-4">
+                                        <blockquote className="text-2xl font-black italic leading-tight text-base-content sm:text-3xl lg:text-[2.5rem]">
+                                            “Encore un <span className="text-error">signalement en vocal</span> pour lequel il n'y a aucune preuve.”
+                                        </blockquote>
+                                        <p className="text-right text-xs font-black uppercase tracking-[0.2em] text-base-content/50">
+                                            Modérateur fatigué
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="diff-item-2" role="img" aria-label="Modérateur heureux avec preuve fournie par Voicey">
+                            <div className="flex h-full flex-col justify-between bg-base-100 p-6 text-base-content sm:p-8">
+                                <div className="flex items-center justify-between text-xs font-black uppercase tracking-[0.24em] text-base-content/45">
+                                    <span>Avec Voicey</span>
+                                    <span>Preuve exploitable</span>
+                                </div>
+
+                                <div className="flex-1 content-center py-8">
+                                    <div className="mx-auto max-w-lg space-y-4">
+                                        <blockquote className="text-2xl font-black italic leading-tight text-base-content sm:text-3xl lg:text-[2.5rem]">
+                                            “C'est bon, on a la <span className="text-primary">preuve</span> pour bannir ce fauteur de troubles grâce à Voicey!”
+                                        </blockquote>
+                                        <p className="text-right text-xs font-black uppercase tracking-[0.2em] text-base-content/50">
+                                            Modérateur soulagé
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="diff-resizer"></div>
+                    </figure>
+                </div>
+            </section>
+
+            <section className="mx-auto max-w-7xl px-6 pt-6 pb-8 lg:px-10">
+                <div className="mb-8 max-w-2xl">
+                    <div className="badge badge-secondary badge-soft">Fondements</div>
+                    <h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">Les idées clefs</h2>
+                </div>
+
+                <div className="grid gap-5 md:grid-cols-3">
+                    {principles.map((item) => {
+                        const Icon = item.icon
+
+                        return (
+                            <article key={item.title} className="card border border-base-300 bg-base-100 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
+                                <div className="card-body">
+                                    <Icon className="h-8 w-8 text-secondary" />
+                                    <h3 className="card-title text-lg">{item.title}</h3>
+                                    <p className="text-base-content/72">{item.text}</p>
+                                </div>
                             </article>
                         )
                     })}
                 </div>
             </section>
 
-            {/* Values Section */}
-            <section className="mx-auto max-w-5xl px-6 py-16 lg:px-10">
-                <h2 className="mb-12 text-center text-3xl font-extrabold sm:text-4xl">Nos valeurs</h2>
-
-                <div className="grid gap-6 md:grid-cols-3">
-                    <div className="card border border-base-300 bg-base-100 shadow">
-                        <div className="card-body">
-                            <h3 className="card-title text-lg">Transparence</h3>
-                            <p className="text-sm text-base-content/70">
-                                Logs complets, permissions claires, et historique de modération pour une confiance totale.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="card border border-base-300 bg-base-100 shadow">
-                        <div className="card-body">
-                            <h3 className="card-title text-lg">Stabilité</h3>
-                            <p className="text-sm text-base-content/70">
-                                Infrastructure robuste et tests rigoureux pour zéro downtime et performances optimales.
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="card border border-base-300 bg-base-100 shadow">
-                        <div className="card-body">
-                            <h3 className="card-title text-lg">Écoute</h3>
-                            <p className="text-sm text-base-content/70">
-                                Chaque suggestion compte. Vos retours façonnent les prochaines features de Voicey.
-                            </p>
-                        </div>
-                    </div>
+            <section className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
+                <div className="mb-10 max-w-3xl">
+                    <div className="badge badge-secondary badge-soft">Roadmap</div>
+                    <h2 className="mt-4 text-3xl font-black sm:text-4xl">La construction de Voicey, et la suite</h2>
                 </div>
-            </section>
 
-            {/* CTA Section */}
-            <section className="mx-auto max-w-5xl px-6 pb-20 pt-12 lg:px-10">
-                <div className="hero rounded-box border border-primary/30 bg-gradient-to-r from-primary/15 via-base-200 to-secondary/15 p-8">
-                    <div className="hero-content text-center">
-                        <div className="max-w-2xl">
-                            <h2 className="mb-4 text-3xl font-black sm:text-4xl">Rejoins notre communauté</h2>
-                            <p className="mb-6 text-base-content/80">
-                                Que tu sois développeur, modérateur ou simple utilisateur, ta voix compte !
-                            </p>
-                            <div className="join join-vertical gap-2 sm:join-horizontal">
-                                <a href="#" className="btn join-item btn-primary">
-                                    Rejoindre Discord
-                                </a>
-                                <NavLink to="/docs" className="btn join-item btn-outline">
-                                    Voir la documentation
-                                </NavLink>
+                <ul className="timeline timeline-snap-icon max-md:timeline-compact timeline-vertical">
+                    {roadmapSteps.map((step, index) => (
+                        <li key={step.title}>
+                            {index > 0 ? <hr className="bg-base-300" /> : null}
+                            <div className="timeline-middle">
+                                <div className="flex h-10 w-10 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-sm font-black text-primary">
+                                    {index + 1}
+                                </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
+                            <div className={`mb-10 rounded-[1.5rem] border border-base-300/70 bg-base-100 p-6 shadow-md ${index % 2 === 0 ? 'timeline-start md:text-end' : 'timeline-end'}`}>
+                                <p className="text-xs font-black uppercase tracking-[0.22em] text-base-content/45">{step.period}</p>
+                                <h3 className="mt-3 text-2xl font-black">{step.title}</h3>
+                                <p className="mt-3 text-sm leading-7 text-base-content/72 sm:text-base">{step.text}</p>
+                                {index === roadmapSteps.length - 1 ? (
+                                    <div className="mt-5">
+                                        <a href={VOICEY_HELP_DISCORD_URL} target="_blank" rel="noreferrer" className="btn btn-primary btn-sm">
+                                            Rejoindre le Discord pour aider
+                                        </a>
+                                    </div>
+                                ) : null}
+                            </div>
+                            {index < roadmapSteps.length - 1 ? <hr className="bg-base-300" /> : null}
+                        </li>
+                    ))}
+                </ul>
             </section>
         </main>
     )

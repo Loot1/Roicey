@@ -1,32 +1,4 @@
 export function GuidelinesPage() {
-    const pillars = [
-        {
-            title: 'Respect des serveurs',
-            description: 'Roicey doit être utilisé pour faciliter la modération et la gestion vocale, jamais pour contourner les règles d\'un serveur Discord.',
-        },
-        {
-            title: 'Usage responsable',
-            description: 'Toute automatisation, configuration ou consultation des données doit rester proportionnée au besoin réel du serveur et de sa communauté.',
-        },
-        {
-            title: 'Protection des membres',
-            description: 'Les salons, logs et enregistrements éventuels doivent être utilisés avec transparence et uniquement dans un cadre légitime et annoncé.',
-        },
-        {
-            title: 'Zero abus technique',
-            description: 'Aucune tentative de surcharge, de détournement de fonctionnalité, de scraping agressif ou d\'exploitation de faille n\'est autorisée.',
-        },
-    ]
-
-    const commitments = [
-        'Respecter les Conditions d\'utilisation de Discord et la législation applicable.',
-        'Configurer uniquement les permissions nécessaires au bon fonctionnement du bot et du dashboard.',
-        'Informer clairement les membres lorsqu\'une fonctionnalité de log ou d\'enregistrement est activée.',
-        'Ne pas utiliser Roicey pour harceler, surveiller abusivement ou discriminer des utilisateurs.',
-        'Conserver une hygiène de sécurité minimale sur les comptes Discord ayant accès au dashboard.',
-        'Signaler toute anomalie ou faille de sécurité plutôt que tenter de l\'exploiter.',
-    ]
-
     return (
         <main className="bg-base-100">
             <section className="relative overflow-hidden border-b border-base-300/60 bg-gradient-to-b from-primary/10 via-base-100 to-base-100">
@@ -34,68 +6,53 @@ export function GuidelinesPage() {
                     <div className="absolute -left-20 top-12 h-56 w-56 rounded-full bg-primary/20 blur-3xl"></div>
                     <div className="absolute right-0 top-24 h-64 w-64 rounded-full bg-secondary/15 blur-3xl"></div>
                 </div>
-
                 <div className="mx-auto max-w-5xl px-6 py-14 lg:px-10">
                     <div className="badge badge-primary badge-outline badge-lg">Charte d'utilisation</div>
-                    <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl">Charte d'utilisation de Roicey</h1>
+                    <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl">Charte d'utilisation de Voicey</h1>
                     <p className="mt-4 max-w-3xl text-base text-base-content/75 sm:text-lg">
-                        Roicey est la vitrine et l'interface web de Voicey. Cette charte fixe le cadre d'un usage
-                        propre, transparent et conforme aux attentes des communautés qui s'appuient sur le service.
+                        Cette charte fixe le cadre d'un usage transparent, proportionné et compatible avec un bot Discord pensé pour la modération vocale.
                     </p>
-                    <blockquote className="mt-8 max-w-4xl overflow-hidden rounded-[2rem] border border-primary/20 bg-linear-to-r from-base-100/85 via-base-200/70 to-primary/10 px-6 py-6 shadow-xl shadow-primary/10 backdrop-blur-sm sm:px-8">
-                        <p className="text-2xl font-black italic leading-tight text-base-content sm:text-3xl">
-                            “Un grand pouvoir implique de <span className="text-primary">grandes responsabilités</span>.”
-                        </p>
-                    </blockquote>
+                    <p className="text-2xl font-black italic leading-tight text-base-content sm:text-3xl mt-4">
+                        “Un grand pouvoir implique de <span className="text-primary">grandes responsabilités</span>.”
+                    </p>
                 </div>
             </section>
 
-            <section className="mx-auto grid max-w-5xl gap-6 px-6 py-12 md:grid-cols-2 lg:px-10">
-                {pillars.map((pillar) => (
-                    <article key={pillar.title} className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
-                        <h2 className="text-xl font-bold">{pillar.title}</h2>
-                        <p className="mt-3 text-sm leading-6 text-base-content/72">{pillar.description}</p>
-                    </article>
-                ))}
-            </section>
-
-            <section className="mx-auto max-w-5xl px-6 pb-12 lg:px-10">
-                <div className="rounded-box border border-base-300 bg-base-200/40 p-6 sm:p-8">
-                    <h2 className="text-2xl font-black">Engagements attendus</h2>
-                    <div className="mt-6 grid gap-4 md:grid-cols-2">
-                        {commitments.map((commitment) => (
-                            <div key={commitment} className="rounded-xl border border-base-300/80 bg-base-100 px-4 py-4 text-sm text-base-content/75">
-                                {commitment}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            <section className="mx-auto max-w-5xl px-6 pb-16 lg:px-10">
-                <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+            <section className="mx-auto max-w-5xl px-6 lg:px-10 mt-10 mb-6">
+                <div className="grid gap-6 lg:grid-cols-2">
                     <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
-                        <h2 className="text-2xl font-black">Modération et traces</h2>
+                        <h2 className="text-2xl font-black">Transparence</h2>
                         <p className="mt-4 text-sm leading-6 text-base-content/72">
-                            Les outils de modération, de journalisation et d'enregistrement doivent servir un objectif
-                            clair : sécuriser l'espace communautaire, documenter un incident ou faciliter la gestion
-                            d'un serveur. Ils ne doivent jamais devenir un moyen de surveillance opaque ou invasive.
-                        </p>
-                        <p className="mt-4 text-sm leading-6 text-base-content/72">
-                            Toute équipe utilisant Roicey s'engage à définir des règles internes simples, à limiter les
-                            accès sensibles et à supprimer les données qui ne sont plus utiles à l'exploitation du service.
+                            Tout serveur Discord qui utilise Voicey ne doit pas chercher à cacher le fonctionnement des salons vocaux, du dashboard et de l'existence possible d'enregistrements à ses membres.
                         </p>
                     </article>
+                    <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+                        <h2 className="text-2xl font-black">Usage à seule fin de modération</h2>
+                        <p className="mt-4 text-sm leading-6 text-base-content/72">
+                            Les outils de Voicey doivent servir le seul objectif de préserver un espace communautaire. Tout usage des fonctionnalités de modération de Voicey n'ayant pas pour sens de documenter un incident ou faciliter une décision est à proscrire.
+                        </p>
+                    </article>
+                    <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+                        <h2 className="text-2xl font-black">Accès limité au dashboard</h2>
+                        <p className="mt-4 text-sm leading-6 text-base-content/72">
+                            Seuls les modérateurs et responsables habilités du serveur doivent pouvoir accéder au dashboard et consulter les éléments sensibles.
+                        </p>
+                    </article>
+                    <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
+                        <h2 className="text-2xl font-black">Interdiction de surveillance, discrimination et de harcèlement</h2>
+                        <p className="mt-4 text-sm leading-6 text-base-content/72">
+                            Voicey ne doit jamais être utilisé pour surveiller des membres, constituer des dossiers personnels ou nourrir un comportement de harcèlement.
+                        </p>
+                    </article>
+                </div>
+            </section>
 
-                    <aside className="rounded-box border border-primary/20 bg-primary/8 p-6">
-                        <h2 className="text-lg font-bold">En pratique</h2>
-                        <ul className="mt-4 space-y-3 text-sm text-base-content/75">
-                            <li>Informer les membres des fonctionnalités actives.</li>
-                            <li>Documenter qui a accès au dashboard.</li>
-                            <li>Revoir régulièrement les permissions de modération.</li>
-                            <li>Supprimer les données obsolètes dès qu'elles ne servent plus.</li>
-                        </ul>
-                    </aside>
+            <section className="mx-auto max-w-5xl px-6 mb-12 lg:px-10">
+                <div className="rounded-box border border-primary/20 bg-primary/8 p-6">
+                    <h2 className="text-2xl font-black text-secondary">Non-respect de la charte</h2>
+                    <p className="mt-4 text-sm text-base-content/75">
+                        En cas de non-respect de cette charte, il est possible que l'accès au bot soit retiré à un serveur Discord ou bien à un utilisateur.
+                    </p>
                 </div>
             </section>
         </main>

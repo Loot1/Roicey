@@ -1,68 +1,88 @@
-import { DocsCard } from '../../components'
+import { DocsCard, DocsTable } from '../../components'
+import type { DocsTableColumn } from '../../components'
+
+type CommandRow = {
+    command: string
+    description: string
+    permission: string
+}
+
+const commandColumns: DocsTableColumn<CommandRow>[] = [
+    {
+        key: 'command',
+        header: 'Commande',
+        render: (row: CommandRow) => <code className="badge badge-ghost">{row.command}</code>,
+    },
+    {
+        key: 'description',
+        header: 'Description',
+        render: (row: CommandRow) => row.description,
+    },
+    {
+        key: 'permission',
+        header: 'Permissions',
+        headerClassName: 'hidden md:table-cell',
+        cellClassName: 'hidden md:table-cell',
+        render: (row: CommandRow) => row.permission,
+    },
+]
+
+const commandRows = [
+    {
+        command: '/config',
+        description: "Ouvre l'assistant de configuration du serveur",
+        permission: 'Administrateur',
+    },
+    {
+        command: '/settings',
+        description: 'Met à jour un paramètre spécifique du bot',
+        permission: 'Administrateur',
+    },
+    {
+        command: '/recordban',
+        description: "Interdit à une personne d'utiliser la fonctionnalité d'enregistrement",
+        permission: 'Modération',
+    },
+    {
+        command: '/banhistory',
+        description: "Consulte l'historique des bannissements d'un salon vocal d'une personne",
+        permission: 'Modération',
+    },
+    {
+        command: '/record',
+        description: 'Lance un enregistrement du salon vocal courant avec la durée prévue par la configuration',
+        permission: 'Membres',
+    },
+    {
+        command: '/ping',
+        description: 'Vérifie rapidement que le bot répond',
+        permission: 'Membres',
+    },
+] satisfies CommandRow[]
 
 export function DocsCommandsPage() {
     return (
         <div className="space-y-4">
             <h1 className="text-3xl font-bold">Commandes disponibles</h1>
             <p className="text-base-content/70">
-                Voici l'ensemble des commandes slash que tu peux utiliser avec Voicey.
+                Voicey reste simple à utiliser : peu de slash commands et une gestion quotidienne directement via les boutons des salons vocaux.
             </p>
 
-            <div className="overflow-x-auto">
-                <table className="table w-full">
-                    <thead>
-                        <tr>
-                            <th>Commande</th>
-                            <th>Description</th>
-                            <th className="hidden md:table-cell">Permissions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <code className="badge badge-ghost">/config</code>
-                            </td>
-                            <td>Configure les catégories et limites de salons</td>
-                            <td className="hidden md:table-cell">Admin</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <code className="badge badge-ghost">/settings</code>
-                            </td>
-                            <td>Paramètres avancés et permissions par rôle</td>
-                            <td className="hidden md:table-cell">Admin</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <code className="badge badge-ghost">/ping</code>
-                            </td>
-                            <td>Vérifie la latence du bot</td>
-                            <td className="hidden md:table-cell">Tous</td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <code className="badge badge-ghost">/history</code>
-                            </td>
-                            <td>Affiche l'historique des actions</td>
-                            <td className="hidden md:table-cell">Modérateur</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            <DocsTable columns={commandColumns} rows={commandRows} rowKey={(row) => row.command} />
 
             <div className="mt-6 space-y-4">
                 <h2 className="text-2xl font-bold">Boutons d'action</h2>
                 <p className="text-base-content/70">
-                    Dans chaque salon vocal créé, tu auras accès à ces boutons :
+                    Dans chaque salon vocal géré par Voicey, les actions sont accessibles sans mémoriser de commande via des boutons :
                 </p>
 
-                <div className="grid gap-4 md:grid-cols-2">
-                    <DocsCard title="🔒 Lock" description="Verrouille le salon pour les nouveaux entrants" />
-                    <DocsCard title="🔓 Unlock" description="Déverrouille le salon" />
-                    <DocsCard title="🎯 Limit" description="Ajuste la limite d'utilisateurs" />
-                    <DocsCard title="👑 Transfer" description="Transfère la propriété du salon" />
-                    <DocsCard title="👢 Kick" description="Éjecte un utilisateur" />
-                    <DocsCard title="🚫 Ban" description="Bannit un utilisateur du salon" />
+                <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                    <DocsCard title="🔒 Verrouiller" description="Ferme ou rouvre le salon aux nouveaux entrants." />
+                    <DocsCard title="🎯 Limit" description="Change la limite de places du salon vocal." />
+                    <DocsCard title="🫴 Claim" description="Récupère le contrôle du salon si le propriétaire n'est plus présent." />
+                    <DocsCard title="👑 Transférer" description="Transfère la gestion du salon à un autre membre." />
+                    <DocsCard title="🚫 Kick / Ban / Unban" description="Expulse, bannit ou débannit un membre d'un salon vocal." />
+                    <DocsCard title="🎙️ Enregistrement" description="Ouvre une demande d'enregistrement dans le salon vocal." />
                 </div>
             </div>
         </div>

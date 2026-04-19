@@ -1,3 +1,5 @@
+import { Link } from 'react-router'
+
 import { DocsCollapse } from '../../components'
 
 export function DocsFAQPage() {
@@ -9,71 +11,49 @@ export function DocsFAQPage() {
             </p>
 
             <div className="space-y-3">
-                <DocsCollapse name="faq" title="❓ Le bot a-t-il besoin d'accès administrateur ?" defaultChecked>
+                <DocsCollapse name="faq" title="❓ Le bot a-t-il besoin de la permission Adminsitrateur ?" defaultChecked>
                     <p>
-                        Non ! Voicey n'a besoin que des permissions minimales : créer/supprimer des salons, 
-                        gérer les permissions et déplacer les utilisateurs. C'est plus sûr et respecte le 
-                        principe du moindre privilège.
+                        Non. Voicey a besoin des permissions utiles à sa mission, pas d'un accès administrateur global.
                     </p>
                 </DocsCollapse>
 
-                <DocsCollapse name="faq" title="💾 Combien de salons le bot peut-il gérer ?">
+                <DocsCollapse name="faq" title="🛡️ Qui peut accéder au dashboard ?">
                     <p>
-                        Il n'y a pas de limite technique. Voicey est conçu pour supporter 
-                        des serveurs de toutes tailles jusqu'à plusieurs milliers de salons actifs. 
-                        On a des serveurs avec 500+ salons temporaires par jour sans problèmes.
+                        Le dashboard est réservé aux modérateurs et responsables du serveur qui disposent des droits de gestion nécessaires. Ce n'est pas un espace ouvert à tous les membres.
                     </p>
                 </DocsCollapse>
 
-                <DocsCollapse name="faq" title="🗑️ Qu'est-ce qui ne se supprime pas ?">
+                <DocsCollapse name="faq" title="💾 Où sont stockés les enregistrements ?">
                     <p>
-                        Les salons ne sont supprimés que s'ils sont vides. Les salons contenant des voix 
-                        ou des utilisateurs sont toujours préservés. Le bot respecte le premier entrant = 
-                        propriétaire du salon.
+                        Voicey publie les enregistrements dans le salon de modération Discord du serveur, avec une
+                        archive prévue pour le dashboard. En aucun cas Voicey ne stocke les enregistements dans une base de données.
                     </p>
                 </DocsCollapse>
 
-                <DocsCollapse name="faq" title="🚀 Comment signaler un bug ?">
+                <DocsCollapse name="faq" title="🚫 Peut-on empêcher une personne d'utiliser le record ?">
                     <p>
-                        Rejoins notre serveur Discord et signale le bug dans le channel #support. Tes retours 
-                        aident à améliorer Voicey ! Nous répondons généralement en moins de 24 heures.
+                        Oui. Les commandes <code className="badge badge-ghost px-1">/recordban</code> permettent de bloquer une personne sur cette fonctionnalité
+                        sans l'exclure du serveur ni lui retirer l'accès aux salons vocaux standards.
                     </p>
                 </DocsCollapse>
 
-                <DocsCollapse name="faq" title="💰 Y a-t-il un plan premium ?">
+                <DocsCollapse name="faq" title="🎧 Peut-on réutiliser une voix enregistrée dans un autre but ?">
                     <p>
-                        Actuellement, Voicey est entièrement gratuit et open-source. Nous n'avons aucun plan 
-                        payant prévu. Le bot dépend des donations et du soutien communautaire.
+                        Non. La voix enregistrée ne doit servir qu'à prouver une atteinte au règlement du serveur.
+                        Toute réutilisation hors de ce cadre est contraire à la charte d'utilisation.
                     </p>
+                    <div className="mt-4">
+                        <Link to="/guidelines" className="btn btn-error btn-sm">
+                            Lire la charte
+                        </Link>
+                    </div>
                 </DocsCollapse>
 
-                <DocsCollapse name="faq" title="🔄 Peut-on avoir plusieurs canaux créateurs ?">
+                <DocsCollapse name="faq" title="🎙️ Est-ce que l'on peut faire un enregistrement dans un salon qui n'a pas été créé par Voicey ?">
                     <p>
-                        Oui ! Tu peux créer plusieurs canaux "Rejoindre pour créer" dans différentes 
-                        catégories avec des configurations différentes. Parfait pour les Guildes ou les 
-                        événements multiples.
+                        Totalement ! C'est possible en utilisant la commande <code className="badge badge-ghost px-1">/record</code> et en étant présent dans le salon.
                     </p>
                 </DocsCollapse>
-
-                <DocsCollapse name="faq" title="👥 Est-ce que le bot crée un salon par utilisateur ?">
-                    <p>
-                        Oui, chaque utilisateur qui rejoint un canal créateur se voit attribuer son propre 
-                        salon personnel. S'il a déjà un salon actif, il est déplacé dans celui-ci au lieu 
-                        d'en créer un nouveau.
-                    </p>
-                </DocsCollapse>
-
-                <DocsCollapse name="faq" title="🔒 Mes données sont-elles sécurisées ?">
-                    <p>
-                        Oui. Nous utilisons des serveurs cloud sécurisés avec chiffrement et les données 
-                        ne sont jamais vendues. Les logs de modération sont conservés conformément à la 
-                        RGPD. Consulte notre politique de confidentialité pour plus de détails.
-                    </p>
-                </DocsCollapse>
-            </div>
-
-            <div className="alert alert-info mt-6">
-                <p>Tu ne trouves pas ta réponse ? <a href="#" className="link link-primary">Rejoins le Discord</a> et pose la question !</p>
             </div>
         </div>
     )

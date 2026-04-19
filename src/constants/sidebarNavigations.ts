@@ -70,6 +70,12 @@ export const docsSidebarNavigation = [
         icon: ShieldCheckIcon,
     },
     {
+        id: 'recording',
+        title: 'Enregistrement',
+        href: '/docs/recording',
+        icon: SpeakerWaveIcon,
+    },
+    {
         id: 'faq',
         title: 'FAQ',
         href: '/docs/faq',
