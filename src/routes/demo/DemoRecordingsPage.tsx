@@ -1,8 +1,29 @@
-import { ArrowDownTrayIcon, InformationCircleIcon, PlayCircleIcon } from '@heroicons/react/24/outline'
+import { ArrowDownTrayIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
+import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
-import { DashboardAlert, DashboardPageHeader, RecordingSessionPlayer } from '../../components'
+import { ButtonOne, DashboardAlert, DashboardPageHeader, RecordingSessionPlayer } from '../../components'
 import { demoRecording, demoRecordingMixPath, demoRecordingUserTrackPaths } from '../../constants'
+import type { DashboardRecordingParticipant } from '../../types'
 import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
+
+type RecordingMetaChipProps = {
+    label: string
+    toneClassName: string
+    children: ReactNode
+    leading?: ReactNode
+}
+
+function RecordingMetaChip({ label, toneClassName, children, leading }: RecordingMetaChipProps) {
+    return (
+        <div className={`inline-flex h-8 items-center gap-2 rounded-full border text-xs font-black uppercase leading-none tracking-[0.16em] ${leading ? 'pl-0 pr-3' : 'px-3'} ${toneClassName}`}>
+            {leading ? <div className="inline-flex items-center">{leading}</div> : null}
+            <span>{label}</span>
+            <div className="inline-flex items-center gap-2 font-semibold normal-case tracking-normal text-base-content/85">
+                {children}
+            </div>
+        </div>
+    )
+}
 
 export function DemoRecordingsPage() {
     const [tracksPrepared, setTracksPrepared] = useState(false)
@@ -28,6 +49,13 @@ export function DemoRecordingsPage() {
         }))
     }, [recording.id, tracksPrepared, userGroups])
     const areTracksPrepared = userGroups.length > 0 && userGroups.every((group) => Boolean(userSources[group.userId]))
+    const allParticipants: DashboardRecordingParticipant[] = recording.participants?.length
+        ? recording.participants
+        : userGroups.map((group) => ({
+            userId: group.userId,
+            username: group.username,
+            avatarUrl: group.avatarUrl,
+        }))
 
     const downloadStaticAsset = (path: string, fileName: string) => {
         const anchor = document.createElement('a')
@@ -69,34 +97,68 @@ export function DemoRecordingsPage() {
     return (
         <section className="space-y-0 bg-base-100 pb-10 lg:pb-14">
             <DashboardPageHeader
-                title={
-                    <span className="flex w-full min-w-0 items-center justify-between gap-3 leading-none sm:inline-flex sm:w-auto sm:max-w-full sm:flex-wrap sm:justify-start">
-                        <span className="block min-w-0 flex-1 truncate leading-tight sm:max-w-[32rem] sm:flex-none lg:max-w-[40rem]">{recording.channelName ?? `Salon ${recording.channelId}`}</span>
-                        <span className="inline-flex items-center justify-center rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-black uppercase leading-none tracking-[0.16em] text-primary">Démo publique</span>
-                    </span>
-                }
+                title={recording.channelName ?? `Salon ${recording.channelId}`}
                 description={
                     <div className="space-y-3">
-                        <p>Demandé par {recording.requesterName ?? recording.requesterId} ({recording.requesterId}) le {formatDateTime(recording.requestedAt)}.</p>
-                        <div className="flex flex-wrap gap-x-5 gap-y-2 text-sm text-base-content/60">
-                            <span>Durée: <span className="font-semibold text-base-content/80">{`${actualDurationSeconds ? formatDuration(actualDurationSeconds) : 'Indisponible'} / ${formatDuration(recording.durationSeconds)}`}</span></span>
-                            <span>Participants: <span className="font-semibold text-base-content/80">{userGroups.length}</span></span>
-                            <span>Segments: <span className="font-semibold text-base-content/80">{recording.outputFiles.length}</span></span>
+                        <div className="space-y-3">
+                            <p>
+                                Demandé par {recording.requesterName ?? recording.requesterId} ({recording.requesterId}) le {formatDateTime(recording.requestedAt)}.
+                                {' '}Raison: <span className="font-semibold text-base-content/80">{recording.reason}</span>
+                            </p>
+                            <div className="flex flex-wrap items-center gap-3">
+                                <RecordingMetaChip
+                                    label="Durée"
+                                    toneClassName="border-[#00a86b]/80 bg-[#00a86b]/10 text-[#00a86b]"
+                                >
+                                    <span>{`${actualDurationSeconds ? formatDuration(actualDurationSeconds) : 'Indisponible'} / ${formatDuration(recording.durationSeconds)}`}</span>
+                                </RecordingMetaChip>
+                                <RecordingMetaChip
+                                    label="Voice room"
+                                    toneClassName="border-[#1520a6]/30 bg-[#1520a6]/12 text-[#1520a6]"
+                                >
+                                    <span>{recording.voiceRoomId ? `#${recording.voiceRoomId}` : 'Aucune'}</span>
+                                </RecordingMetaChip>
+                                <RecordingMetaChip
+                                    label="Participants"
+                                    toneClassName="border-[#5865F2]/30 bg-[#5865F2]/12 text-[#5865F2]"
+                                    leading={
+                                        <div className="-ml-[5px] flex -space-x-1.5">
+                                            {allParticipants.slice(0, 6).map((participant) => (
+                                                <div key={participant.userId} className="avatar">
+                                                    <div className="h-8 w-8 rounded-full border border-[#5865F2]/30 bg-base-200 text-[9px] font-black text-base-content shadow-none">
+                                                        {participant.avatarUrl ? (
+                                                            <img src={participant.avatarUrl} alt={participant.username} loading="lazy" />
+                                                        ) : (
+                                                            <div className="flex h-full w-full items-center justify-center uppercase">
+                                                                {(participant.username[0] ?? '?').toUpperCase()}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    }
+                                >
+                                    <span>{allParticipants.length}</span>
+                                </RecordingMetaChip>
+                                <RecordingMetaChip
+                                    label="Segments"
+                                    toneClassName="border-[#ff6e00]/80 bg-[#ff6e00]/10 text-[#ff6e00]"
+                                >
+                                    <span>{recording.outputFiles.length}</span>
+                                </RecordingMetaChip>
+                            </div>
                         </div>
                     </div>
                 }
                 actions={
-                    <button className="btn btn-outline" onClick={() => setTracksPrepared(true)} disabled={areTracksPrepared || recording.outputFiles.length === 0}>
-                        {areTracksPrepared ? <ArrowDownTrayIcon className="h-4 w-4" /> : <PlayCircleIcon className="h-4 w-4" />}
-                        {areTracksPrepared ? 'Pistes chargées' : 'Charger les pistes'}
-                    </button>
-                }
-                bottom={
-                    <div className="flex flex-wrap gap-2">
-                        <span className="badge badge-primary badge-soft">Extraits réels dans public</span>
-                        <span className="badge badge-secondary badge-soft">Aucune API</span>
-                        <span className="badge badge-accent badge-soft">OGG natif</span>
-                    </div>
+                    <ButtonOne
+                        label={areTracksPrepared ? 'Pistes chargées' : 'Charger les pistes'}
+                        variant="outline"
+                        Icon={ArrowDownTrayIcon}
+                        onClick={() => setTracksPrepared(true)}
+                        disabled={areTracksPrepared || recording.outputFiles.length === 0}
+                    />
                 }
             />
 

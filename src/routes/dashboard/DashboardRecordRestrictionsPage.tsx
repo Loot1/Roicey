@@ -1,4 +1,4 @@
-import { ArrowPathIcon, TrashIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon, MagnifyingGlassIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router'
 import { deleteGuildDashboardRecordRestriction, getGuildDashboardRecordRestrictions } from '../../api/discordAuth'
@@ -12,6 +12,7 @@ export function DashboardRecordRestrictionsPage() {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [deletingRestrictionId, setDeletingRestrictionId] = useState<number | null>(null)
+    const [searchUserId, setSearchUserId] = useState('')
 
     const loadRestrictions = async (guildId: string) => {
         setLoading(true)
@@ -41,6 +42,24 @@ export function DashboardRecordRestrictionsPage() {
         return `${total} sanction${total > 1 ? 's' : ''} active${total > 1 ? 's' : ''}`
     }, [restrictions])
 
+    const filteredRestrictions = useMemo(() => {
+        const normalizedSearch = searchUserId.trim()
+        if (!normalizedSearch) {
+            return restrictions
+        }
+
+        return restrictions.filter((restriction) => restriction.userId.includes(normalizedSearch))
+    }, [restrictions, searchUserId])
+
+    const filteredSummaryLabel = useMemo(() => {
+        if (!searchUserId.trim()) {
+            return summaryLabel
+        }
+
+        const total = filteredRestrictions.length
+        return `${total} résultat${total > 1 ? 's' : ''} pour l'ID recherché`
+    }, [filteredRestrictions.length, searchUserId, summaryLabel])
+
     const handleRefreshRestrictions = () => {
         if (!selectedGuildId) {
             return
@@ -66,13 +85,45 @@ export function DashboardRecordRestrictionsPage() {
         }
     }
 
+    const getInitials = (value: string) => value
+        .trim()
+        .split(/\s+/)
+        .slice(0, 2)
+        .map((part) => part.charAt(0).toUpperCase())
+        .join('') || '??'
+
     return (
         <section className="space-y-0 bg-base-100">
             <DashboardPageHeader
                 title="Bannissement des enregistrements"
                 description={`Sanctions actives pour ${selectedGuild?.name ?? 'ce serveur'}: les utilisateurs listés ici ne peuvent plus utiliser la fonctionnalité de record.`}
                 actions={<ButtonOne label="Actualiser" variant="outline" Icon={ArrowPathIcon} onClick={handleRefreshRestrictions} loading={loading} disabled={!selectedGuildId} />}
-                bottom={<div className="text-sm text-base-content/60">{summaryLabel}</div>}
+                bottom={(
+                    <div className="space-y-3">
+                        <div className="text-sm text-base-content/60">{filteredSummaryLabel}</div>
+                        <label className="flex items-center gap-3 rounded-[1.25rem] border border-base-300 bg-base-100 px-4 py-3 shadow-sm">
+                            <MagnifyingGlassIcon className="h-5 w-5 text-base-content/45" />
+                            <input
+                                type="text"
+                                inputMode="numeric"
+                                value={searchUserId}
+                                onChange={(event) => setSearchUserId(event.target.value.replace(/\s+/g, ''))}
+                                className="w-full bg-transparent text-sm outline-none"
+                                placeholder="Rechercher un utilisateur banni par ID Discord"
+                            />
+                            {searchUserId ? (
+                                <button
+                                    type="button"
+                                    onClick={() => setSearchUserId('')}
+                                    className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-base-300 text-base-content/55 transition hover:border-base-content/25 hover:text-base-content"
+                                    aria-label="Effacer la recherche"
+                                >
+                                    <XMarkIcon className="h-4 w-4" />
+                                </button>
+                            ) : null}
+                        </label>
+                    </div>
+                )}
             />
 
             {error ? <DashboardAlert tone="warning" className="mx-6 mt-6 lg:mx-8">{error}</DashboardAlert> : null}
@@ -84,18 +135,34 @@ export function DashboardRecordRestrictionsPage() {
                     </DashboardStateCard>
                 ) : restrictions.length === 0 ? (
                     <DashboardStateCard tone="dashed" className="text-base-content/70">Aucune sanction d'enregistrement active sur ce serveur.</DashboardStateCard>
+                ) : filteredRestrictions.length === 0 ? (
+                    <DashboardStateCard tone="dashed" className="text-base-content/70">Aucun bannissement ne correspond à cet ID utilisateur.</DashboardStateCard>
                 ) : (
                     <div className="space-y-4">
-                        {restrictions.map((restriction) => (
+                        {filteredRestrictions.map((restriction) => (
                             <article key={restriction.id} className="rounded-[1.5rem] border border-base-300 bg-base-100 p-5 shadow-sm">
                                 <div className="flex flex-wrap items-start justify-between gap-4">
-                                    <div className="space-y-3">
-                                        <div>
-                                            <div className="flex flex-wrap items-center gap-2">
-                                                <h2 className="text-xl font-black tracking-tight">{restriction.userName ?? restriction.userId} <span className="text-base-content/45">({restriction.userId})</span></h2>
-                                                <span className="rounded-full border border-base-300 bg-base-200/40 px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-base-content/60">#{restriction.id}</span>
+                                    <div className="flex min-w-0 items-start gap-4">
+                                        <div className="avatar">
+                                            <div className="h-14 w-14 rounded-full border border-base-300 bg-base-200 text-base-content/60 shadow-sm">
+                                                {restriction.userAvatarUrl ? (
+                                                    <img src={restriction.userAvatarUrl} alt={`Avatar de ${restriction.userName ?? restriction.userId}`} loading="lazy" />
+                                                ) : (
+                                                    <div className="flex h-full w-full items-center justify-center text-sm font-black uppercase tracking-[0.12em]">
+                                                        {getInitials(restriction.userName ?? restriction.userId)}
+                                                    </div>
+                                                )}
                                             </div>
-                                            <p className="mt-1 text-sm text-base-content/60">Ajoutée par {restriction.executorName ?? restriction.executorId} <span className="text-base-content/45">({restriction.executorId})</span> le {formatDateTime(restriction.createdAt)} • Motif: {restriction.reason ?? 'Non renseigné'}</p>
+                                        </div>
+
+                                        <div className="min-w-0 space-y-3">
+                                            <div>
+                                                <div className="flex flex-wrap items-center gap-2">
+                                                    <h2 className="text-xl font-black tracking-tight">{restriction.userName ?? restriction.userId} <span className="text-base-content/45">({restriction.userId})</span></h2>
+                                                    {searchUserId ? <span className="rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-primary">Correspondance</span> : null}
+                                                </div>
+                                                <p className="mt-1 text-sm text-base-content/60">Ajoutée par {restriction.executorName ?? restriction.executorId} <span className="text-base-content/45">({restriction.executorId})</span> le {formatDateTime(restriction.createdAt)} • Motif: {restriction.reason ?? 'Non renseigné'}</p>
+                                            </div>
                                         </div>
                                     </div>
 

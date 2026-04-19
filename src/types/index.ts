@@ -1,5 +1,5 @@
 export type { DashboardLayoutContextValue } from './dashboard-layout-context-value'
-export type { DashboardRecording, DashboardRecordingFile, DashboardRecordingParticipant } from './dashboard-record-archive'
+export type { DashboardRecording, DashboardRecordingFile, DashboardRecordingParticipant } from './dashboard-recording'
 export type { DiscordGuild } from './discord-guild'
 export type { DiscordUser } from './discord-user'
 export type { FeaturedServer } from './featured-server'
