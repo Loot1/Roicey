@@ -16,6 +16,20 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
+
+  .hover-3d-logo > :first-child {
+    background: transparent;
+    outline: none;
+    overflow: visible;
+  }
+
+  .hover-3d-logo > :first-child::before {
+    display: none;
+  }
+
+  .hover-3d-logo:hover > :first-child {
+    outline: none;
+  }
   
   .scrollbar-hide::-webkit-scrollbar {
     display: none;

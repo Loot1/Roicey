@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router'
 import { Bars3Icon, UserCircleIcon } from '@heroicons/react/24/outline'
 import logoSansFond from '../../assets/images/voicey-logo.png'
 import { getDiscordSession, logoutDiscord, onAuthChanged, startDiscordLogin } from '../../api/discordAuth'
+import { headerNavigation } from '../../constants'
 import type { DiscordUser } from '../../types'
 
 export function Header() {
@@ -10,14 +11,14 @@ export function Header() {
     const [user, setUser] = useState<DiscordUser | null>(null)
     const [loadingUser, setLoadingUser] = useState(true)
     const currentPath = `${location.pathname}${location.search}`
-    
-    const isActive = (path: string) => location.pathname === path
 
-    const navItems = [
-        { label: 'Accueil', href: '/' },
-        { label: 'À propos', href: '/about' },
-        { label: 'Documentation', href: '/docs' },
-    ]
+    const isActive = (path: string, exact = false) => {
+        if (exact) {
+            return location.pathname === path
+        }
+
+        return location.pathname === path || location.pathname.startsWith(`${path}/`)
+    }
 
     useEffect(() => {
         let ignore = false
@@ -61,7 +62,7 @@ export function Header() {
     }
 
     return (
-        <div className="navbar bg-base-100 shadow-md border-b border-base-200/50">
+        <div className="navbar bg-base-100 shadow-md border-base-200/50">
             <div className="navbar-start">
                 <div className="dropdown">
                     <button tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -70,11 +71,11 @@ export function Header() {
                     <ul
                         tabIndex={-1}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-lg border border-base-200">
-                        {navItems.map((item) => (
+                        {headerNavigation.map((item) => (
                             <li key={item.href}>
                                 <Link
                                     to={item.href}
-                                    className={isActive(item.href) ? 'active font-semibold' : ''}
+                                    className={isActive(item.href, item.exact) ? 'active font-semibold' : ''}
                                 >
                                     {item.label}
                                 </Link>
@@ -93,12 +94,12 @@ export function Header() {
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1 gap-2">
-                    {navItems.map((item) => (
+                    {headerNavigation.map((item) => (
                         <li key={item.href}>
                             <Link
                                 to={item.href}
                                 className={`rounded-lg transition-all ${
-                                    isActive(item.href)
+                                    isActive(item.href, item.exact)
                                         ? 'bg-primary/20 text-primary font-semibold'
                                         : 'hover:bg-base-200'
                                 }`}

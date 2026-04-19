@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { DiscordGuild, DiscordUser, FeaturedServer, GuildDashboardConfigInput, GuildDashboardOptions } from '../types'
+import type { DashboardRecordRestriction, DashboardRecording, DiscordGuild, DiscordUser, FeaturedServer, GuildDashboardConfigInput, GuildDashboardOptions } from '../types'
 
 const AUTH_CHANGED_EVENT = 'voicey-auth-changed'
 
@@ -20,8 +20,9 @@ interface GuildDashboardConfig {
     guildId: string
     categoryId: string | null
     createChannelId: string | null
-    logChannelId: string | null
+    modChannelId: string | null
     defaultMaxMembers: number
+    defaultRecordingDurationSeconds: number
     adminRolesIds: string[]
 }
 
@@ -29,8 +30,39 @@ interface GuildOptionsResponse {
     options: GuildDashboardOptions
 }
 
-interface FeaturedServersResponse {
+interface PublicStatsResponse {
     servers: FeaturedServer[]
+    stats: {
+        createdVoiceRoomsToday: number
+        totalVoiceRooms?: number
+        totalActiveServers?: number
+        nonFeaturedActiveServers: number
+    }
+}
+
+export interface PublicHomeStats {
+    servers: FeaturedServer[]
+    stats: {
+        createdVoiceRoomsToday: number
+        totalVoiceRooms: number
+        totalActiveServers: number
+        nonFeaturedActiveServers: number
+    }
+}
+
+let publicHomeStatsCache: PublicHomeStats | null = null
+let publicHomeStatsInflight: Promise<PublicHomeStats> | null = null
+
+interface ResolveRecordingResponse {
+    recording: DashboardRecording
+}
+
+interface GuildRecordRestrictionsResponse {
+    restrictions: DashboardRecordRestriction[]
+}
+
+interface GuildRecordRestrictionResponse {
+    restriction: DashboardRecordRestriction
 }
 
 const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
@@ -88,9 +120,70 @@ export async function getGuildDashboardOptions(guildId: string): Promise<GuildDa
     return data.options
 }
 
-export async function getFeaturedServers(): Promise<FeaturedServer[]> {
-    const { data } = await discordApi.get<FeaturedServersResponse>('/api/public/featured-servers')
-    return data.servers
+export async function getGuildDashboardRecordRestrictions(guildId: string): Promise<DashboardRecordRestriction[]> {
+    const { data } = await discordApi.get<GuildRecordRestrictionsResponse>(`/api/dashboard/guilds/${guildId}/record-restrictions`)
+    return data.restrictions
+}
+
+export async function deleteGuildDashboardRecordRestriction(guildId: string, restrictionId: number): Promise<DashboardRecordRestriction> {
+    const { data } = await discordApi.delete<GuildRecordRestrictionResponse>(`/api/dashboard/guilds/${guildId}/record-restrictions/${restrictionId}`)
+    return data.restriction
+}
+
+export async function resolveDashboardRecordingSource(source: string): Promise<DashboardRecording> {
+    const { data } = await discordApi.post<ResolveRecordingResponse>('/api/dashboard/recordings/resolve', { source })
+    return data.recording
+}
+
+export async function downloadRecordingSourceUserMix(source: string, userId: string): Promise<Blob> {
+    const { data } = await discordApi.post(`/api/dashboard/recordings/users/${userId}/mix`, {
+        source,
+    }, {
+        responseType: 'blob',
+    })
+
+    return data
+}
+
+export async function downloadRecordingSourceMix(source: string, excludedUserIds: string[] = []): Promise<Blob> {
+    const { data } = await discordApi.post('/api/dashboard/recordings/mix', {
+        source,
+        excludedUserIds,
+    }, {
+        responseType: 'blob',
+    })
+
+    return data
+}
+
+export async function getPublicStats(): Promise<PublicHomeStats> {
+    if (publicHomeStatsCache) {
+        return publicHomeStatsCache
+    }
+
+    if (!publicHomeStatsInflight) {
+        publicHomeStatsInflight = discordApi
+            .get<PublicStatsResponse>('/api/public/stats')
+            .then(({ data }) => {
+                const normalizedData: PublicHomeStats = {
+                    servers: data.servers,
+                    stats: {
+                        createdVoiceRoomsToday: data.stats.createdVoiceRoomsToday,
+                        totalVoiceRooms: data.stats.totalVoiceRooms ?? data.stats.createdVoiceRoomsToday,
+                        totalActiveServers: data.stats.totalActiveServers ?? data.servers.length + data.stats.nonFeaturedActiveServers,
+                        nonFeaturedActiveServers: data.stats.nonFeaturedActiveServers,
+                    },
+                }
+
+                publicHomeStatsCache = normalizedData
+                return normalizedData
+            })
+            .finally(() => {
+                publicHomeStatsInflight = null
+            })
+    }
+
+    return publicHomeStatsInflight
 }
 
 export async function logoutDiscord(): Promise<void> {

@@ -1,13 +1,15 @@
 import { ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router'
-import { ResponsiveSidebarLayout } from '../../components/layouts/ResponsiveSidebarLayout'
+import { DashboardAlert, DashboardStateCard, ResponsiveSidebarLayout } from '../../components'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
-import { useDashboardGuildSelection } from '../../contexts/DashboardContext'
+import { useDashboardGuildSelection } from '../../hooks'
+import { dashboardSidebarNavigation } from '../../constants'
 import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
 
 export function DashboardLayout() {
     const location = useLocation()
+    const authError = useMemo(() => new URLSearchParams(location.search).get('authError'), [location.search])
     const { selectedGuildId, setSelectedGuildId } = useDashboardGuildSelection()
     const [user, setUser] = useState<DiscordUser | null>(null)
     const [guilds, setGuilds] = useState<DiscordGuild[]>([])
@@ -30,7 +32,15 @@ export function DashboardLayout() {
                         setUser(null)
                         setGuilds([])
                         setSelectedGuildId(null)
-                        setError(null)
+                        setError(authError === 'access_denied'
+                            ? 'Connexion Discord annulée. Relance la connexion si tu veux accéder au dashboard.'
+                            : authError
+                                ? 'La connexion Discord a échoué. Réessaie pour continuer.'
+                                : null)
+                    }
+
+                    if (authError) {
+                        return
                     }
 
                     await startDiscordLogin(`${location.pathname}${location.search}`)
@@ -66,7 +76,7 @@ export function DashboardLayout() {
         return () => {
             ignore = true
         }
-    }, [location.pathname, location.search, selectedGuildId, setSelectedGuildId])
+    }, [authError, location.pathname, location.search, selectedGuildId, setSelectedGuildId])
 
     const selectedGuild = useMemo(() => guilds.find((guild) => guild.id === selectedGuildId) ?? null, [guilds, selectedGuildId])
 
@@ -96,15 +106,36 @@ export function DashboardLayout() {
         }
     }, [guildPickerOpen])
 
-    if (loading || !user) {
+    if (loading) {
         return (
-            <main className="min-h-[70vh] bg-base-100 px-6 py-16 lg:px-10">
-                <div className="mx-auto flex max-w-5xl items-center gap-4 rounded-box border border-base-300 bg-base-200/40 p-8 shadow-lg">
+            <main className="flex min-h-screen items-center justify-center bg-base-100 px-6 py-16 lg:px-10">
+                <div className="flex items-center gap-4 text-center lg:text-left">
                     <ArrowPathIcon className="h-6 w-6 animate-spin text-primary" />
                     <div>
                         <h1 className="text-2xl font-black">Connexion au dashboard</h1>
                         <p className="text-base-content/70">Chargement de ta session Discord en cours...</p>
                     </div>
+                </div>
+            </main>
+        )
+    }
+
+    if (!user) {
+        return (
+            <main className="flex min-h-screen items-center justify-center bg-base-100 px-6 py-16 lg:px-10">
+                <div className="w-full max-w-xl space-y-4">
+                    <DashboardAlert tone="warning" icon={<ExclamationTriangleIcon className="h-5 w-5" />}>
+                        {error ?? 'Aucune session Discord active.'}
+                    </DashboardAlert>
+                    <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={() => {
+                            void startDiscordLogin(`${location.pathname}`)
+                        }}
+                    >
+                        Reconnecter Discord
+                    </button>
                 </div>
             </main>
         )
@@ -117,7 +148,7 @@ export function DashboardLayout() {
             onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             onCloseSidebar={() => setSidebarOpen(false)}
             asideClassName="fixed inset-y-0 left-0 z-40 mt-16 w-72 overflow-y-auto border-r border-base-300 bg-base-200 lg:static lg:mt-0 lg:bg-base-200/50"
-            contentWrapperClassName="mx-auto max-w-5xl px-6 py-10 lg:px-10"
+            contentWrapperClassName="py-0"
             sidebar={
                 <nav className="space-y-4 p-4">
                     <div>
@@ -130,11 +161,11 @@ export function DashboardLayout() {
                             <div ref={guildPickerRef} className="space-y-2">
                                 <button
                                     type="button"
-                                    className="flex w-full items-center gap-3 rounded-lg bg-primary/20 px-3 py-3 text-left text-primary transition hover:bg-primary/25"
+                                    className="flex w-full items-center gap-3 rounded-lg border border-base-300 bg-base-100 px-3 py-3 text-left text-base-content transition hover:border-base-300 hover:bg-base-100"
                                     onClick={() => setGuildPickerOpen((previous) => !previous)}
                                     aria-expanded={guildPickerOpen}
                                 >
-                                    <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-primary/15 text-xs font-black text-primary">
+                                    <div className={`flex h-10 w-10 flex-none items-center justify-center rounded-lg text-xs font-black text-primary ${selectedGuild?.iconUrl ? '' : 'bg-primary/15'}`}>
                                         {selectedGuild?.iconUrl ? (
                                             <img src={selectedGuild.iconUrl} alt={selectedGuild.name} className="h-10 w-10 rounded-lg object-cover" />
                                         ) : (
@@ -151,7 +182,7 @@ export function DashboardLayout() {
                                         ) : null}
                                     </div>
 
-                                    <ChevronDownIcon className={`h-4 w-4 flex-none text-primary/70 transition ${guildPickerOpen ? 'rotate-180' : ''}`} />
+                                    <ChevronDownIcon className={`h-4 w-4 flex-none text-base-content/60 transition ${guildPickerOpen ? 'rotate-180' : ''}`} />
                                 </button>
 
                                 {guildPickerOpen ? (
@@ -171,11 +202,17 @@ export function DashboardLayout() {
                                                     className={`flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left transition ${
                                                         isSelected
                                                             ? 'bg-primary/20 text-primary'
-                                                            : 'bg-base-200/40 text-base-content/75 hover:bg-base-300/50'
+                                                            : 'bg-base-100 text-base-content/75 hover:bg-base-300/50'
                                                     }`}
                                                 >
                                                     <div className={`flex h-10 w-10 flex-none items-center justify-center rounded-lg text-xs font-black ${
-                                                        isSelected ? 'bg-primary/15 text-primary' : 'bg-base-300/40 text-base-content'
+                                                        guild.iconUrl
+                                                            ? isSelected
+                                                                ? 'text-base-content'
+                                                                : 'text-base-content'
+                                                            : isSelected
+                                                                ? 'bg-base-200 text-base-content'
+                                                                : 'bg-base-300/40 text-base-content'
                                                     }`}>
                                                         {guild.iconUrl ? (
                                                             <img src={guild.iconUrl} alt={guild.name} className="h-10 w-10 rounded-lg object-cover" />
@@ -199,52 +236,40 @@ export function DashboardLayout() {
 
                     <div>
                         <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">Navigation</p>
-                        <NavLink
-                            to="/dashboard"
-                            end
-                            className={({ isActive }) => `flex rounded-lg px-3 py-2 text-sm transition ${
-                                isActive
-                                    ? 'bg-primary/20 text-primary font-semibold'
-                                    : 'text-base-content/75 hover:bg-base-300/50'
-                            }`}
-                            onClick={() => setSidebarOpen(false)}
-                        >
-                            Vue d’ensemble
-                        </NavLink>
-                        <NavLink
-                            to="/dashboard/settings"
-                            className={({ isActive }) => `mt-1 flex rounded-lg px-3 py-2 text-sm transition ${
-                                isActive
-                                    ? 'bg-primary/20 text-primary font-semibold'
-                                    : 'text-base-content/75 hover:bg-base-300/50'
-                            }`}
-                            onClick={() => setSidebarOpen(false)}
-                        >
-                            Configuration
-                        </NavLink>
-                        <NavLink
-                            to="/dashboard/logs"
-                            className={({ isActive }) => `mt-1 flex rounded-lg px-3 py-2 text-sm transition ${
-                                isActive
-                                    ? 'bg-primary/20 text-primary font-semibold'
-                                    : 'text-base-content/75 hover:bg-base-300/50'
-                            }`}
-                            onClick={() => setSidebarOpen(false)}
-                        >
-                            Logs
-                        </NavLink>
+                        {dashboardSidebarNavigation.map((item, index) => (
+                            <NavLink
+                                key={item.id}
+                                to={item.href}
+                                end={item.end}
+                                className={({ isActive }) => `${index > 0 ? 'mt-1 ' : ''}flex rounded-lg px-3 py-2 text-sm transition ${
+                                    isActive
+                                        ? 'bg-primary/20 text-primary font-semibold'
+                                        : 'text-base-content/75 hover:bg-base-300/50'
+                                }`}
+                                onClick={() => setSidebarOpen(false)}
+                            >
+                                {item.title}
+                            </NavLink>
+                        ))}
                     </div>
                 </nav>
             }
         >
             {error ? (
-                <div className="alert alert-warning mb-6">
-                    <ExclamationTriangleIcon className="h-5 w-5" />
-                    <span>{error}</span>
-                </div>
+                <DashboardAlert tone="warning" icon={<ExclamationTriangleIcon className="h-5 w-5" />} className="mb-6">
+                    {error}
+                </DashboardAlert>
             ) : null}
 
+            {!selectedGuild ? (
+                <section className="bg-base-100 px-6 py-8 lg:px-8">
+                    <DashboardStateCard tone="muted" className="text-base-content/70">
+                        Sélectionne un serveur dans la sidebar pour accéder à cette section du dashboard.
+                    </DashboardStateCard>
+                </section>
+            ) : (
             <Outlet context={{ selectedGuild, selectedGuildId, user } satisfies DashboardLayoutContextValue} />
+            )}
         </ResponsiveSidebarLayout>
     )
 }

@@ -1,9 +1,59 @@
-import { BoltIcon, ShieldCheckIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/outline'
+import { Link } from 'react-router'
+import { useEffect, useState } from 'react'
+import { InformationCircleIcon, ShieldCheckIcon, SpeakerWaveIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/outline'
 import logoSansFond from '../assets/images/voicey-logo.png'
-import { startDiscordLogin } from '../api/discordAuth'
-import { FeaturedServers } from '../components/FeaturedServers'
+import { FeaturedServers } from '../components'
+import { getPublicStats } from '../api/discordAuth'
+import { VOICEY_HELP_DISCORD_URL, VOICEY_INVITE_URL } from '../constants'
+import type { FeaturedServer } from '../types'
 
 export function HomePage() {
+    const [stats, setStats] = useState({
+        createdVoiceRoomsToday: 0,
+        totalVoiceRooms: 0,
+        totalActiveServers: 0,
+        nonFeaturedActiveServers: 0,
+    })
+    const [featuredServers, setFeaturedServers] = useState<FeaturedServer[]>([])
+    const [homeDataLoading, setHomeDataLoading] = useState(true)
+    const [homeDataError, setHomeDataError] = useState<string | null>(null)
+
+    useEffect(() => {
+        let ignore = false
+
+        const loadHomeData = async () => {
+            try {
+                const publicHomeData = await getPublicStats()
+                if (!ignore) {
+                    setStats(publicHomeData.stats)
+                    setFeaturedServers(publicHomeData.servers)
+                    setHomeDataError(null)
+                }
+            } catch {
+                if (!ignore) {
+                    setStats({
+                        createdVoiceRoomsToday: 0,
+                        totalVoiceRooms: 0,
+                        totalActiveServers: 0,
+                        nonFeaturedActiveServers: 0,
+                    })
+                    setFeaturedServers([])
+                    setHomeDataError('Impossible de charger les données publiques de Voicey pour le moment.')
+                }
+            } finally {
+                if (!ignore) {
+                    setHomeDataLoading(false)
+                }
+            }
+        }
+
+        void loadHomeData()
+
+        return () => {
+            ignore = true
+        }
+    }, [])
+
     return (
         <main className="relative isolate overflow-hidden bg-base-100">
             <div className="pointer-events-none absolute inset-0 -z-10">
@@ -16,50 +66,63 @@ export function HomePage() {
                 <div className="space-y-6">
                     <div className="badge badge-primary badge-outline badge-lg">Bot Discord Voicey</div>
                     <h1 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
-                        Le bot Discord qui crée tes salons vocaux temporaires automatiquement
+                        Le bot de gestion des salons vocaux conçu pour la modération
                     </h1>
                     <p className="max-w-2xl text-base-content/80 sm:text-lg">
-                        Voicey est un bot Discord dédié aux salons vocaux : il détecte l&apos;arrivée d&apos;un membre,
-                        crée son salon, applique les permissions, puis nettoie quand il est vide. Rapide, propre,
-                        zéro friction pour ta communauté.
+                        Voicey crée automatiquement les salons vocaux temporaires, les rend simples à piloter avec des boutons
+                        et ajoute des fonctionnalités pensées pour la modération vocale.
                     </p>
                     <div className="flex flex-wrap gap-3">
-                        <button className="btn btn-primary btn-wide" onClick={() => void startDiscordLogin('/dashboard').catch(console.error)}>
-                            Se connecter au dashboard
-                        </button>
-                        <button className="btn btn-outline btn-secondary">Voir les commandes Discord</button>
+                        <a href={VOICEY_INVITE_URL} target="_blank" rel="noreferrer" className="btn btn-primary btn-wide">
+                            Ajouter Voicey
+                        </a>
+                        <a href={VOICEY_HELP_DISCORD_URL} target="_blank" rel="noreferrer" className="btn btn-outline btn-secondary">
+                            Rejoindre le Discord
+                        </a>
                     </div>
                     <div className="alert alert-info alert-soft max-w-xl">
-                        <ShieldCheckIcon className="h-5 w-5" />
-                        <span>Bot Discord sécurisé : permissions maîtrisées, logs de modération, et configuration par rôle.</span>
+                        <InformationCircleIcon className="h-5 w-5" />
+                        <span>Enregistrements publiés dans Discord, historique des bannissements vocaux et dashboard réservé à la modération : Voicey facilite la modération de vos salons vocaux.</span>
                     </div>
                 </div>
 
                 <div className="relative mr-0 flex items-center justify-end p-0 md:-mr-8 lg:-mr-12 xl:-mr-16">
-                    <img
-                        src={logoSansFond}
-                        alt="Logo Voicey"
-                        className="relative z-10 w-full max-w-[640px] object-contain"
-                    />
+                    <div className="hover-3d hover-3d-logo w-full max-w-[640px]">
+                        <figure className="w-full max-w-[640px]">
+                            <img
+                                src={logoSansFond}
+                                alt="Logo Voicey"
+                                className="relative z-10 w-full max-w-[640px] object-contain"
+                            />
+                        </figure>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                    </div>
                 </div>
             </section>
 
             <section className="mx-auto max-w-7xl px-6 pb-8 lg:px-10">
                 <div className="stats stats-vertical w-full bg-base-200/70 shadow md:stats-horizontal">
                     <div className="stat">
-                        <div className="stat-title">Salons créés / jour</div>
-                        <div className="stat-value text-primary">2.4K</div>
-                        <div className="stat-desc">+18% cette semaine</div>
+                        <div className="stat-title">Salons créés aujourd'hui</div>
+                        <div className="stat-value text-secondary">{stats.createdVoiceRoomsToday.toLocaleString('fr-FR')}</div>
+                        <div className="stat-desc">{stats.totalVoiceRooms.toLocaleString('fr-FR')} au total</div>
                     </div>
                     <div className="stat">
                         <div className="stat-title">Temps moyen création</div>
                         <div className="stat-value text-secondary">&lt; 1s</div>
-                        <div className="stat-desc">quasi instantané</div>
+                        <div className="stat-desc">instantané</div>
                     </div>
                     <div className="stat">
                         <div className="stat-title">Serveurs actifs</div>
-                        <div className="stat-value text-accent">890</div>
-                        <div className="stat-desc">moderation integree</div>
+                        <div className="stat-value text-secondary">{stats.totalActiveServers.toLocaleString('fr-FR')}</div>
+                        <div className="stat-desc">{stats.nonFeaturedActiveServers.toLocaleString('fr-FR')} autres hors featured</div>
                     </div>
                 </div>
             </section>
@@ -73,33 +136,33 @@ export function HomePage() {
                 <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                     <article className="card border border-base-300 bg-base-100 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
                         <div className="card-body">
-                            <BoltIcon className="h-8 w-8 text-primary" />
-                            <h3 className="card-title">Création instantanée</h3>
-                            <p>Un membre rejoint le canal créateur, un salon privé est ouvert automatiquement.</p>
+                            <WrenchScrewdriverIcon className="h-8 w-8 text-secondary" />
+                            <h3 className="card-title">Contrôles par boutons, menus et modals</h3>
+                            <p>Verouiller, limiter, transférer, expulser et bannir de votre salon sans taper de commande. Gérer votre salon vocal Discord devient très simple!</p>
                             <div className="card-actions justify-end">
-                                <span className="badge badge-primary badge-soft">Auto</span>
+                                <span className="badge badge-secondary badge-soft">Accessibilité</span>
                             </div>
                         </div>
                     </article>
 
                     <article className="card border border-base-300 bg-base-100 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
                         <div className="card-body">
-                            <WrenchScrewdriverIcon className="h-8 w-8 text-secondary" />
-                            <h3 className="card-title">Contrôles par boutons</h3>
-                            <p>Lock, unlock, limit, transfer, kick, ban et reset sans taper de commande.</p>
+                            <SpeakerWaveIcon className="h-8 w-8 text-secondary" />
+                            <h3 className="card-title">Enregistrement à la demande</h3>
+                            <p>Enregistrement vocal déclenché par vos membres et publié dans le canal de modération de votre serveur Discord pour fournir une preuve exploitable.</p>
                             <div className="card-actions justify-end">
-                                <span className="badge badge-secondary badge-soft">UI</span>
+                                <span className="badge badge-secondary badge-soft">Modération avancée</span>
                             </div>
                         </div>
                     </article>
 
-                    <article className="card border border-base-300 bg-base-100 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl md:col-span-2 xl:col-span-1">
+                    <article className="card border border-base-300 bg-base-100 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
                         <div className="card-body">
                             <ShieldCheckIcon className="h-8 w-8 text-accent" />
-                            <h3 className="card-title">Modération et historique</h3>
-                            <p>Suivi des actions sensibles et historique des bans pour éviter les abus.</p>
+                            <h3 className="card-title">Historique des bannissements</h3>
+                            <p>Une alerte est envoyée dès qu'un utilisateur est banni d'un salon vocal et un historique est conservé consultable à tout moment.</p>
                             <div className="card-actions justify-end">
-                                <span className="badge badge-accent badge-soft">Secure</span>
+                                <span className="badge badge-accent badge-soft">Traçabilité</span>
                             </div>
                         </div>
                     </article>
@@ -112,8 +175,8 @@ export function HomePage() {
                         <h2 className="text-3xl font-extrabold">Mise en place en 3 étapes</h2>
                         <ul className="steps steps-vertical mt-6 w-full lg:steps-horizontal">
                             <li className="step step-primary">Invite le bot</li>
-                            <li className="step step-primary">Configure /config</li>
-                            <li className="step">Ton serveur est live</li>
+                            <li className="step step-primary">Configure avec /config</li>
+                            <li className="step">C'est parti !</li>
                         </ul>
                     </div>
 
@@ -127,23 +190,28 @@ export function HomePage() {
                         </div>
                         <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
                             <input type="radio" name="faq-voicey" />
-                            <div className="collapse-title font-semibold">Puis-je limiter le nombre de places ?</div>
+                            <div className="collapse-title font-semibold">Le record est-il prévu pour la modération ?</div>
                             <div className="collapse-content text-sm text-base-content/80">
-                                Oui, avec des présets par défaut et des ajustements en direct via bouton Limit.
+                                Oui. Voicey a été pensé pour aider à documenter une atteinte au règlement, pas pour enregistrer par confort ou curiosité.
                             </div>
                         </div>
                         <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
                             <input type="radio" name="faq-voicey" />
-                            <div className="collapse-title font-semibold">Compatible avec plusieurs catégories ?</div>
+                            <div className="collapse-title font-semibold">Qui voit les records dans le dashboard ?</div>
                             <div className="collapse-content text-sm text-base-content/80">
-                                Oui, tu peux définir des catégories vocales différentes selon tes besoins communautaires.
+                                Les modérateurs autorisés du serveur. Cette restriction doit être documentée et annoncée aux membres.
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <FeaturedServers />
+            <FeaturedServers
+                servers={featuredServers}
+                nonFeaturedActiveServers={stats.nonFeaturedActiveServers}
+                loading={homeDataLoading}
+                error={homeDataError}
+            />
 
             <section className="mx-auto max-w-7xl px-6 pb-16 pt-6 lg:px-10">
                 <div className="hero rounded-box border border-primary/20 bg-gradient-to-r from-primary/20 via-base-200 to-secondary/20 p-2">
@@ -151,11 +219,13 @@ export function HomePage() {
                         <div className="max-w-2xl">
                             <h2 className="text-3xl font-black sm:text-4xl">Prêt à fluidifier ton vocal Discord ?</h2>
                             <p className="py-4 text-base-content/80">
-                                Lance Voicey et donne à tes membres des salons perso, gérables en 1 clic.
+                                Installe Voicey et donne à tes membres des salons vocaux simples à utiliser, avec une vraie boîte à outils de modération.
                             </p>
                             <div className="join join-vertical gap-2 sm:join-horizontal">
-                                <button className="btn join-item btn-primary">Ajouter Voicey</button>
-                                <button className="btn join-item btn-outline">Documentation</button>
+                                <a href={VOICEY_INVITE_URL} target="_blank" rel="noreferrer" className="btn join-item btn-primary">Ajouter Voicey</a>
+                                <Link to="/docs" className="btn join-item btn-outline">
+                                    Documentation
+                                </Link>
                             </div>
                         </div>
                     </div>

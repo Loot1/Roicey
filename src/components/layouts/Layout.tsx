@@ -4,10 +4,10 @@ import type { ReactNode } from 'react'
 
 export function Layout({ children }: { children: ReactNode }) {
     return (
-        <>
+        <div className="flex min-h-screen flex-col bg-base-100">
             <Header />
-            {children}
+            <main className="flex flex-1 flex-col">{children}</main>
             <Footer />
-        </>
+        </div>
     )
 }

@@ -1,35 +1,37 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useOutletContext } from 'react-router'
-import { DashboardSelectField } from '../../components/DashboardSelectField'
+import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardSelectField } from '../../components'
 import { getGuildDashboardConfig, getGuildDashboardOptions, saveGuildDashboardConfig } from '../../api/discordAuth'
 import type { DashboardLayoutContextValue, GuildDashboardConfigInput, GuildDashboardOptions } from '../../types'
 
 interface ConfigFormState {
     categoryId: string
     createChannelId: string
-    logChannelId: string
+    modChannelId: string
     defaultMaxMembers: string
+    defaultRecordingDurationSeconds: string
     adminRolesIds: string[]
 }
 
 const defaultFormValues: ConfigFormState = {
     categoryId: '',
     createChannelId: '',
-    logChannelId: '',
+    modChannelId: '',
     defaultMaxMembers: '7',
+    defaultRecordingDurationSeconds: '60',
     adminRolesIds: [],
 }
 
 const emptyOptions: GuildDashboardOptions = {
     categories: [],
     voiceChannels: [],
-    logChannels: [],
+    modChannels: [],
     roles: [],
 }
 
 export function DashboardSettingsPage() {
-    const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
+    const { selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
     const form = useForm<ConfigFormState>({
         defaultValues: defaultFormValues,
         mode: 'onChange',
@@ -61,8 +63,9 @@ export function DashboardSettingsPage() {
                     form.reset({
                         categoryId: config.categoryId ?? '',
                         createChannelId: config.createChannelId ?? '',
-                        logChannelId: config.logChannelId ?? '',
+                        modChannelId: config.modChannelId ?? '',
                         defaultMaxMembers: String(config.defaultMaxMembers),
+                        defaultRecordingDurationSeconds: String(config.defaultRecordingDurationSeconds),
                         adminRolesIds: config.adminRolesIds,
                     })
                     setOptions(guildOptions)
@@ -106,11 +109,18 @@ export function DashboardSettingsPage() {
             return
         }
 
+        const recordingDurationSeconds = Number(data.defaultRecordingDurationSeconds)
+        if (!Number.isInteger(recordingDurationSeconds) || recordingDurationSeconds < 10 || recordingDurationSeconds > 180) {
+            setConfigMessage("La durée d'enregistrement par défaut doit être comprise entre 10 et 180 secondes.")
+            return
+        }
+
         const payload: GuildDashboardConfigInput = {
             categoryId: data.categoryId,
             createChannelId: data.createChannelId,
-            logChannelId: data.logChannelId,
+            modChannelId: data.modChannelId,
             defaultMaxMembers: maxMembers,
+            defaultRecordingDurationSeconds: recordingDurationSeconds,
             adminRolesIds: data.adminRolesIds,
         }
 
@@ -121,8 +131,9 @@ export function DashboardSettingsPage() {
             form.reset({
                 categoryId: savedConfig.categoryId ?? '',
                 createChannelId: savedConfig.createChannelId ?? '',
-                logChannelId: savedConfig.logChannelId ?? '',
+                modChannelId: savedConfig.modChannelId ?? '',
                 defaultMaxMembers: String(savedConfig.defaultMaxMembers),
+                defaultRecordingDurationSeconds: String(savedConfig.defaultRecordingDurationSeconds),
                 adminRolesIds: savedConfig.adminRolesIds,
             })
             setConfigMessage('Configuration sauvegardée avec succès.')
@@ -133,28 +144,31 @@ export function DashboardSettingsPage() {
         }
     }
 
-    if (!selectedGuild) {
-        return (
-            <div className="rounded-box border border-base-300 bg-base-200/40 p-8 text-base-content/70">
-                Sélectionne un serveur dans la sidebar pour afficher sa configuration.
-            </div>
-        )
-    }
-
     const adminRolesIds = form.watch('adminRolesIds')
     const isDisabled = configLoading || configSaving
+    const formId = 'dashboard-settings-form'
 
     return (
-        <section className="space-y-6">
-            <div className="rounded-box border border-base-300 bg-base-100 p-6 shadow-lg">
+        <section className="space-y-0 bg-base-100">
+            <DashboardPageHeader
+                title="Configuration"
+                description="Ajuste les paramètres du serveur, les salons utilisés par Voicey et les rôles autorisés à gérer les salons vocaux."
+                actions={<ButtonOne label="Sauvegarder" type="submit" form={formId} loadingLabel={configLoading ? 'Chargement...' : 'Sauvegarde...'} loading={isDisabled} />}
+            />
+
+            <div className="px-6 py-4 lg:px-8">
                 {configMessage ? (
-                    <div className="alert alert-info mb-4 py-2">
-                        <span className="text-sm">{configMessage}</span>
-                    </div>
+                    <DashboardAlert className="mb-6 py-2 shadow-sm">{configMessage}</DashboardAlert>
                 ) : null}
 
-                <form onSubmit={form.handleSubmit(handleSaveConfig)} className="space-y-4">
-                    <div className="grid gap-4 md:grid-cols-2">
+                <form id={formId} onSubmit={form.handleSubmit(handleSaveConfig)} className="space-y-6">
+                    <div className="rounded-[1.6rem] border border-base-300 bg-base-100 p-5 shadow-sm">
+                        <div className="mb-5">
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-base-content/45">Canaux</p>
+                            <h2 className="mt-1 text-2xl font-black tracking-tight">Structure vocale</h2>
+                        </div>
+
+                        <div className="grid gap-4 md:grid-cols-2">
                         <DashboardSelectField
                             control={form.control}
                             name="categoryId"
@@ -175,10 +189,10 @@ export function DashboardSettingsPage() {
 
                         <DashboardSelectField
                             control={form.control}
-                            name="logChannelId"
-                            label="Salon de logs"
+                            name="modChannelId"
+                            label="Salon de modération"
                             placeholder="Aucun salon"
-                            options={options.logChannels}
+                            options={options.modChannels}
                             disabled={isDisabled}
                         />
 
@@ -193,40 +207,49 @@ export function DashboardSettingsPage() {
                                 disabled={isDisabled}
                             />
                         </label>
+
+                        <label className="form-control flex flex-col">
+                            <span className="label-text mb-1">Durée d'enregistrement par défaut (10-180s)</span>
+                            <input
+                                type="number"
+                                min={10}
+                                max={180}
+                                className="input input-bordered w-full"
+                                {...form.register('defaultRecordingDurationSeconds')}
+                                disabled={isDisabled}
+                            />
+                        </label>
+                        </div>
                     </div>
 
-                    <div className="form-control mt-5">
-                        <span className="label-text mb-1">Rôles administrateurs</span>
-                        {options.roles.length === 0 ? (
-                            <div className="rounded-box border border-dashed border-base-300 p-3 text-sm text-base-content/65">
-                                Aucun rôle disponible pour ce serveur.
-                            </div>
-                        ) : (
-                            <div className="mt-1 max-h-56 w-full space-y-2 overflow-y-auto rounded-box border border-base-300 bg-base-200/30 p-3">
-                                {options.roles.map((role) => (
-                                    <label key={role.id} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-base-300/40">
-                                        <input
-                                            type="checkbox"
-                                            className="checkbox checkbox-sm"
-                                            checked={adminRolesIds.includes(role.id)}
-                                            onChange={() => toggleRole(role.id)}
-                                            disabled={isDisabled}
-                                        />
-                                        <span className="text-sm">{role.name}</span>
-                                    </label>
-                                ))}
-                            </div>
-                        )}
-                    </div>
+                    <div className="rounded-[1.6rem] border border-base-300 bg-base-100 p-5 shadow-sm">
+                        <div className="mb-5">
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-base-content/45">Accès</p>
+                            <h2 className="mt-1 text-2xl font-black tracking-tight">Rôles administrateurs</h2>
+                        </div>
 
-                    <div className="mt-5 flex flex-wrap gap-3">
-                        <button
-                            type="submit"
-                            className="btn btn-primary"
-                            disabled={isDisabled}
-                        >
-                            {configLoading ? 'Chargement...' : configSaving ? 'Sauvegarde...' : 'Sauvegarder'}
-                        </button>
+                        <div className="form-control">
+                            {options.roles.length === 0 ? (
+                                <div className="rounded-box border border-dashed border-base-300 p-3 text-sm text-base-content/65">
+                                    Aucun rôle disponible pour ce serveur.
+                                </div>
+                            ) : (
+                                <div className="max-h-72 w-full space-y-2 overflow-y-auto rounded-box border border-base-300 bg-base-200/30 p-3">
+                                    {options.roles.map((role) => (
+                                        <label key={role.id} className="flex cursor-pointer items-center gap-3 rounded-lg px-2 py-1.5 hover:bg-base-300/40">
+                                            <input
+                                                type="checkbox"
+                                                className="checkbox checkbox-sm"
+                                                checked={adminRolesIds.includes(role.id)}
+                                                onChange={() => toggleRole(role.id)}
+                                                disabled={isDisabled}
+                                            />
+                                            <span className="text-sm">{role.name}</span>
+                                        </label>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </form>
             </div>

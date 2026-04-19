@@ -23,7 +23,7 @@ export function ResponsiveSidebarLayout({
     contentWrapperClassName,
 }: ResponsiveSidebarLayoutProps) {
     return (
-        <div className="flex min-h-screen bg-base-100">
+        <div className="flex min-h-full flex-1 bg-base-100">
             <aside
                 className={`${asideClassName} transition-transform lg:translate-x-0 ${
                     sidebarOpen ? 'translate-x-0' : '-translate-x-full'
