@@ -8,6 +8,22 @@
     <title>Voicey</title>
   </head>
   <body>
+    <script>
+      (function redirectGithubPagesSpa() {
+        const params = new URLSearchParams(window.location.search)
+        const redirectedPath = params.get('p')
+
+        if (!redirectedPath) {
+          return
+        }
+
+        const redirectedQuery = params.get('q')
+        const redirectedHash = window.location.hash || ''
+        const nextUrl = `${redirectedPath}${redirectedQuery ? `?${redirectedQuery}` : ''}${redirectedHash}`
+
+        window.history.replaceState(null, '', nextUrl)
+      })()
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/index.tsx"></script>
   </body>
