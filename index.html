@@ -6,10 +6,26 @@
     <link rel="shortcut icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Voicey</title>
-    <script type="module" crossorigin src="/assets/index-CI4H2CBZ.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DY3fy3zd.css">
+    <script type="module" crossorigin src="/assets/index-C9q9Sh-0.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dr73Kviz.css">
   </head>
   <body>
+    <script>
+      (function redirectGithubPagesSpa() {
+        const params = new URLSearchParams(window.location.search)
+        const redirectedPath = params.get('p')
+
+        if (!redirectedPath) {
+          return
+        }
+
+        const redirectedQuery = params.get('q')
+        const redirectedHash = window.location.hash || ''
+        const nextUrl = `${redirectedPath}${redirectedQuery ? `?${redirectedQuery}` : ''}${redirectedHash}`
+
+        window.history.replaceState(null, '', nextUrl)
+      })()
+    </script>
     <div id="root"></div>
   </body>
 </html>
