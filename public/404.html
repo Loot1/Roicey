@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Voicey</title>
+    <script>
+      (function redirectToSpaEntry() {
+        const { pathname, search, hash, origin } = window.location
+        const query = search.startsWith('?') ? search.slice(1) : search
+        const target = `${origin}/?p=${encodeURIComponent(pathname)}${query ? `&q=${encodeURIComponent(query)}` : ''}${hash}`
+
+        window.location.replace(target)
+      })()
+    </script>
+  </head>
+  <body></body>
+</html>

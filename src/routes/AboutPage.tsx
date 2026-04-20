@@ -48,7 +48,7 @@ export function AboutPage() {
             </div>
 
             <section>
-                <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 py-14 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)] lg:px-10 lg:py-16">
+                <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 pt-12 lg:pb-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)] lg:px-10">
                     <div className="space-y-7">
                         <div className="badge badge-primary badge-outline badge-lg">Origine du projet</div>
 
@@ -92,7 +92,7 @@ export function AboutPage() {
                                 </div>
                             </div>
                         </div>
-                        <div className="diff-item-2" role="img" aria-label="Modérateur heureux avec preuve fournie par Voicey">
+                        <div className="diff-item-2 after:bg-secondary" role="img" aria-label="Modérateur heureux avec preuve fournie par Voicey">
                             <div className="flex h-full flex-col justify-between bg-base-100 p-6 text-base-content sm:p-8">
                                 <div className="flex items-center justify-between text-xs font-black uppercase tracking-[0.24em] text-base-content/45">
                                     <span>Avec Voicey</span>
@@ -116,7 +116,7 @@ export function AboutPage() {
                 </div>
             </section>
 
-            <section className="mx-auto max-w-7xl px-6 pt-6 pb-8 lg:px-10">
+            <section className="mx-auto max-w-7xl px-6 lg:pt-6 pb-8 lg:px-10">
                 <div className="mb-8 max-w-2xl">
                     <div className="badge badge-secondary badge-soft">Fondements</div>
                     <h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">Les idées clefs</h2>
