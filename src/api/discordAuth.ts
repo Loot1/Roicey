@@ -73,7 +73,7 @@ export const discordApi = axios.create({
 })
 
 export async function startDiscordLogin(returnTo?: string): Promise<void> {
-    const { data } = await discordApi.get<{ url: string }>('/api/auth/discord/url', {
+    const { data } = await discordApi.get<{ url: string }>('/auth/discord/url', {
         params: returnTo ? { returnTo } : undefined,
     })
     window.location.assign(data.url)
@@ -81,7 +81,7 @@ export async function startDiscordLogin(returnTo?: string): Promise<void> {
 
 export async function getDiscordSession(): Promise<DiscordUser | null> {
     try {
-        const { data } = await discordApi.get<MeResponse>('/api/auth/me')
+        const { data } = await discordApi.get<MeResponse>('/auth/me')
         return data.user
     } catch (error) {
         if (axios.isAxiosError(error) && error.response?.status === 401) {
@@ -93,17 +93,17 @@ export async function getDiscordSession(): Promise<DiscordUser | null> {
 }
 
 export async function getDiscordGuilds(): Promise<DiscordGuild[]> {
-    const { data } = await discordApi.get<GuildsResponse>('/api/auth/guilds')
+    const { data } = await discordApi.get<GuildsResponse>('/auth/guilds')
     return data.guilds
 }
 
 export async function getDashboardGuilds(): Promise<DiscordGuild[]> {
-    const { data } = await discordApi.get<GuildsResponse>('/api/dashboard/guilds')
+    const { data } = await discordApi.get<GuildsResponse>('/dashboard/guilds')
     return data.guilds
 }
 
 export async function getGuildDashboardConfig(guildId: string): Promise<GuildDashboardConfig> {
-    const { data } = await discordApi.get<GuildConfigResponse>(`/api/dashboard/guilds/${guildId}/config`)
+    const { data } = await discordApi.get<GuildConfigResponse>(`/dashboard/guilds/${guildId}/config`)
     return data.config
 }
 
@@ -111,32 +111,32 @@ export async function saveGuildDashboardConfig(
     guildId: string,
     config: GuildDashboardConfigInput,
 ): Promise<GuildDashboardConfig> {
-    const { data } = await discordApi.put<GuildConfigResponse>(`/api/dashboard/guilds/${guildId}/config`, config)
+    const { data } = await discordApi.put<GuildConfigResponse>(`/dashboard/guilds/${guildId}/config`, config)
     return data.config
 }
 
 export async function getGuildDashboardOptions(guildId: string): Promise<GuildDashboardOptions> {
-    const { data } = await discordApi.get<GuildOptionsResponse>(`/api/dashboard/guilds/${guildId}/options`)
+    const { data } = await discordApi.get<GuildOptionsResponse>(`/dashboard/guilds/${guildId}/options`)
     return data.options
 }
 
 export async function getGuildDashboardRecordRestrictions(guildId: string): Promise<DashboardRecordRestriction[]> {
-    const { data } = await discordApi.get<GuildRecordRestrictionsResponse>(`/api/dashboard/guilds/${guildId}/record-restrictions`)
+    const { data } = await discordApi.get<GuildRecordRestrictionsResponse>(`/dashboard/guilds/${guildId}/record-restrictions`)
     return data.restrictions
 }
 
 export async function deleteGuildDashboardRecordRestriction(guildId: string, restrictionId: number): Promise<DashboardRecordRestriction> {
-    const { data } = await discordApi.delete<GuildRecordRestrictionResponse>(`/api/dashboard/guilds/${guildId}/record-restrictions/${restrictionId}`)
+    const { data } = await discordApi.delete<GuildRecordRestrictionResponse>(`/dashboard/guilds/${guildId}/record-restrictions/${restrictionId}`)
     return data.restriction
 }
 
 export async function resolveDashboardRecordingSource(source: string): Promise<DashboardRecording> {
-    const { data } = await discordApi.post<ResolveRecordingResponse>('/api/dashboard/recordings/resolve', { source })
+    const { data } = await discordApi.post<ResolveRecordingResponse>('/dashboard/recordings/resolve', { source })
     return data.recording
 }
 
 export async function downloadRecordingSourceUserMix(source: string, userId: string): Promise<Blob> {
-    const { data } = await discordApi.post(`/api/dashboard/recordings/users/${userId}/mix`, {
+    const { data } = await discordApi.post(`/dashboard/recordings/users/${userId}/mix`, {
         source,
     }, {
         responseType: 'blob',
@@ -146,7 +146,7 @@ export async function downloadRecordingSourceUserMix(source: string, userId: str
 }
 
 export async function downloadRecordingSourceMix(source: string, excludedUserIds: string[] = []): Promise<Blob> {
-    const { data } = await discordApi.post('/api/dashboard/recordings/mix', {
+    const { data } = await discordApi.post('/dashboard/recordings/mix', {
         source,
         excludedUserIds,
     }, {
@@ -163,7 +163,7 @@ export async function getPublicStats(): Promise<PublicHomeStats> {
 
     if (!publicHomeStatsInflight) {
         publicHomeStatsInflight = discordApi
-            .get<PublicStatsResponse>('/api/public/stats')
+            .get<PublicStatsResponse>('/public/stats')
             .then(({ data }) => {
                 const normalizedData: PublicHomeStats = {
                     servers: data.servers,
@@ -187,7 +187,7 @@ export async function getPublicStats(): Promise<PublicHomeStats> {
 }
 
 export async function logoutDiscord(): Promise<void> {
-    await discordApi.post('/api/auth/logout')
+    await discordApi.post('/auth/logout')
     window.dispatchEvent(new Event(AUTH_CHANGED_EVENT))
 }
 
