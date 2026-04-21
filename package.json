@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build --mode prod",
     "lint": "eslint .",
     "preview": "vite preview",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist -c voicey.fr"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
