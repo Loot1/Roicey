@@ -48,7 +48,7 @@ export function AboutPage() {
             </div>
 
             <section>
-                <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 pt-12 lg:pb-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)] lg:px-10">
+                <div className="mx-auto grid max-w-7xl items-center gap-10 px-6 pt-12 pb-6 lg:pb-12 lg:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)] lg:px-10">
                     <div className="space-y-7">
                         <div className="badge badge-primary badge-outline badge-lg">Origine du projet</div>
 
@@ -72,7 +72,7 @@ export function AboutPage() {
 
                     </div>
 
-                    <figure className="diff aspect-[4/3] min-h-[26rem] overflow-hidden lg:min-h-[30rem]" tabIndex={0}>
+                    <figure className="diff aspect-[4/3] min-h-[20rem] overflow-hidden lg:min-h-[24rem]" tabIndex={0}>
                         <div className="diff-item-1" role="img" tabIndex={0} aria-label="Modérateur fatigué sans preuve exploitable">
                             <div className="flex h-full flex-col justify-between bg-base-100 p-6 text-base-content sm:p-8">
                                 <div className="flex items-center justify-between text-xs font-black uppercase tracking-[0.24em] text-base-content/45">
@@ -80,8 +80,8 @@ export function AboutPage() {
                                     <span>Report vocal</span>
                                 </div>
 
-                                <div className="flex-1 content-center py-8">
-                                    <div className="mx-auto max-w-lg space-y-4">
+                                <div className="flex flex-1 items-start pt-10">
+                                    <div className="mx-auto flex h-full max-w-lg flex-col justify-between gap-4">
                                         <blockquote className="text-2xl font-black italic leading-tight text-base-content sm:text-3xl lg:text-[2.5rem]">
                                             “Encore un <span className="text-error">signalement en vocal</span> pour lequel il n'y a aucune preuve.”
                                         </blockquote>
@@ -99,8 +99,8 @@ export function AboutPage() {
                                     <span>Preuve exploitable</span>
                                 </div>
 
-                                <div className="flex-1 content-center py-8">
-                                    <div className="mx-auto max-w-lg space-y-4">
+                                <div className="flex flex-1 items-start pt-10">
+                                    <div className="mx-auto flex h-full max-w-lg flex-col justify-between gap-4">
                                         <blockquote className="text-2xl font-black italic leading-tight text-base-content sm:text-3xl lg:text-[2.5rem]">
                                             “C'est bon, on a la <span className="text-primary">preuve</span> pour bannir ce fauteur de troubles grâce à Voicey!”
                                         </blockquote>
@@ -116,7 +116,7 @@ export function AboutPage() {
                 </div>
             </section>
 
-            <section className="mx-auto max-w-7xl px-6 lg:pt-6 pb-8 lg:px-10">
+            <section className="mx-auto max-w-7xl px-6 pt-6 pb-8 lg:px-10">
                 <div className="mb-8 max-w-2xl">
                     <div className="badge badge-secondary badge-soft">Fondements</div>
                     <h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">Les idées clefs</h2>
