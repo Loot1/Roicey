@@ -432,7 +432,7 @@ function RecordingSessionPlayerContent({
                                             <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-base-content/55">
                                                 <span>Temps de parole: <span className="font-semibold text-base-content/75">{formatPlaybackClock(metrics?.speakingDurationSeconds ?? 0)}</span></span>
                                                 <span>Taille: <span className="font-semibold text-base-content/75">{formatSize(metrics?.totalSizeBytes ?? 0)}</span></span>
-                                                <span>{metrics?.segmentsCount ?? 0} piste{(metrics?.segmentsCount ?? 0) > 1 ? 's' : ''}</span>
+                                                <span>{metrics?.segmentsCount ?? 0} segment{(metrics?.segmentsCount ?? 0) > 1 ? 's' : ''}</span>
                                             </div>
 
                                         </article>
