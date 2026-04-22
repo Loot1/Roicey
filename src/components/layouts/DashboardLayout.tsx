@@ -47,17 +47,23 @@ export function DashboardLayout() {
                     return
                 }
 
-                const manageableGuilds = await getDashboardGuilds()
+                const dashboardGuilds = await getDashboardGuilds()
 
                 if (!ignore) {
                     setUser(sessionUser)
-                    setGuilds(manageableGuilds)
-                    
-                    // If no guild is selected, select the first one
-                    if (!selectedGuildId && manageableGuilds.length > 0) {
-                        setSelectedGuildId(manageableGuilds[0].id)
+                    setGuilds(dashboardGuilds)
+
+                    // Keep the selected guild in sync with the currently accessible guild list.
+                    const hasSelectedGuild = selectedGuildId
+                        ? dashboardGuilds.some((guild) => guild.id === selectedGuildId)
+                        : false
+
+                    if (dashboardGuilds.length === 0) {
+                        setSelectedGuildId(null)
+                    } else if (!selectedGuildId || !hasSelectedGuild) {
+                        setSelectedGuildId(dashboardGuilds[0].id)
                     }
-                    
+
                     setError(null)
                 }
             } catch {
@@ -236,7 +242,9 @@ export function DashboardLayout() {
 
                     <div>
                         <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">Navigation</p>
-                        {dashboardSidebarNavigation.map((item, index) => (
+                        {dashboardSidebarNavigation
+                            .filter((item) => item.id !== 'settings' || selectedGuild?.canAccessSettings)
+                            .map((item, index) => (
                             <NavLink
                                 key={item.id}
                                 to={item.href}

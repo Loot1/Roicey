@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useOutletContext } from 'react-router'
-import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardSelectField } from '../../components'
+import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardSelectField, DashboardStateCard } from '../../components'
 import { getGuildDashboardConfig, getGuildDashboardOptions, saveGuildDashboardConfig } from '../../api/discordAuth'
 import type { DashboardLayoutContextValue, GuildDashboardConfigInput, GuildDashboardOptions } from '../../types'
 
@@ -31,7 +31,7 @@ const emptyOptions: GuildDashboardOptions = {
 }
 
 export function DashboardSettingsPage() {
-    const { selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
+    const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
     const form = useForm<ConfigFormState>({
         defaultValues: defaultFormValues,
         mode: 'onChange',
@@ -147,6 +147,23 @@ export function DashboardSettingsPage() {
     const adminRolesIds = form.watch('adminRolesIds')
     const isDisabled = configLoading || configSaving
     const formId = 'dashboard-settings-form'
+
+    if (selectedGuild && !selectedGuild.canAccessSettings) {
+        return (
+            <section className="space-y-0 bg-base-100">
+                <DashboardPageHeader
+                    title="Configuration"
+                    description="Cette section est réservée aux administrateurs de la guilde."
+                />
+
+                <div className="px-6 py-4 lg:px-8">
+                    <DashboardStateCard tone="dashed" className="text-base-content/70">
+                        Tu dois avoir la permission Administrateur sur ce serveur pour modifier la configuration.
+                    </DashboardStateCard>
+                </div>
+            </section>
+        )
+    }
 
     return (
         <section className="space-y-0 bg-base-100">
