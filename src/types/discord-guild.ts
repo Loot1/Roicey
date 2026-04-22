@@ -6,4 +6,5 @@ export interface DiscordGuild {
     permissions: string
     botInGuild: boolean
     iconUrl: string | null
+    canAccessSettings: boolean
 }
