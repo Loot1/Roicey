@@ -242,7 +242,7 @@ export function DashboardSettingsPage() {
                     <div className="rounded-[1.6rem] border border-base-300 bg-base-100 p-5 shadow-sm">
                         <div className="mb-5">
                             <p className="text-xs font-black uppercase tracking-[0.18em] text-base-content/45">Accès</p>
-                            <h2 className="mt-1 text-2xl font-black tracking-tight">Rôles administrateurs</h2>
+                            <h2 className="mt-1 text-2xl font-black tracking-tight">Rôles de modération</h2>
                         </div>
 
                         <div className="form-control">
