@@ -321,7 +321,7 @@ export function DashboardRecordingDetailPage() {
                                 </RecordingMetaChip>
                                 <RecordingMetaChip
                                     label="Segments"
-                                    toneClassName="border-[#ff6e00]/80 bg-[#ff6e00]/10 text-[#ff6e00]"
+                                    toneClassName="border-[#c35500]/80 bg-[#c35500]/10 text-[#c35500]"
                                 >
                                     <span>{recording.outputFiles.length}</span>
                                 </RecordingMetaChip>
