@@ -12,8 +12,8 @@
       (function redirectGithubPagesSpa() {
         const params = new URLSearchParams(window.location.search)
         const redirectedPath = params.get('p')
-
-        if (!redirectedPath) {
+        
+        if (!redirectedPath || !redirectedPath.startsWith('/') || redirectedPath.startsWith('//')) {
           return
         }
 
