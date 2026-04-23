@@ -45,7 +45,7 @@ const settingRows = [
     },
     {
         id: 'moderation-channel',
-        setting: '🧾 Salon de modération',
+        setting: '🧾 Salon de logs',
         description: "C'est le salon textuel dans lequel sont remontés les bannissements des salons vocaux, les résultats d'enregistrement et les éventuelles erreurs de configuration du bot sur votre serveur Discord. Sans que ce salon soit défini, les enregistrements ne peuvent pas fonctionner.",
         type: 'Salon textuel',
     },

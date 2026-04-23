@@ -25,7 +25,7 @@ export function DocsFAQPage() {
 
                 <DocsCollapse name="faq" title="💾 Où sont stockés les enregistrements ?">
                     <p>
-                        Voicey publie les enregistrements dans le salon de modération Discord du serveur, avec une
+                        Voicey publie les enregistrements dans le salon de logs Discord du serveur, avec une
                         archive prévue pour le dashboard. En aucun cas Voicey ne stocke les enregistements dans une base de données.
                     </p>
                 </DocsCollapse>

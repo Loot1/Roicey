@@ -149,7 +149,7 @@ export function HomePage() {
                         <div className="card-body">
                             <SpeakerWaveIcon className="h-8 w-8 text-secondary" />
                             <h3 className="card-title">Enregistrement à la demande</h3>
-                            <p>Enregistrement vocal déclenché par vos membres et publié dans le canal de modération de votre serveur Discord pour fournir une preuve exploitable.</p>
+                            <p>Enregistrement vocal déclenché par vos membres et publié dans le salon de logs de votre serveur Discord pour fournir une preuve exploitable.</p>
                             <div className="card-actions justify-end">
                                 <span className="badge badge-secondary badge-soft">Modération avancée</span>
                             </div>
