@@ -158,11 +158,11 @@ export function HomePage() {
 
                     <article className="card border border-base-300 bg-base-100 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
                         <div className="card-body">
-                            <ShieldCheckIcon className="h-8 w-8 text-accent" />
+                            <ShieldCheckIcon className="h-8 w-8 text-secondary" />
                             <h3 className="card-title">Historique des bannissements</h3>
                             <p>Une alerte est envoyée dès qu'un utilisateur est banni d'un salon vocal et un historique est conservé consultable à tout moment.</p>
                             <div className="card-actions justify-end">
-                                <span className="badge badge-accent badge-soft">Traçabilité</span>
+                                <span className="badge badge-secondary badge-soft">Traçabilité</span>
                             </div>
                         </div>
                     </article>
@@ -183,23 +183,23 @@ export function HomePage() {
                     <div className="space-y-3">
                         <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
                             <input type="radio" name="faq-voicey" defaultChecked />
-                            <div className="collapse-title font-semibold">Le bot supprime les salons vides ?</div>
+                            <div className="collapse-title font-semibold">Qui peut voir les enregistrements ?</div>
                             <div className="collapse-content text-sm text-base-content/80">
-                                Oui. Quand le dernier membre quitte, le salon temporaire est retiré proprement.
+                                Uniquement les modérateurs autorisés dans le serveur, selon la configuration des rôles et des accès aux salons.
                             </div>
                         </div>
                         <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
                             <input type="radio" name="faq-voicey" />
-                            <div className="collapse-title font-semibold">Le record est-il prévu pour la modération ?</div>
+                            <div className="collapse-title font-semibold">Peut-on empêcher un membre d'utiliser /record ?</div>
                             <div className="collapse-content text-sm text-base-content/80">
-                                Oui. Voicey a été pensé pour aider à documenter une atteinte au règlement, pas pour enregistrer par confort ou curiosité.
+                                Oui. Les modérateurs peuvent appliquer des restrictions ciblées pour bloquer la demande d'enregistrement à des utilisateurs précis.
                             </div>
                         </div>
                         <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
                             <input type="radio" name="faq-voicey" />
-                            <div className="collapse-title font-semibold">Qui voit les records dans le dashboard ?</div>
+                            <div className="collapse-title font-semibold">Les salons vocaux temporaires sont-ils nettoyés automatiquement ?</div>
                             <div className="collapse-content text-sm text-base-content/80">
-                                Les modérateurs autorisés du serveur. Cette restriction doit être documentée et annoncée aux membres.
+                                Oui. Dès que le dernier membre quitte, le salon temporaire est retiré pour garder le serveur propre et lisible.
                             </div>
                         </div>
                     </div>
