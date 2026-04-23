@@ -38,7 +38,7 @@
 
 
 @plugin "daisyui" {
-  themes: light --default, dark --prefersdark;
+  themes: voicey --default, voicey-dark --prefersdark;
   root: ":root";
   include: ;
   exclude: ;
@@ -49,7 +49,7 @@
 @plugin "daisyui/theme" {
   name: "voicey";
   default: true;
-  prefersdark: true;
+  prefersdark: false;
   color-scheme: "light";
   --color-base-100: #89C9EC;
   --color-base-200: #71bee7;
@@ -71,6 +71,41 @@
   --color-warning-content: #2e2200;
   --color-error: #b71c1c;
   --color-error-content: #fff5f5;
+  --radius-selector: 0.5rem;
+  --radius-field: 0.25rem;
+  --radius-box: 0.5rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
+
+@plugin "daisyui/theme" {
+  name: "voicey-dark";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: #0f1c2a;
+  --color-base-200: #132437;
+  --color-base-300: #1a3149;
+  --color-base-content: #e9f2f8;
+  --color-primary: #e04646;
+  --color-primary-content: #ffffff;
+  --color-secondary: #f06565;
+  --color-secondary-content: #220606;
+  --color-accent: #f08b8b;
+  --color-accent-content: #2d0a0a;
+  --color-neutral: #0b1622;
+  --color-neutral-content: #eef5fa;
+  --color-info: #7fb8e6;
+  --color-info-content: #03131f;
+  --color-success: #4caf50;
+  --color-success-content: #041606;
+  --color-warning: #ffc107;
+  --color-warning-content: #281f00;
+  --color-error: #ef5350;
+  --color-error-content: #240606;
   --radius-selector: 0.5rem;
   --radius-field: 0.25rem;
   --radius-box: 0.5rem;
