@@ -45,7 +45,7 @@ const settingRows = [
     },
     {
         id: 'moderation-channel',
-        setting: '🧾 Salon de modération',
+        setting: '🧾 Salon de logs',
         description: "C'est le salon textuel dans lequel sont remontés les bannissements des salons vocaux, les résultats d'enregistrement et les éventuelles erreurs de configuration du bot sur votre serveur Discord. Sans que ce salon soit défini, les enregistrements ne peuvent pas fonctionner.",
         type: 'Salon textuel',
     },
@@ -65,6 +65,9 @@ const settingRows = [
                     <li>accéder au dashboard de modération, consulter les enregistrements et les logs d'activité</li>
                     <li>gérer les salons vocaux temporaires, ils disposent des mêmes droits que les propriétaires des salons et sont immunisés : un propriétaire de salon ne peut pas bannir ou expulser un modérateur de son salon.</li>
                 </ul>
+                <p className="mt-2">
+                    Les rôles de modération permettent un accès au dashboard, toutefois, pour modifier les paramètres de Voicey sur votre serveur, la permission Administrateur est requise.
+                </p>
             </>
         ),
         type: 'Rôles',

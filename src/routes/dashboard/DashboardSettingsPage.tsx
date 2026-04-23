@@ -1,14 +1,15 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { useOutletContext } from 'react-router'
+import { Link, useOutletContext } from 'react-router'
 import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardSelectField, DashboardStateCard } from '../../components'
 import { getGuildDashboardConfig, getGuildDashboardOptions, saveGuildDashboardConfig } from '../../api/discordAuth'
 import type { DashboardLayoutContextValue, GuildDashboardConfigInput, GuildDashboardOptions } from '../../types'
+import { InformationCircleIcon } from '@heroicons/react/24/outline'
 
 interface ConfigFormState {
     categoryId: string
     createChannelId: string
-    modChannelId: string
+    logChannelId: string
     defaultMaxMembers: string
     defaultRecordingDurationSeconds: string
     adminRolesIds: string[]
@@ -17,7 +18,7 @@ interface ConfigFormState {
 const defaultFormValues: ConfigFormState = {
     categoryId: '',
     createChannelId: '',
-    modChannelId: '',
+    logChannelId: '',
     defaultMaxMembers: '7',
     defaultRecordingDurationSeconds: '60',
     adminRolesIds: [],
@@ -26,7 +27,7 @@ const defaultFormValues: ConfigFormState = {
 const emptyOptions: GuildDashboardOptions = {
     categories: [],
     voiceChannels: [],
-    modChannels: [],
+    logChannels: [],
     roles: [],
 }
 
@@ -63,7 +64,7 @@ export function DashboardSettingsPage() {
                     form.reset({
                         categoryId: config.categoryId ?? '',
                         createChannelId: config.createChannelId ?? '',
-                        modChannelId: config.modChannelId ?? '',
+                        logChannelId: config.logChannelId ?? '',
                         defaultMaxMembers: String(config.defaultMaxMembers),
                         defaultRecordingDurationSeconds: String(config.defaultRecordingDurationSeconds),
                         adminRolesIds: config.adminRolesIds,
@@ -118,7 +119,7 @@ export function DashboardSettingsPage() {
         const payload: GuildDashboardConfigInput = {
             categoryId: data.categoryId,
             createChannelId: data.createChannelId,
-            modChannelId: data.modChannelId,
+            logChannelId: data.logChannelId,
             defaultMaxMembers: maxMembers,
             defaultRecordingDurationSeconds: recordingDurationSeconds,
             adminRolesIds: data.adminRolesIds,
@@ -131,7 +132,7 @@ export function DashboardSettingsPage() {
             form.reset({
                 categoryId: savedConfig.categoryId ?? '',
                 createChannelId: savedConfig.createChannelId ?? '',
-                modChannelId: savedConfig.modChannelId ?? '',
+                logChannelId: savedConfig.logChannelId ?? '',
                 defaultMaxMembers: String(savedConfig.defaultMaxMembers),
                 defaultRecordingDurationSeconds: String(savedConfig.defaultRecordingDurationSeconds),
                 adminRolesIds: savedConfig.adminRolesIds,
@@ -173,7 +174,16 @@ export function DashboardSettingsPage() {
                 actions={<ButtonOne label="Sauvegarder" type="submit" form={formId} loadingLabel={configLoading ? 'Chargement...' : 'Sauvegarde...'} loading={isDisabled} />}
             />
 
-            <div className="px-6 py-4 lg:px-8">
+            <DashboardAlert tone="info" icon={<InformationCircleIcon className="h-5 w-5" />} className="alert-outline mx-6 mt-6 lg:mx-8">
+                <div className="grid w-full gap-4 md:grid-cols-2 md:items-center">
+                    <p>Envie d'en savoir plus sur les paramètres de configuration et leurs effets ?</p>
+                    <Link to="/docs/settings" className="btn btn-primary btn-sm w-fit justify-self-start md:justify-self-end">
+                        Consulte la documentation
+                    </Link>
+                </div>
+            </DashboardAlert>
+
+            <div className="px-6 py-8 lg:px-8">
                 {configMessage ? (
                     <DashboardAlert className="mb-6 py-2 shadow-sm">{configMessage}</DashboardAlert>
                 ) : null}
@@ -198,7 +208,7 @@ export function DashboardSettingsPage() {
                         <DashboardSelectField
                             control={form.control}
                             name="createChannelId"
-                            label="Salon créateur"
+                            label="Salon vocal de création"
                             placeholder="Aucun salon"
                             options={options.voiceChannels}
                             disabled={isDisabled}
@@ -206,10 +216,10 @@ export function DashboardSettingsPage() {
 
                         <DashboardSelectField
                             control={form.control}
-                            name="modChannelId"
-                            label="Salon de modération"
+                            name="logChannelId"
+                            label="Salon de logs"
                             placeholder="Aucun salon"
-                            options={options.modChannels}
+                            options={options.logChannels}
                             disabled={isDisabled}
                         />
 

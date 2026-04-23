@@ -86,7 +86,7 @@ export function PrivacyPage() {
                         <h2 className="text-2xl font-black">Enregistrements et stockage</h2>
                         <p className="mt-4 text-sm leading-6 text-base-content/75">
                             Conformément au contenu des pages publiques, les enregistrements sont publiés dans Discord,
-                            dans le salon de modération du serveur concerné, avec une archive destinée à l'exploitation
+                            dans le salon de logs du serveur concerné, avec une archive destinée à l'exploitation
                             via le dashboard.
                         </p>
                         <p className="mt-4 text-sm leading-6 text-base-content/75">

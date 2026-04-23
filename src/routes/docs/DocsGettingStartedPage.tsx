@@ -15,7 +15,7 @@ export function DocsGettingStartedPage() {
                     step={1}
                     title="Invite le bot"
                     description={
-                        "Ajoute Voicey sur ton serveur, puis vérifie qu'il peut créer des salons vocaux, modifier leurs permissions, rejoindre un salon vocal et écrire dans ton salon de modération."
+                        "Ajoute Voicey sur ton serveur, puis vérifie qu'il peut créer des salons vocaux, modifier leurs permissions, rejoindre un salon vocal et écrire dans ton salon de logs."
                     }
                     action={<a href={VOICEY_INVITE_URL} target="_blank" rel="noreferrer" className="btn btn-primary btn-sm w-fit">Inviter Voicey</a>}
                 />
@@ -29,7 +29,7 @@ export function DocsGettingStartedPage() {
                         <li>Créer et supprimer des salons vocaux temporaires</li>
                         <li>Modifier les permissions d'accès des salons</li>
                         <li>Rejoindre un salon vocal pour lancer un enregistrement</li>
-                        <li>Écrire dans le salon de modération configuré</li>
+                        <li>Écrire dans le salon de logs configuré</li>
                     </ul>
                 </DocsStep>
 

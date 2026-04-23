@@ -18,7 +18,7 @@ export function DashboardAlert({
     return (
         <div className={['alert', `alert-${tone}`, className].filter(Boolean).join(' ')}>
             {icon}
-            <span>{children}</span>
+            <span className="w-full">{children}</span>
         </div>
     )
 }

@@ -162,7 +162,7 @@ export function DemoRecordingsPage() {
                 }
             />
 
-            <DashboardAlert tone="info" icon={<InformationCircleIcon className="h-5 w-5" />} className="mx-6 mt-6 lg:mx-8">
+            <DashboardAlert tone="info" icon={<InformationCircleIcon className="h-5 w-5" />} className="alert-outline mx-6 mt-6 lg:mx-8">
                 Cette démo lit uniquement des fichiers audio statiques stockés dans le site. Le téléchargement du mix récupère le master public de référence.
             </DashboardAlert>
 

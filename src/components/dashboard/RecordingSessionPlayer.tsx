@@ -86,6 +86,7 @@ function RecordingSessionPlayerContent({
     const [mutedUserIds, setMutedUserIds] = useState<string[]>([])
     const [currentTimeSeconds, setCurrentTimeSeconds] = useState(0)
     const [isPlaying, setIsPlaying] = useState(false)
+    const [shouldAutoPlayAfterPrepare, setShouldAutoPlayAfterPrepare] = useState(false)
 
     const playableGroups = useMemo(
         () => userGroups.filter((group) => sourcesByUserId[group.userId]),
@@ -223,6 +224,15 @@ function RecordingSessionPlayerContent({
         }))
     }
 
+    useEffect(() => {
+        if (!shouldAutoPlayAfterPrepare || !hasPreparedSources || isPreparing || isPlaying) {
+            return
+        }
+
+        setShouldAutoPlayAfterPrepare(false)
+        void playAll()
+    }, [hasPreparedSources, isPlaying, isPreparing, shouldAutoPlayAfterPrepare])
+
     const pauseAll = () => {
         for (const group of playableGroups) {
             const audio = audioRefs.current[group.userId]
@@ -232,6 +242,7 @@ function RecordingSessionPlayerContent({
 
     const togglePlayback = async () => {
         if (!hasPreparedSources) {
+            setShouldAutoPlayAfterPrepare(true)
             onPrepare()
             return
         }
@@ -372,7 +383,7 @@ function RecordingSessionPlayerContent({
                                 const metrics = userMetrics[group.userId]
 
                                 return (
-                                    <div key={group.userId} className={`grid grid-cols-1 gap-4 rounded-[1.35rem] border bg-base-100 px-4 py-3 shadow-sm transition xl:grid-cols-[minmax(320px,360px)_minmax(0,1fr)] ${isActive ? 'border-primary/25 bg-primary/[0.03]' : 'border-base-300'} ${!isReady ? 'opacity-60' : ''}`}>
+                                    <div key={group.userId} className={`grid grid-cols-1 gap-3 md:gap-4 rounded-[1.35rem] border bg-base-100 px-4 py-3 shadow-sm transition xl:grid-cols-[minmax(320px,360px)_minmax(0,1fr)] ${isActive ? 'border-primary/25 bg-primary/[0.03]' : 'border-base-300'} ${!isReady ? 'opacity-60' : ''}`}>
                                         <article className={`${isActive ? 'text-base-content' : ''} p-1`}>
                                             <div className="flex items-start justify-between gap-3">
                                                 <div className="min-w-0">
@@ -437,7 +448,7 @@ function RecordingSessionPlayerContent({
 
                                         </article>
 
-                                        <div className="py-1">
+                                        <div className="pb-1 lg:py-1">
                                             <div className={`relative h-12 w-full overflow-hidden rounded-full border ${isActive ? 'border-primary/35 bg-primary/5' : 'border-base-300 bg-base-200/35'}`}>
                                                 {group.files.map((file) => {
                                                     const offsetMs = getApproximateFileOffsetMs(recording, file)

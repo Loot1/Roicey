@@ -81,6 +81,22 @@ export function Header() {
                                 </Link>
                             </li>
                         ))}
+                        {!user && !loadingUser ? (
+                            <li className="sm:hidden">
+                                <button onClick={() => void startDiscordLogin(currentPath).catch(console.error)}>
+                                    Se connecter
+                                </button>
+                            </li>
+                        ) : null}
+                        {user ? (
+                            <>
+                                <li className="menu-title px-2 py-1 sm:hidden">
+                                    <span>{user.global_name ?? user.username}</span>
+                                </li>
+                                <li className="sm:hidden"><Link to="/dashboard">Dashboard</Link></li>
+                                <li className="sm:hidden"><button onClick={() => void handleLogout().catch(console.error)}>Déconnexion</button></li>
+                            </>
+                        ) : null}
                     </ul>
                 </div>
                 <Link to="/" className="btn btn-ghost text-lg font-black">
@@ -111,53 +127,46 @@ export function Header() {
                 </ul>
             </div>
             <div className="navbar-end gap-4">
-                {user ? (
-                    <Link
-                        to="/dashboard"
-                        className="hidden items-center gap-2 rounded-box border border-base-300 bg-base-200/40 px-3 py-1.5 transition hover:bg-base-300/40 md:flex"
-                    >
-                        <span className="text-sm font-semibold">{user.global_name ?? user.username}</span>
-                    </Link>
-                ) : null}
-
                 {!user && !loadingUser ? (
-                    <button className="btn btn-primary btn-sm" onClick={() => void startDiscordLogin(currentPath).catch(console.error)}>
+                    <button
+                        className="btn btn-primary btn-sm hidden gap-2 sm:inline-flex"
+                        onClick={() => void startDiscordLogin(currentPath).catch(console.error)}
+                    >
+                        <UserCircleIcon className="h-5 w-5" />
                         Se connecter
                     </button>
                 ) : null}
-                <div className="dropdown dropdown-end">
+                {user ? (
+                <div className="dropdown dropdown-end hidden sm:block">
                     <button
                         tabIndex={0}
                         role="button"
-                        className="btn btn-ghost btn-circle"
+                        className="btn btn-ghost h-auto min-h-0 rounded-box px-2 py-1.5 md:px-3"
                         title="Menu utilisateur"
                     >
-                        {user ? (
+                        <span className="flex items-center gap-2">
                             <img
                                 src={user.avatarUrl}
                                 alt={user.username}
                                 className="h-8 w-8 rounded-full border border-base-300 object-cover"
                             />
-                        ) : (
-                            <UserCircleIcon className="h-6 w-6" />
-                        )}
+                            <span className="max-w-32 truncate text-sm font-semibold">
+                                {user.global_name ?? user.username}
+                            </span>
+                        </span>
                     </button>
                     <ul
                         tabIndex={0}
                         className="dropdown-content z-50 menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200"
                     >
-                        {user ? (
-                            <li className="menu-title px-2 py-1">
-                                <span>{user.global_name ?? user.username}</span>
-                            </li>
-                        ) : null}
-                        {user ? (
-                            <li><button onClick={() => void handleLogout().catch(console.error)}>Déconnexion</button></li>
-                        ) : (
-                            <li><button onClick={() => void startDiscordLogin(currentPath).catch(console.error)}>Connexion Discord</button></li>
-                        )}
+                        <li className="menu-title px-2 py-1">
+                            <span>{user.global_name ?? user.username}</span>
+                        </li>
+                        <li><Link to="/dashboard">Dashboard</Link></li>
+                        <li><button onClick={() => void handleLogout().catch(console.error)}>Déconnexion</button></li>
                     </ul>
                 </div>
+                ) : null}
             </div>
         </div>
     )

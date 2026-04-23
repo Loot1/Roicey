@@ -17,7 +17,7 @@ export function DocsRecordingPage() {
                         <p>Pour déclencher un enregistrement, il suffit d'utiliser le bouton du salon vocal temporaire ou bien la commande <code className="badge badge-ghost px-1">/record</code>.</p>
                     }
                 />
-                <DocsCard title="👾 Stockage côté Discord" description="L'enregistrement est publié dans le salon de modération du serveur sous forme de message audio, directement exploitable." />
+                <DocsCard title="👾 Stockage côté Discord" description="L'enregistrement est publié dans le salon de logs du serveur sous forme de message audio, directement exploitable." />
                 <DocsCard title="🔐 Archive scellée" description="Voicey génère une archive chiffrée destinée au dashboard, qui permet d'analyser en détail l'enregistrement tout en empêchant tout accès d'une personne qui n'est pas autorisée." />
                 <DocsCard title="🌍 Souveraineté des données" description="Les éléments de preuve sont uniquement envoyés sur le serveur Discord qui utilise Voicey. Si vous souhaitez supprimer un enregistrement, il vous suffit de supprimer le message contenant la pièce jointe sur Discord."/>
             </div>
