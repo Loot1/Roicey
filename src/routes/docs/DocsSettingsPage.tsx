@@ -65,6 +65,9 @@ const settingRows = [
                     <li>accéder au dashboard de modération, consulter les enregistrements et les logs d'activité</li>
                     <li>gérer les salons vocaux temporaires, ils disposent des mêmes droits que les propriétaires des salons et sont immunisés : un propriétaire de salon ne peut pas bannir ou expulser un modérateur de son salon.</li>
                 </ul>
+                <p className="mt-2">
+                    Les rôles de modération permettent un accès au dashboard, toutefois, pour modifier les paramètres de Voicey sur votre serveur, la permission Administrateur est requise.
+                </p>
             </>
         ),
         type: 'Rôles',
