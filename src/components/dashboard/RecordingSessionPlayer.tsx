@@ -86,6 +86,7 @@ function RecordingSessionPlayerContent({
     const [mutedUserIds, setMutedUserIds] = useState<string[]>([])
     const [currentTimeSeconds, setCurrentTimeSeconds] = useState(0)
     const [isPlaying, setIsPlaying] = useState(false)
+    const [shouldAutoPlayAfterPrepare, setShouldAutoPlayAfterPrepare] = useState(false)
 
     const playableGroups = useMemo(
         () => userGroups.filter((group) => sourcesByUserId[group.userId]),
@@ -223,6 +224,15 @@ function RecordingSessionPlayerContent({
         }))
     }
 
+    useEffect(() => {
+        if (!shouldAutoPlayAfterPrepare || !hasPreparedSources || isPreparing || isPlaying) {
+            return
+        }
+
+        setShouldAutoPlayAfterPrepare(false)
+        void playAll()
+    }, [hasPreparedSources, isPlaying, isPreparing, shouldAutoPlayAfterPrepare])
+
     const pauseAll = () => {
         for (const group of playableGroups) {
             const audio = audioRefs.current[group.userId]
@@ -232,6 +242,7 @@ function RecordingSessionPlayerContent({
 
     const togglePlayback = async () => {
         if (!hasPreparedSources) {
+            setShouldAutoPlayAfterPrepare(true)
             onPrepare()
             return
         }
