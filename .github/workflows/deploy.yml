@@ -23,6 +23,7 @@ jobs:
       - name: Build
         env:
           VITE_API_URL: https://api.voicey.fr
+          VITE_DISCORD_CLIENT_ID: "1269350971570393251"
         run: npm run build
 
       - name: Deploy

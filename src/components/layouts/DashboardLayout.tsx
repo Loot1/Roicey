@@ -1,15 +1,23 @@
-import { ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
+import { ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router'
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 import { DashboardAlert, DashboardStateCard, ResponsiveSidebarLayout } from '../../components'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
 import { useDashboardGuildSelection } from '../../hooks'
-import { dashboardSidebarNavigation } from '../../constants'
+import { dashboardSidebarNavigation, VOICEY_INVITE_URL } from '../../constants'
 import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
 
 export function DashboardLayout() {
     const location = useLocation()
+    const navigate = useNavigate()
     const authError = useMemo(() => new URLSearchParams(location.search).get('authError'), [location.search])
+    const invitedGuildId = useMemo(() => new URLSearchParams(location.search).get('guild_id'), [location.search])
+    const inviteBotUrl = useMemo(() => {
+        const url = new URL(VOICEY_INVITE_URL)
+        url.searchParams.set('redirect_uri', `${window.location.origin}/dashboard`)
+        url.searchParams.set('response_type', 'code')
+        return url.toString()
+    }, [])
     const { selectedGuildId, setSelectedGuildId } = useDashboardGuildSelection()
     const [user, setUser] = useState<DiscordUser | null>(null)
     const [guilds, setGuilds] = useState<DiscordGuild[]>([])
@@ -57,9 +65,14 @@ export function DashboardLayout() {
                     const hasSelectedGuild = selectedGuildId
                         ? dashboardGuilds.some((guild) => guild.id === selectedGuildId)
                         : false
+                    const hasInvitedGuild = invitedGuildId
+                        ? dashboardGuilds.some((guild) => guild.id === invitedGuildId)
+                        : false
 
                     if (dashboardGuilds.length === 0) {
                         setSelectedGuildId(null)
+                    } else if (invitedGuildId && hasInvitedGuild) {
+                        setSelectedGuildId(invitedGuildId)
                     } else if (!selectedGuildId || !hasSelectedGuild) {
                         setSelectedGuildId(dashboardGuilds[0].id)
                     }
@@ -82,7 +95,20 @@ export function DashboardLayout() {
         return () => {
             ignore = true
         }
-    }, [authError, location.pathname, location.search, selectedGuildId, setSelectedGuildId])
+    }, [authError, invitedGuildId, location.pathname, location.search, selectedGuildId, setSelectedGuildId])
+
+    useEffect(() => {
+        if (!invitedGuildId || loading) {
+            return
+        }
+
+        const hasGuildQuery = new URLSearchParams(location.search).has('guild_id')
+        if (!hasGuildQuery) {
+            return
+        }
+
+        navigate('/dashboard', { replace: true })
+    }, [invitedGuildId, loading, location.search, navigate])
 
     const selectedGuild = useMemo(() => guilds.find((guild) => guild.id === selectedGuildId) ?? null, [guilds, selectedGuildId])
 
@@ -193,6 +219,19 @@ export function DashboardLayout() {
 
                                 {guildPickerOpen ? (
                                     <div className="space-y-2 rounded-box border border-base-300 bg-base-100 p-2 shadow-lg">
+                                        <a
+                                            href={inviteBotUrl}
+                                            className="flex w-full items-center gap-3 rounded-lg bg-base-100 px-3 py-3 text-left text-base-content/75 transition hover:bg-base-300/50"
+                                        >
+                                            <div className="flex h-10 w-10 flex-none items-center justify-center rounded-lg bg-base-300/40 text-base-content">
+                                                <PlusIcon className="h-5 w-5" />
+                                            </div>
+
+                                            <div className="min-w-0 flex-1">
+                                                <p className="truncate text-sm font-semibold text-base-content">Ajouter Voicey</p>
+                                                <p className="text-xs text-base-content/60">Inviter le bot sur un serveur</p>
+                                            </div>
+                                        </a>
                                         {guilds.map((guild) => {
                                             const isSelected = guild.id === selectedGuildId
 
