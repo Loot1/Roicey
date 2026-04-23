@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router'
-import { Bars3Icon, UserCircleIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, MoonIcon, SunIcon, UserCircleIcon } from '@heroicons/react/24/outline'
 import logoSansFond from '../../assets/images/voicey-logo.png'
 import { getDiscordSession, logoutDiscord, onAuthChanged, startDiscordLogin } from '../../api/discordAuth'
 import { headerNavigation } from '../../constants'
 import type { DiscordUser } from '../../types'
+import { useTheme } from '../../hooks'
 
 export function Header() {
     const location = useLocation()
+    const { isDark, toggleTheme } = useTheme()
     const [user, setUser] = useState<DiscordUser | null>(null)
     const [loadingUser, setLoadingUser] = useState(true)
     const currentPath = `${location.pathname}${location.search}`
@@ -127,6 +129,15 @@ export function Header() {
                 </ul>
             </div>
             <div className="navbar-end gap-4">
+                <button
+                    type="button"
+                    className="btn btn-ghost btn-circle"
+                    onClick={toggleTheme}
+                    aria-label={isDark ? 'Activer le theme clair' : 'Activer le theme sombre'}
+                    title={isDark ? 'Activer le theme clair' : 'Activer le theme sombre'}
+                >
+                    {isDark ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
+                </button>
                 {!user && !loadingUser ? (
                     <button
                         className="btn btn-primary btn-sm hidden gap-2 sm:inline-flex"
