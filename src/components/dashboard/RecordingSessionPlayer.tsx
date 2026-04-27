@@ -86,7 +86,7 @@ function RecordingSessionPlayerContent({
     const [mutedUserIds, setMutedUserIds] = useState<string[]>([])
     const [currentTimeSeconds, setCurrentTimeSeconds] = useState(0)
     const [isPlaying, setIsPlaying] = useState(false)
-    const [shouldAutoPlayAfterPrepare, setShouldAutoPlayAfterPrepare] = useState(false)
+    const shouldAutoPlayAfterPrepare = useRef(false)
 
     const playableGroups = useMemo(
         () => userGroups.filter((group) => sourcesByUserId[group.userId]),
@@ -225,13 +225,29 @@ function RecordingSessionPlayerContent({
     }
 
     useEffect(() => {
-        if (!shouldAutoPlayAfterPrepare || !hasPreparedSources || isPreparing || isPlaying) {
+        if (!shouldAutoPlayAfterPrepare.current || !hasPreparedSources || isPreparing || isPlaying) {
             return
         }
 
-        setShouldAutoPlayAfterPrepare(false)
-        void playAll()
-    }, [hasPreparedSources, isPlaying, isPreparing, shouldAutoPlayAfterPrepare])
+        shouldAutoPlayAfterPrepare.current = false
+
+        const autoPlay = async () => {
+            for (const group of playableGroups) {
+                const audio = audioRefs.current[group.userId]
+                if (audio) {
+                    audio.currentTime = currentTimeSeconds
+                }
+            }
+            await Promise.all(playableGroups.map(async (group) => {
+                const audio = audioRefs.current[group.userId]
+                if (audio) {
+                    await audio.play()
+                }
+            }))
+        }
+
+        void autoPlay()
+    }, [hasPreparedSources, isPlaying, isPreparing, playableGroups, currentTimeSeconds])
 
     const pauseAll = () => {
         for (const group of playableGroups) {
@@ -242,7 +258,7 @@ function RecordingSessionPlayerContent({
 
     const togglePlayback = async () => {
         if (!hasPreparedSources) {
-            setShouldAutoPlayAfterPrepare(true)
+            shouldAutoPlayAfterPrepare.current = true
             onPrepare()
             return
         }
