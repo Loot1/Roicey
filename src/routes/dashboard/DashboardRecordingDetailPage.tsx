@@ -3,7 +3,7 @@ import type { ReactNode } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { downloadRecordingSourceMix, downloadRecordingSourceUserMix, resolveDashboardRecordingSource } from '../../api/discordAuth'
-import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingSessionPlayer } from '../../components'
+import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingSessionTracksPlayer } from '../../components'
 import type { DashboardRecording, DashboardRecordingParticipant } from '../../types'
 import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
 
@@ -346,7 +346,7 @@ export function DashboardRecordingDetailPage() {
 
             {error ? <DashboardAlert tone="warning" icon={<ExclamationTriangleIcon className="h-5 w-5" />} className="mx-6 mt-6 lg:mx-8">{error}</DashboardAlert> : null}
 
-            <RecordingSessionPlayer
+            <RecordingSessionTracksPlayer
                 recording={recording}
                 userGroups={userGroups}
                 sourcesByUserId={userSources}
