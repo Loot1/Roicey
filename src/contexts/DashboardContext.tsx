@@ -5,6 +5,7 @@ export interface DashboardContextType {
     setSelectedGuildId: (guildId: string | null) => void
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const DashboardContext = createContext<DashboardContextType | undefined>(undefined)
 
 const STORAGE_KEY = 'dashboard-selected-guild'

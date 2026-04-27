@@ -10,6 +10,7 @@ type ThemeContextValue = {
 }
 
 const STORAGE_KEY = 'voicey-theme'
+// eslint-disable-next-line react-refresh/only-export-components
 export const ThemeContext = createContext<ThemeContextValue | null>(null)
 
 function getInitialTheme(): ThemeName {
