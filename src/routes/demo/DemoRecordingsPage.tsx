@@ -1,7 +1,7 @@
 import { ArrowDownTrayIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
-import { ButtonOne, DashboardAlert, DashboardPageHeader, RecordingSessionPlayer } from '../../components'
+import { ButtonOne, DashboardAlert, DashboardPageHeader, RecordingSessionTracksPlayer } from '../../components'
 import { demoRecording, demoRecordingMixPath, demoRecordingUserTrackPaths } from '../../constants'
 import type { DashboardRecordingParticipant } from '../../types'
 import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
@@ -166,7 +166,7 @@ export function DemoRecordingsPage() {
                 Cette démo lit uniquement des fichiers audio statiques stockés dans le site. Le téléchargement du mix récupère le master public de référence.
             </DashboardAlert>
 
-            <RecordingSessionPlayer
+            <RecordingSessionTracksPlayer
                 recording={recording}
                 userGroups={userGroups}
                 sourcesByUserId={userSources}
