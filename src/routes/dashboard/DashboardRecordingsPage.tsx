@@ -1,21 +1,14 @@
 import { ArrowTopRightOnSquareIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
 import { ButtonOne, DashboardAlert, DashboardPageHeader } from '../../components'
 
 export function DashboardRecordingsPage() {
     const navigate = useNavigate()
     const [searchParams] = useSearchParams()
-    const [source, setSource] = useState('')
+    const [source, setSource] = useState(() => searchParams.get('source') ?? '')
     const [error, setError] = useState<string | null>(null)
     const hasSource = source.trim().length > 0
-
-    useEffect(() => {
-        const prefilledSource = searchParams.get('source')
-        if (prefilledSource) {
-            setSource(prefilledSource)
-        }
-    }, [searchParams])
 
     const handleSearch = () => {
         const normalizedSource = source.trim()
