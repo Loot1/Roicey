@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router'
 import { PlayCircleIcon } from '@heroicons/react/24/outline'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
-import { demoSidebarNavigation } from '../../constants'
+import { DEMO_SIDEBAR_NAVIGATION } from '../../constants'
 
 export function DemoLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -31,7 +31,7 @@ export function DemoLayout() {
 
                     <div>
                         <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">Navigation</p>
-                        {demoSidebarNavigation.map((item, index) => {
+                        {DEMO_SIDEBAR_NAVIGATION.map((item, index) => {
                             const IconComponent = item.icon
 
                             return (

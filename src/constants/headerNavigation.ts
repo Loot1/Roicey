@@ -1,4 +1,4 @@
-export const headerNavigation = [
+export const HEADER_NAVIGATION = [
     { label: 'Accueil', href: '/', exact: true },
     { label: 'À propos', href: '/about', exact: true },
     { label: 'Documentation', href: '/docs', exact: false },
@@ -6,4 +6,4 @@ export const headerNavigation = [
     { label: 'Charte', href: '/guidelines', exact: true },
 ] as const
 
-export type HeaderNavigationItem = (typeof headerNavigation)[number]
+export type HeaderNavigationItem = (typeof HEADER_NAVIGATION)[number]

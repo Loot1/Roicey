@@ -4,7 +4,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 import { DashboardAlert, DashboardStateCard, ResponsiveSidebarLayout } from '../../components'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
 import { useDashboardGuildSelection } from '../../hooks'
-import { dashboardSidebarNavigation, VOICEY_INVITE_URL } from '../../constants'
+import { DASHBOARD_SIDEBAR_NAVIGATION, VOICEY_INVITE_URL } from '../../constants'
 import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
 
 export function DashboardLayout() {
@@ -19,6 +19,16 @@ export function DashboardLayout() {
         return url.toString()
     }, [])
     const { selectedGuildId, setSelectedGuildId } = useDashboardGuildSelection()
+    const selectedGuildIdRef = useRef(selectedGuildId)
+    const locationRef = useRef(location)
+
+    useEffect(() => {
+        selectedGuildIdRef.current = selectedGuildId
+    }, [selectedGuildId])
+
+    useEffect(() => {
+        locationRef.current = location
+    }, [location])
     const [user, setUser] = useState<DiscordUser | null>(null)
     const [guilds, setGuilds] = useState<DiscordGuild[]>([])
     const [loading, setLoading] = useState(true)
@@ -51,7 +61,7 @@ export function DashboardLayout() {
                         return
                     }
 
-                    await startDiscordLogin(`${location.pathname}${location.search}`)
+                    await startDiscordLogin(`${locationRef.current.pathname}${locationRef.current.search}`)
                     return
                 }
 
@@ -62,8 +72,8 @@ export function DashboardLayout() {
                     setGuilds(dashboardGuilds)
 
                     // Keep the selected guild in sync with the currently accessible guild list.
-                    const hasSelectedGuild = selectedGuildId
-                        ? dashboardGuilds.some((guild) => guild.id === selectedGuildId)
+                    const hasSelectedGuild = selectedGuildIdRef.current
+                        ? dashboardGuilds.some((guild) => guild.id === selectedGuildIdRef.current)
                         : false
                     const hasInvitedGuild = invitedGuildId
                         ? dashboardGuilds.some((guild) => guild.id === invitedGuildId)
@@ -73,7 +83,7 @@ export function DashboardLayout() {
                         setSelectedGuildId(null)
                     } else if (invitedGuildId && hasInvitedGuild) {
                         setSelectedGuildId(invitedGuildId)
-                    } else if (!selectedGuildId || !hasSelectedGuild) {
+                    } else if (!selectedGuildIdRef.current || !hasSelectedGuild) {
                         setSelectedGuildId(dashboardGuilds[0].id)
                     }
 
@@ -95,7 +105,7 @@ export function DashboardLayout() {
         return () => {
             ignore = true
         }
-    }, [authError, invitedGuildId, location.pathname, location.search, selectedGuildId, setSelectedGuildId])
+    }, [authError, invitedGuildId, setSelectedGuildId])
 
     useEffect(() => {
         if (!invitedGuildId || loading) {
@@ -281,7 +291,7 @@ export function DashboardLayout() {
 
                     <div>
                         <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">Navigation</p>
-                        {dashboardSidebarNavigation
+                        {DASHBOARD_SIDEBAR_NAVIGATION
                             .filter((item) => item.id !== 'settings' || selectedGuild?.canAccessSettings)
                             .map((item, index) => (
                             <NavLink

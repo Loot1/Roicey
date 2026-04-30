@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router'
 import { Bars3Icon, MoonIcon, SunIcon, UserCircleIcon } from '@heroicons/react/24/outline'
 import logoSansFond from '../../assets/images/voicey-logo.png'
 import { getDiscordSession, logoutDiscord, onAuthChanged, startDiscordLogin } from '../../api/discordAuth'
-import { headerNavigation } from '../../constants'
+import { HEADER_NAVIGATION } from '../../constants'
 import type { DiscordUser } from '../../types'
 import { useTheme } from '../../hooks'
 
@@ -47,7 +47,7 @@ export function Header() {
         return () => {
             ignore = true
         }
-    }, [location.pathname])
+    }, [])
 
     useEffect(() => {
         return onAuthChanged(() => {
@@ -63,6 +63,9 @@ export function Header() {
         setUser(null)
     }
 
+    const handleLoginClick = () => void startDiscordLogin(currentPath).catch(console.error)
+    const handleLogoutClick = () => void handleLogout().catch(console.error)
+
     return (
         <div className="navbar bg-base-100 shadow-md border-base-200/50">
             <div className="navbar-start">
@@ -73,7 +76,7 @@ export function Header() {
                     <ul
                         tabIndex={-1}
                         className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-lg border border-base-200">
-                        {headerNavigation.map((item) => (
+                        {HEADER_NAVIGATION.map((item) => (
                             <li key={item.href}>
                                 <Link
                                     to={item.href}
@@ -85,7 +88,7 @@ export function Header() {
                         ))}
                         {!user && !loadingUser ? (
                             <li className="sm:hidden">
-                                <button onClick={() => void startDiscordLogin(currentPath).catch(console.error)}>
+                                <button onClick={handleLoginClick}>
                                     Se connecter
                                 </button>
                             </li>
@@ -96,7 +99,7 @@ export function Header() {
                                     <span>{user.global_name ?? user.username}</span>
                                 </li>
                                 <li className="sm:hidden"><Link to="/dashboard">Dashboard</Link></li>
-                                <li className="sm:hidden"><button onClick={() => void handleLogout().catch(console.error)}>Déconnexion</button></li>
+                                <li className="sm:hidden"><button onClick={handleLogoutClick}>Déconnexion</button></li>
                             </>
                         ) : null}
                     </ul>
@@ -112,7 +115,7 @@ export function Header() {
             </div>
             <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1 gap-2">
-                    {headerNavigation.map((item) => (
+                    {HEADER_NAVIGATION.map((item) => (
                         <li key={item.href}>
                             <Link
                                 to={item.href}
@@ -141,7 +144,7 @@ export function Header() {
                 {!user && !loadingUser ? (
                     <button
                         className="btn btn-primary btn-sm hidden gap-2 sm:inline-flex"
-                        onClick={() => void startDiscordLogin(currentPath).catch(console.error)}
+                        onClick={handleLoginClick}
                     >
                         <UserCircleIcon className="h-5 w-5" />
                         Se connecter
@@ -174,7 +177,7 @@ export function Header() {
                             <span>{user.global_name ?? user.username}</span>
                         </li>
                         <li><Link to="/dashboard">Dashboard</Link></li>
-                        <li><button onClick={() => void handleLogout().catch(console.error)}>Déconnexion</button></li>
+                        <li><button onClick={handleLogoutClick}>Déconnexion</button></li>
                     </ul>
                 </div>
                 ) : null}

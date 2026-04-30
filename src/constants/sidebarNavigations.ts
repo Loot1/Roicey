@@ -15,7 +15,7 @@ type SidebarDemoNavigationItem = SidebarNavigationItem & {
     icon: typeof CommandLineIcon
 }
 
-export const dashboardSidebarNavigation = [
+export const DASHBOARD_SIDEBAR_NAVIGATION = [
     {
         id: 'overview',
         title: "Vue d'ensemble",
@@ -44,7 +44,7 @@ export const dashboardSidebarNavigation = [
     },
 ] satisfies SidebarNavigationItem[]
 
-export const docsSidebarNavigation = [
+export const DOCS_SIDEBAR_NAVIGATION = [
     {
         id: 'getting-started',
         title: 'Démarrage rapide',
@@ -83,7 +83,7 @@ export const docsSidebarNavigation = [
     },
 ] satisfies SidebarDocumentationNavigationItem[]
 
-export const demoSidebarNavigation = [
+export const DEMO_SIDEBAR_NAVIGATION = [
     {
         id: 'recordings',
         title: 'Enregistrements',
@@ -93,6 +93,6 @@ export const demoSidebarNavigation = [
     },
 ] satisfies SidebarDemoNavigationItem[]
 
-export type DashboardSidebarNavigationItem = (typeof dashboardSidebarNavigation)[number]
-export type DocsSidebarNavigationItem = (typeof docsSidebarNavigation)[number]
-export type DemoSidebarNavigationItem = (typeof demoSidebarNavigation)[number]
+export type DashboardSidebarNavigationItem = (typeof DASHBOARD_SIDEBAR_NAVIGATION)[number]
+export type DocsSidebarNavigationItem = (typeof DOCS_SIDEBAR_NAVIGATION)[number]
+export type DemoSidebarNavigationItem = (typeof DEMO_SIDEBAR_NAVIGATION)[number]

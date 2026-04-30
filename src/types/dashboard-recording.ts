@@ -11,13 +11,13 @@ export interface DashboardRecordingFile {
 export interface DashboardRecordingParticipant {
     userId: string;
     username: string;
-    avatarUrl?: string | null;
+    avatarUrl: string | null;
 }
 
 export interface DashboardRecording {
     id: number;
-    guildId?: string;
-    guildName?: string | null;
+    guildId: string | null;
+    guildName: string | null;
     channelId: string;
     channelName: string | null;
     requesterId: string;
@@ -33,7 +33,7 @@ export interface DashboardRecording {
     participants?: DashboardRecordingParticipant[];
     outputFiles: DashboardRecordingFile[];
     source?: string;
-    sourceArchiveUrl?: string | null;
-    sourceMessageUrl?: string | null;
+    sourceArchiveUrl?: string;
+    sourceMessageUrl?: string;
     archiveFileName?: string;
 }

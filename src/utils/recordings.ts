@@ -147,10 +147,11 @@ export function groupFilesByUser(recording: DashboardRecording): UserRecordingGr
             continue
         }
 
+        const participant = getParticipantByUserId(recording, file.userId)
         groups.set(file.userId, {
             userId: file.userId,
-            username: getParticipantByUserId(recording, file.userId)?.username ?? file.userId,
-            avatarUrl: getParticipantByUserId(recording, file.userId)?.avatarUrl ?? null,
+            username: participant?.username ?? file.userId,
+            avatarUrl: participant?.avatarUrl ?? null,
             files: [file],
         })
     }
