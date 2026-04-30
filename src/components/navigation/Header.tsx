@@ -47,7 +47,7 @@ export function Header() {
         return () => {
             ignore = true
         }
-    }, [location.pathname])
+    }, [])
 
     useEffect(() => {
         return onAuthChanged(() => {

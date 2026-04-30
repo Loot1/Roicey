@@ -1,29 +1,9 @@
 import { ArrowDownTrayIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
-import type { ReactNode } from 'react'
 import { useMemo, useState } from 'react'
-import { ButtonOne, DashboardAlert, DashboardPageHeader, RecordingSessionTracksPlayer } from '../../components'
+import { ButtonOne, DashboardAlert, DashboardPageHeader, RecordingMetaChip, RecordingSessionTracksPlayer } from '../../components'
 import { demoRecording, demoRecordingMixPath, demoRecordingUserTrackPaths } from '../../constants'
 import type { DashboardRecordingParticipant } from '../../types'
 import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
-
-type RecordingMetaChipProps = {
-    label: string
-    toneClassName: string
-    children: ReactNode
-    leading?: ReactNode
-}
-
-function RecordingMetaChip({ label, toneClassName, children, leading }: RecordingMetaChipProps) {
-    return (
-        <div className={`inline-flex h-8 items-center gap-2 rounded-full border text-xs font-black uppercase leading-none tracking-[0.16em] ${leading ? 'pl-0 pr-3' : 'px-3'} ${toneClassName}`}>
-            {leading ? <div className="inline-flex items-center">{leading}</div> : null}
-            <span>{label}</span>
-            <div className="inline-flex items-center gap-2 font-semibold normal-case tracking-normal text-base-content/85">
-                {children}
-            </div>
-        </div>
-    )
-}
 
 export function DemoRecordingsPage() {
     const [tracksPrepared, setTracksPrepared] = useState(false)

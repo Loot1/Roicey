@@ -356,6 +356,7 @@ function RecordingSessionTracksPlayerContent({
                             </div>
                             <div
                                 className="relative h-2 cursor-pointer rounded-full bg-base-300/80"
+                                aria-hidden="true"
                                 onClick={(event) => {
                                     const bounds = event.currentTarget.getBoundingClientRect()
                                     const relativeX = Math.max(0, Math.min(bounds.width, event.clientX - bounds.left))
@@ -415,6 +416,7 @@ function RecordingSessionTracksPlayerContent({
                     src={sourcesByUserId[group.userId]?.objectUrl}
                     preload="metadata"
                     className="hidden"
+                    aria-hidden="true"
                 />
             ))}
         </section>

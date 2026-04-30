@@ -1,30 +1,10 @@
 import { ArrowDownTrayIcon, ArrowLeftIcon, ArrowPathIcon, ExclamationTriangleIcon, XCircleIcon } from '@heroicons/react/24/outline'
-import type { ReactNode } from 'react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { downloadRecordingSourceMix, downloadRecordingSourceUserMix, resolveDashboardRecordingSource } from '../../api/discordAuth'
-import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingSessionTracksPlayer } from '../../components'
+import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingMetaChip, RecordingSessionTracksPlayer } from '../../components'
 import type { DashboardRecording, DashboardRecordingParticipant } from '../../types'
 import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
-
-type RecordingMetaChipProps = {
-    label: string
-    toneClassName: string
-    children: ReactNode
-    leading?: ReactNode
-}
-
-function RecordingMetaChip({ label, toneClassName, children, leading }: RecordingMetaChipProps) {
-    return (
-        <div className={`inline-flex h-8 items-center gap-2 rounded-full border text-xs font-black uppercase leading-none tracking-[0.16em] ${leading ? 'pl-0 pr-3' : 'px-3'} ${toneClassName}`}>
-            {leading ? <div className="inline-flex items-center">{leading}</div> : null}
-            <span>{label}</span>
-            <div className="inline-flex items-center gap-2 font-semibold normal-case tracking-normal text-base-content/85">
-                {children}
-            </div>
-        </div>
-    )
-}
 
 export function DashboardRecordingDetailPage() {
     const [searchParams] = useSearchParams()
@@ -118,6 +98,8 @@ export function DashboardRecordingDetailPage() {
             return
         }
 
+        const createdUrls: string[] = []
+
         try {
             setAudioLoadingKey(`session:${recording.id}`)
             setError(null)
@@ -125,6 +107,7 @@ export function DashboardRecordingDetailPage() {
             const nextEntries = await Promise.all(groupsToPrepare.map(async (group) => {
                 const mixedAudioBlob = await ensureUserMixBlob(group.userId)
                 const objectUrl = URL.createObjectURL(mixedAudioBlob)
+                createdUrls.push(objectUrl)
                 const sourceKey = `user:${recording.id}:${group.userId}`
 
                 return [sourceKey, {
@@ -138,6 +121,7 @@ export function DashboardRecordingDetailPage() {
                 ...Object.fromEntries(nextEntries),
             }))
         } catch {
+            createdUrls.forEach((url) => URL.revokeObjectURL(url))
             setError('La préparation des pistes audio a échoué pour cet enregistrement.')
         } finally {
             setAudioLoadingKey((currentKey) => (currentKey === `session:${recording?.id ?? 'unknown'}` ? null : currentKey))
@@ -224,18 +208,6 @@ export function DashboardRecordingDetailPage() {
         } finally {
             setGlobalMixDownloadLoading(false)
         }
-    }
-
-    const handlePrepareTracks = () => {
-        void prepareAllUserSources()
-    }
-
-    const handleDownloadUserTrack = (userId: string) => {
-        void downloadUserTrack(userId)
-    }
-
-    const handleDownloadGlobalMix = (mutedUserIds: string[]) => {
-        void downloadGlobalMix(mutedUserIds)
     }
 
     if (loading) {
@@ -337,7 +309,7 @@ export function DashboardRecordingDetailPage() {
                         label={areTracksPrepared ? 'Pistes chargées' : 'Charger les pistes'}
                         variant="outline"
                         Icon={ArrowDownTrayIcon}
-                        onClick={handlePrepareTracks}
+                        onClick={() => { void prepareAllUserSources() }}
                         loading={audioLoadingKey === `session:${recording.id}`}
                         disabled={areTracksPrepared || recording.outputFiles.length === 0}
                     />
@@ -351,9 +323,9 @@ export function DashboardRecordingDetailPage() {
                 userGroups={userGroups}
                 sourcesByUserId={userSources}
                 isPreparing={audioLoadingKey === `session:${recording.id}`}
-                onPrepare={handlePrepareTracks}
-                onDownloadGlobalMix={handleDownloadGlobalMix}
-                onDownloadUserTrack={handleDownloadUserTrack}
+                onPrepare={() => { void prepareAllUserSources() }}
+                onDownloadGlobalMix={(mutedUserIds) => { void downloadGlobalMix(mutedUserIds) }}
+                onDownloadUserTrack={(userId) => { void downloadUserTrack(userId) }}
                 downloadLoadingGlobalMix={globalMixDownloadLoading}
                 downloadLoadingUserId={downloadLoadingKey}
             />

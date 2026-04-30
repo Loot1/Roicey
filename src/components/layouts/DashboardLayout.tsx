@@ -19,6 +19,10 @@ export function DashboardLayout() {
         return url.toString()
     }, [])
     const { selectedGuildId, setSelectedGuildId } = useDashboardGuildSelection()
+    const selectedGuildIdRef = useRef(selectedGuildId)
+    selectedGuildIdRef.current = selectedGuildId
+    const locationRef = useRef(location)
+    locationRef.current = location
     const [user, setUser] = useState<DiscordUser | null>(null)
     const [guilds, setGuilds] = useState<DiscordGuild[]>([])
     const [loading, setLoading] = useState(true)
@@ -51,7 +55,7 @@ export function DashboardLayout() {
                         return
                     }
 
-                    await startDiscordLogin(`${location.pathname}${location.search}`)
+                    await startDiscordLogin(`${locationRef.current.pathname}${locationRef.current.search}`)
                     return
                 }
 
@@ -62,8 +66,8 @@ export function DashboardLayout() {
                     setGuilds(dashboardGuilds)
 
                     // Keep the selected guild in sync with the currently accessible guild list.
-                    const hasSelectedGuild = selectedGuildId
-                        ? dashboardGuilds.some((guild) => guild.id === selectedGuildId)
+                    const hasSelectedGuild = selectedGuildIdRef.current
+                        ? dashboardGuilds.some((guild) => guild.id === selectedGuildIdRef.current)
                         : false
                     const hasInvitedGuild = invitedGuildId
                         ? dashboardGuilds.some((guild) => guild.id === invitedGuildId)
@@ -73,7 +77,7 @@ export function DashboardLayout() {
                         setSelectedGuildId(null)
                     } else if (invitedGuildId && hasInvitedGuild) {
                         setSelectedGuildId(invitedGuildId)
-                    } else if (!selectedGuildId || !hasSelectedGuild) {
+                    } else if (!selectedGuildIdRef.current || !hasSelectedGuild) {
                         setSelectedGuildId(dashboardGuilds[0].id)
                     }
 
@@ -95,7 +99,7 @@ export function DashboardLayout() {
         return () => {
             ignore = true
         }
-    }, [authError, invitedGuildId, location.pathname, location.search, selectedGuildId, setSelectedGuildId])
+    }, [authError, invitedGuildId, setSelectedGuildId])
 
     useEffect(() => {
         if (!invitedGuildId || loading) {

@@ -90,7 +90,6 @@ function ParticipantWaveform({
         <div
             ref={containerRef}
             className="absolute inset-0 h-full w-full"
-            id="test"
             style={{
                 opacity,
                 filter,
@@ -130,7 +129,7 @@ export function RecordingSessionParticipantCard({
 
     return (
         <div className={`grid grid-cols-1 gap-3 md:gap-4 rounded-[1.35rem] border bg-base-100 px-4 py-3 shadow-sm transition xl:grid-cols-[minmax(320px,360px)_minmax(0,1fr)] ${isActive ? 'border-primary/25 bg-primary/[0.03]' : 'border-base-300'} ${!isReady ? 'opacity-60' : ''}`}>
-            <article className={`${isActive ? 'text-base-content' : ''} p-1`}>
+            <article className={`${isActive ? 'text-base-content' : ''} p-1`} aria-label={`Participant ${group.username}`}>
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                         <div className="flex items-center gap-3">
