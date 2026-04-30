@@ -2,7 +2,7 @@ import { NavLink, Outlet } from 'react-router'
 import { useState } from 'react'
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
-import { docsSidebarNavigation } from '../../constants'
+import { DOCS_SIDEBAR_NAVIGATION } from '../../constants'
 import { VOICEY_HELP_DISCORD_URL } from '../../constants/externalLinks'
 
 export function DocsLayout() {
@@ -39,7 +39,7 @@ export function DocsLayout() {
                         <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">
                             Documentation
                         </p>
-                        {docsSidebarNavigation.map((item, index) => {
+                        {DOCS_SIDEBAR_NAVIGATION.map((item, index) => {
                             const IconComponent = item.icon
 
                             return (

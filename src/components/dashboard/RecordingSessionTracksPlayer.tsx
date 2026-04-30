@@ -4,6 +4,8 @@ import { RecordingSessionParticipantCard } from './RecordingSessionParticipantCa
 import type { DashboardRecording } from '../../types'
 import { formatPlaybackClock, getActiveSpeakerIds, getRecordingFileDurationMs, getRecordingTimelineDurationMs, type PreparedAudioSource, type UserRecordingGroup } from '../../utils'
 
+const AUDIO_SYNC_THRESHOLD_SECONDS = 0.2
+
 type SessionPlayerButtonVariant = 'primary' | 'ghost' | 'danger'
 type SessionPlayerButtonSize = 'md' | 'sm'
 
@@ -124,7 +126,7 @@ function RecordingSessionTracksPlayerContent({
                     continue
                 }
 
-                if (Math.abs(audio.currentTime - primaryAudio.currentTime) > 0.2) {
+                if (Math.abs(audio.currentTime - primaryAudio.currentTime) > AUDIO_SYNC_THRESHOLD_SECONDS) {
                     audio.currentTime = primaryAudio.currentTime
                 }
             }

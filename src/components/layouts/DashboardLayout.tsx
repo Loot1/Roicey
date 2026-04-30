@@ -4,7 +4,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 import { DashboardAlert, DashboardStateCard, ResponsiveSidebarLayout } from '../../components'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
 import { useDashboardGuildSelection } from '../../hooks'
-import { dashboardSidebarNavigation, VOICEY_INVITE_URL } from '../../constants'
+import { DASHBOARD_SIDEBAR_NAVIGATION, VOICEY_INVITE_URL } from '../../constants'
 import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
 
 export function DashboardLayout() {
@@ -20,9 +20,15 @@ export function DashboardLayout() {
     }, [])
     const { selectedGuildId, setSelectedGuildId } = useDashboardGuildSelection()
     const selectedGuildIdRef = useRef(selectedGuildId)
-    selectedGuildIdRef.current = selectedGuildId
     const locationRef = useRef(location)
-    locationRef.current = location
+
+    useEffect(() => {
+        selectedGuildIdRef.current = selectedGuildId
+    }, [selectedGuildId])
+
+    useEffect(() => {
+        locationRef.current = location
+    }, [location])
     const [user, setUser] = useState<DiscordUser | null>(null)
     const [guilds, setGuilds] = useState<DiscordGuild[]>([])
     const [loading, setLoading] = useState(true)
@@ -285,7 +291,7 @@ export function DashboardLayout() {
 
                     <div>
                         <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">Navigation</p>
-                        {dashboardSidebarNavigation
+                        {DASHBOARD_SIDEBAR_NAVIGATION
                             .filter((item) => item.id !== 'settings' || selectedGuild?.canAccessSettings)
                             .map((item, index) => (
                             <NavLink
