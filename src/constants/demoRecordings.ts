@@ -2,6 +2,8 @@ import type { DashboardRecording } from '../types'
 
 export const demoRecording = {
     id: 301,
+    guildId: null,
+    guildName: null,
     channelId: '1189200012345678901',
     channelName: 'Ranked Trio',
     requesterId: '290100000000000001',
