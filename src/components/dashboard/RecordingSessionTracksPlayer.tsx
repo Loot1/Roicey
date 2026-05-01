@@ -91,7 +91,6 @@ function RecordingSessionTracksPlayerContent({
         () => Math.max(1, Math.round(getRecordingTimelineDurationMs(recording) / 1_000)),
         [recording],
     )
-    const progressPercent = Math.min(100, (currentTimeSeconds / timelineDurationSeconds) * 100)
     const activeSpeakerIds = useMemo(
         () => getActiveSpeakerIds(recording, currentTimeSeconds * 1_000),
         [currentTimeSeconds, recording],
@@ -356,21 +355,16 @@ function RecordingSessionTracksPlayerContent({
                                 </div>
                                 <p className="text-sm font-black tabular-nums text-base-content/70">{formatPlaybackClock(currentTimeSeconds)} <span className="text-base-content/35">/ {formatPlaybackClock(timelineDurationSeconds)}</span></p>
                             </div>
-                            <div
-                                className="relative h-2 cursor-pointer rounded-full bg-base-300/80"
+                            <input
+                                type="range"
+                                className="range range-primary range-xs w-full cursor-pointer h-3.25"
                                 aria-hidden="true"
-                                onClick={(event) => {
-                                    const bounds = event.currentTarget.getBoundingClientRect()
-                                    const relativeX = Math.max(0, Math.min(bounds.width, event.clientX - bounds.left))
-                                    const ratio = bounds.width > 0 ? relativeX / bounds.width : 0
-                                    seekTo(ratio * timelineDurationSeconds)
-                                }}
-                            >
-                                <div className="h-full rounded-full bg-primary" style={{ width: `${progressPercent}%` }} />
-                                <div className="absolute bottom-1/2 w-px translate-y-1/2 bg-primary-content/70" style={{ left: `${progressPercent}%` }}>
-                                    <div className="absolute -top-1.5 left-1/2 h-3.5 w-3.5 -translate-x-1/2 rounded-full border border-primary/30 bg-primary shadow-[0_0_16px_rgba(0,0,0,0.18)]" />
-                                </div>
-                            </div>
+                                min={0}
+                                max={timelineDurationSeconds}
+                                step={0.1}
+                                value={currentTimeSeconds}
+                                onChange={(event) => seekTo(Number(event.target.value))}
+                            />
                         </div>
                     </div>
                 </div>
