@@ -6,6 +6,7 @@ interface GuildChannelOption {
 interface GuildRoleOption {
     id: string
     name: string
+    color: string
 }
 
 export interface GuildDashboardOptions {
