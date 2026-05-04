@@ -271,6 +271,10 @@ export function DashboardSettingsPage() {
                                                 onChange={() => toggleRole(role.id)}
                                                 disabled={isDisabled}
                                             />
+                                            <span
+                                                className="inline-block h-2.5 w-2.5 flex-shrink-0 rounded-full"
+                                                style={{ backgroundColor: role.color !== '#000000' ? role.color : 'transparent', border: role.color !== '#000000' ? 'none' : '1.5px solid currentColor', opacity: role.color !== '#000000' ? 1 : 0.25 }}
+                                            />
                                             <span className="text-sm">{role.name}</span>
                                         </label>
                                     ))}
