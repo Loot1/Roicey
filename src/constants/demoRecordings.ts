@@ -16,6 +16,7 @@ export const demoRecording = {
     requestedAt: '2026-04-12T20:14:00.000Z',
     startedAt: '2026-04-12T20:14:05.000Z',
     finishedAt: '2026-04-12T20:15:27.000Z',
+    stopReason: null,
     participants: [
         {
             userId: '290100000000000001',
