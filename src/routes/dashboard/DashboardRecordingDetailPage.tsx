@@ -3,8 +3,28 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { downloadRecordingSourceMix, downloadRecordingSourceUserMix, resolveDashboardRecordingSource } from '../../api/discordAuth'
 import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingMetaChip, RecordingSessionTracksPlayer } from '../../components'
-import type { DashboardRecording, DashboardRecordingParticipant } from '../../types'
+import type { DashboardRecording, DashboardRecordingParticipant, RecordingStopReason } from '../../types'
 import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
+
+function formatStopReason(reason: RecordingStopReason | null): string {
+    switch (reason) {
+        case 'completed': return 'Terminé'
+        case 'manual': return 'Arrêt manuel'
+        case 'size_limit': return 'Limite de taille'
+        case 'disconnected': return 'Déconnexion'
+        default: return 'Terminé'
+    }
+}
+
+function stopReasonToneClassName(reason: RecordingStopReason | null): string {
+    switch (reason) {
+        case 'completed': return 'border-[#00a86b]/80 bg-[#00a86b]/10 text-[#00a86b]'
+        case 'manual': return 'border-[#f59e0b]/80 bg-[#f59e0b]/10 text-[#b45309]'
+        case 'size_limit': return 'border-[#ef4444]/70 bg-[#ef4444]/10 text-[#b91c1c]'
+        case 'disconnected': return 'border-[#ef4444]/70 bg-[#ef4444]/10 text-[#b91c1c]'
+        default: return 'border-[#00a86b]/80 bg-[#00a86b]/10 text-[#00a86b]'
+    }
+}
 
 export function DashboardRecordingDetailPage() {
     const [searchParams] = useSearchParams()
@@ -296,6 +316,12 @@ export function DashboardRecordingDetailPage() {
                                     toneClassName="border-[#c35500]/80 bg-[#c35500]/10 text-[#c35500]"
                                 >
                                     <span>{recording.outputFiles.length}</span>
+                                </RecordingMetaChip>
+                                <RecordingMetaChip
+                                    label="Statut"
+                                    toneClassName={stopReasonToneClassName(recording.stopReason ?? null)}
+                                >
+                                    <span>{formatStopReason(recording.stopReason ?? null)}</span>
                                 </RecordingMetaChip>
                             </div>
                         </div>

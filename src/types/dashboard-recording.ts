@@ -1,3 +1,5 @@
+export type RecordingStopReason = 'completed' | 'manual' | 'size_limit' | 'disconnected'
+
 export interface DashboardRecordingFile {
     index: number;
     userId: string;
@@ -26,6 +28,7 @@ export interface DashboardRecording {
     reason: string;
     durationSeconds: number;
     status: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED';
+    stopReason: RecordingStopReason | null;
     errorMessage: string | null;
     requestedAt: string;
     startedAt: string | null;
