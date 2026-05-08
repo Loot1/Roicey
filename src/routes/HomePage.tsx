@@ -1,5 +1,6 @@
 import { Link } from 'react-router'
 import { useEffect, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { InformationCircleIcon, ShieldCheckIcon, SpeakerWaveIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/outline'
 import logoSansFond from '../assets/images/voicey-logo.png'
 import { FeaturedServers } from '../components'
@@ -8,6 +9,8 @@ import { VOICEY_HELP_DISCORD_URL, VOICEY_INVITE_URL } from '../config'
 import type { FeaturedServer } from '../types'
 
 export function HomePage() {
+    const { t, i18n } = useTranslation()
+    const locale = i18n.language.startsWith('fr') ? 'fr-FR' : 'en-US'
     const [stats, setStats] = useState({
         createdVoiceRoomsToday: 0,
         totalVoiceRooms: 0,
@@ -64,25 +67,24 @@ export function HomePage() {
 
             <section className="mx-auto grid min-h-[78vh] max-w-7xl items-center gap-8 px-6 py-14 md:grid-cols-2 lg:px-10">
                 <div className="space-y-6">
-                    <div className="badge badge-primary badge-outline badge-lg">Bot Discord Voicey</div>
+                    <div className="badge badge-primary badge-outline badge-lg">{t('home.hero.badge')}</div>
                     <h1 className="text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
-                        Le bot de gestion des salons vocaux conçu pour la modération
+                        {t('home.hero.title')}
                     </h1>
                     <p className="max-w-2xl text-base-content/80 sm:text-lg">
-                        Voicey crée automatiquement les salons vocaux temporaires, les rend simples à piloter avec des boutons
-                        et ajoute des fonctionnalités pensées pour la modération vocale.
+                        {t('home.hero.description')}
                     </p>
                     <div className="flex flex-wrap gap-3">
                         <a href={VOICEY_INVITE_URL} target="_blank" rel="noreferrer" className="btn btn-primary btn-wide">
-                            Ajouter Voicey
+                            {t('home.hero.addBot')}
                         </a>
                         <a href={VOICEY_HELP_DISCORD_URL} target="_blank" rel="noreferrer" className="btn btn-outline btn-secondary">
-                            Rejoindre le Discord
+                            {t('home.hero.joinDiscord')}
                         </a>
                     </div>
                     <div className="alert alert-info alert-soft max-w-xl">
                         <InformationCircleIcon className="h-5 w-5" />
-                        <span>Enregistrements publiés dans Discord, historique des bannissements vocaux et dashboard réservé à la modération : Voicey facilite la modération de vos salons vocaux.</span>
+                        <span>{t('home.hero.infoAlert')}</span>
                     </div>
                 </div>
 
@@ -110,37 +112,37 @@ export function HomePage() {
             <section className="mx-auto max-w-7xl px-6 pb-8 lg:px-10">
                 <div className="stats stats-vertical w-full bg-base-200/70 shadow md:stats-horizontal">
                     <div className="stat">
-                        <div className="stat-title">Salons créés aujourd'hui</div>
-                        <div className="stat-value text-secondary">{stats.createdVoiceRoomsToday.toLocaleString('fr-FR')}</div>
-                        <div className="stat-desc">{stats.totalVoiceRooms.toLocaleString('fr-FR')} au total</div>
+                        <div className="stat-title">{t('home.stats.roomsCreatedToday')}</div>
+                        <div className="stat-value text-secondary">{stats.createdVoiceRoomsToday.toLocaleString(locale)}</div>
+                        <div className="stat-desc">{t('home.stats.roomsTotalDesc', { value: stats.totalVoiceRooms.toLocaleString(locale) })}</div>
                     </div>
                     <div className="stat">
-                        <div className="stat-title">Temps moyen création</div>
+                        <div className="stat-title">{t('home.stats.avgCreationTime')}</div>
                         <div className="stat-value text-secondary">&lt; 1s</div>
-                        <div className="stat-desc">instantané</div>
+                        <div className="stat-desc">{t('home.stats.instant')}</div>
                     </div>
                     <div className="stat">
-                        <div className="stat-title">Serveurs actifs</div>
-                        <div className="stat-value text-secondary">{stats.totalActiveServers.toLocaleString('fr-FR')}</div>
-                        <div className="stat-desc">{stats.nonFeaturedActiveServers.toLocaleString('fr-FR')} autres hors featured</div>
+                        <div className="stat-title">{t('home.stats.activeServers')}</div>
+                        <div className="stat-value text-secondary">{stats.totalActiveServers.toLocaleString(locale)}</div>
+                        <div className="stat-desc">{t('home.stats.nonFeaturedDesc', { value: stats.nonFeaturedActiveServers.toLocaleString(locale) })}</div>
                     </div>
                 </div>
             </section>
 
             <section className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
-                <h2 className="text-3xl font-extrabold sm:text-4xl">Fonctions principales</h2>
+                <h2 className="text-3xl font-extrabold sm:text-4xl">{t('home.features.title')}</h2>
                 <p className="mt-2 max-w-2xl text-base-content/70">
-                    Une boîte à outils complète pour gérer des salons vocaux dynamiques sur Discord.
+                    {t('home.features.subtitle')}
                 </p>
 
                 <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
                     <article className="card border border-base-300 bg-base-100 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
                         <div className="card-body">
                             <WrenchScrewdriverIcon className="h-8 w-8 text-secondary" />
-                            <h3 className="card-title">Contrôles par boutons, menus et modals</h3>
-                            <p>Verouiller, limiter, transférer, expulser et bannir de votre salon sans taper de commande. Gérer votre salon vocal Discord devient très simple!</p>
+                            <h3 className="card-title">{t('home.features.buttons.title')}</h3>
+                            <p>{t('home.features.buttons.description')}</p>
                             <div className="card-actions justify-end">
-                                <span className="badge badge-secondary badge-soft">Accessibilité</span>
+                                <span className="badge badge-secondary badge-soft">{t('home.features.buttons.badge')}</span>
                             </div>
                         </div>
                     </article>
@@ -148,10 +150,10 @@ export function HomePage() {
                     <article className="card border border-base-300 bg-base-100 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
                         <div className="card-body">
                             <SpeakerWaveIcon className="h-8 w-8 text-secondary" />
-                            <h3 className="card-title">Enregistrement à la demande</h3>
-                            <p>Enregistrement vocal déclenché par vos membres et publié dans le salon de logs de votre serveur Discord pour fournir une preuve exploitable.</p>
+                            <h3 className="card-title">{t('home.features.recording.title')}</h3>
+                            <p>{t('home.features.recording.description')}</p>
                             <div className="card-actions justify-end">
-                                <span className="badge badge-secondary badge-soft">Modération avancée</span>
+                                <span className="badge badge-secondary badge-soft">{t('home.features.recording.badge')}</span>
                             </div>
                         </div>
                     </article>
@@ -159,10 +161,10 @@ export function HomePage() {
                     <article className="card border border-base-300 bg-base-100 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl">
                         <div className="card-body">
                             <ShieldCheckIcon className="h-8 w-8 text-secondary" />
-                            <h3 className="card-title">Historique des bannissements</h3>
-                            <p>Une alerte est envoyée dès qu'un utilisateur est banni d'un salon vocal et un historique est conservé consultable à tout moment.</p>
+                            <h3 className="card-title">{t('home.features.bans.title')}</h3>
+                            <p>{t('home.features.bans.description')}</p>
                             <div className="card-actions justify-end">
-                                <span className="badge badge-secondary badge-soft">Traçabilité</span>
+                                <span className="badge badge-secondary badge-soft">{t('home.features.bans.badge')}</span>
                             </div>
                         </div>
                     </article>
@@ -172,34 +174,34 @@ export function HomePage() {
             <section className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
                 <div className="grid gap-8 lg:grid-cols-2">
                     <div>
-                        <h2 className="text-3xl font-extrabold">Mise en place en 3 étapes</h2>
+                        <h2 className="text-3xl font-extrabold">{t('home.setup.title')}</h2>
                         <ul className="steps steps-vertical mt-6 w-full lg:steps-horizontal">
-                            <li className="step step-primary">Invite le bot</li>
-                            <li className="step step-primary">Configure avec /config</li>
-                            <li className="step">C'est parti !</li>
+                            <li className="step step-primary">{t('home.setup.step1')}</li>
+                            <li className="step step-primary">{t('home.setup.step2')}</li>
+                            <li className="step">{t('home.setup.step3')}</li>
                         </ul>
                     </div>
 
                     <div className="space-y-3">
                         <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
                             <input type="radio" name="faq-voicey" defaultChecked />
-                            <div className="collapse-title font-semibold">Qui peut voir les enregistrements ?</div>
+                            <div className="collapse-title font-semibold">{t('home.setup.faq.q1')}</div>
                             <div className="collapse-content text-sm text-base-content/80">
-                                Uniquement les modérateurs autorisés dans le serveur, selon la configuration des rôles et des accès aux salons.
+                                {t('home.setup.faq.a1')}
                             </div>
                         </div>
                         <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
                             <input type="radio" name="faq-voicey" />
-                            <div className="collapse-title font-semibold">Peut-on empêcher un membre d'utiliser /record ?</div>
+                            <div className="collapse-title font-semibold">{t('home.setup.faq.q2')}</div>
                             <div className="collapse-content text-sm text-base-content/80">
-                                Oui. Les modérateurs peuvent appliquer des restrictions ciblées pour bloquer la demande d'enregistrement à des utilisateurs précis.
+                                {t('home.setup.faq.a2')}
                             </div>
                         </div>
                         <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
                             <input type="radio" name="faq-voicey" />
-                            <div className="collapse-title font-semibold">Les salons vocaux temporaires sont-ils nettoyés automatiquement ?</div>
+                            <div className="collapse-title font-semibold">{t('home.setup.faq.q3')}</div>
                             <div className="collapse-content text-sm text-base-content/80">
-                                Oui. Dès que le dernier membre quitte, le salon temporaire est retiré pour garder le serveur propre et lisible.
+                                {t('home.setup.faq.a3')}
                             </div>
                         </div>
                     </div>
@@ -217,14 +219,14 @@ export function HomePage() {
                 <div className="hero rounded-box border border-primary/20 bg-gradient-to-r from-primary/20 via-base-200 to-secondary/20 p-2">
                     <div className="hero-content text-center">
                         <div className="max-w-2xl">
-                            <h2 className="text-3xl font-black sm:text-4xl">Prêt à fluidifier ton vocal Discord ?</h2>
+                            <h2 className="text-3xl font-black sm:text-4xl">{t('home.cta.title')}</h2>
                             <p className="py-4 text-base-content/80">
-                                Installe Voicey et donne à tes membres des salons vocaux simples à utiliser, avec une vraie boîte à outils de modération.
+                                {t('home.cta.description')}
                             </p>
                             <div className="join join-vertical gap-2 sm:join-horizontal">
-                                <a href={VOICEY_INVITE_URL} target="_blank" rel="noreferrer" className="btn join-item btn-primary">Ajouter Voicey</a>
+                                <a href={VOICEY_INVITE_URL} target="_blank" rel="noreferrer" className="btn join-item btn-primary">{t('home.cta.addBot')}</a>
                                 <Link to="/docs" className="btn join-item btn-outline">
-                                    Documentation
+                                    {t('home.cta.docs')}
                                 </Link>
                             </div>
                         </div>

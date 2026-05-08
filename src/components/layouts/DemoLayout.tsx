@@ -1,15 +1,17 @@
 import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router'
 import { PlayCircleIcon } from '@heroicons/react/24/outline'
+import { useTranslation } from 'react-i18next'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
 import { DEMO_SIDEBAR_NAVIGATION } from '../../config'
 
 export function DemoLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const { t } = useTranslation()
 
     return (
         <ResponsiveSidebarLayout
-            mobileTitle="Démo"
+            mobileTitle={t('demo.layout.mobileTitle')}
             sidebarOpen={sidebarOpen}
             onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             onCloseSidebar={() => setSidebarOpen(false)}
@@ -22,15 +24,15 @@ export function DemoLayout() {
                             <div className="inline-flex rounded-lg bg-primary/15 p-2 text-primary">
                                 <PlayCircleIcon className="h-5 w-5" />
                             </div>
-                            <h2 className="text-base font-semibold">Démo publique</h2>
+                            <h2 className="text-base font-semibold">{t('demo.layout.sidebarTitle')}</h2>
                         </div>
                         <p className="mt-2 text-sm text-base-content/65">
-                            Aperçu public du dashboard sans connexion Discord ou installation du bot.
+                            {t('demo.layout.sidebarDesc')}
                         </p>
                     </div>
 
                     <div>
-                        <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">Navigation</p>
+                        <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">{t('demo.layout.navSection')}</p>
                         {DEMO_SIDEBAR_NAVIGATION.map((item, index) => {
                             const IconComponent = item.icon
 
@@ -47,7 +49,7 @@ export function DemoLayout() {
                                     onClick={() => setSidebarOpen(false)}
                                 >
                                     <IconComponent className="h-5 w-5" />
-                                    <span>{item.title}</span>
+                                    <span>{t(item.title)}</span>
                                 </NavLink>
                             )
                         })}

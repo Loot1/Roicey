@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router'
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
 import { DOCS_SIDEBAR_NAVIGATION } from '../../config'
@@ -7,10 +8,11 @@ import { VOICEY_HELP_DISCORD_URL } from '../../config/externalLinks'
 
 export function DocsLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
+    const { t } = useTranslation()
 
     return (
         <ResponsiveSidebarLayout
-            mobileTitle="Documentation"
+            mobileTitle={t('docs.layout.mobileTitle')}
             sidebarOpen={sidebarOpen}
             onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             onCloseSidebar={() => setSidebarOpen(false)}
@@ -23,21 +25,21 @@ export function DocsLayout() {
                             <div className="inline-flex rounded-lg bg-primary/15 p-2 text-primary">
                                 <QuestionMarkCircleIcon className="h-5 w-5" />
                             </div>
-                            <h2 className="text-base font-semibold">Discord d'aide</h2>
+                            <h2 className="text-base font-semibold">{t('docs.layout.helpTitle')}</h2>
                         </div>
                         <p className="mt-2 text-sm text-base-content/65">
-                            Envie d'en savoir plus sur Voicey ou simplement besoin d'aide ?
+                            {t('docs.layout.helpText')}
                         </p>
                         <div className="mt-4">
                             <a href={VOICEY_HELP_DISCORD_URL} target="_blank" rel="noreferrer" className="btn btn-primary btn-sm">
-                                Rejoindre le Discord
+                                {t('docs.layout.helpButton')}
                             </a>
                         </div>
                     </div>
 
                     <div>
                         <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">
-                            Documentation
+                            {t('docs.layout.navSection')}
                         </p>
                         {DOCS_SIDEBAR_NAVIGATION.map((item, index) => {
                             const IconComponent = item.icon
@@ -55,7 +57,7 @@ export function DocsLayout() {
                                     }`}
                                 >
                                     <IconComponent className="h-5 w-5" />
-                                    <span>{item.title}</span>
+                                    <span>{t(item.title)}</span>
                                 </NavLink>
                             )
                         })}

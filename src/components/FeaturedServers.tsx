@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import type { FeaturedServer } from '../types'
 
 const SKELETON_ITEMS = Array.from({ length: 7 }, (_, index) => index)
@@ -20,6 +21,8 @@ function ServerCardSkeleton() {
 }
 
 function FeaturedServerCard({ server }: { server: FeaturedServer }) {
+    const { t, i18n } = useTranslation()
+    const locale = i18n.language.startsWith('fr') ? 'fr-FR' : 'en-US'
     const initials = server.name
         .split(' ')
         .map((chunk) => chunk[0])
@@ -43,7 +46,7 @@ function FeaturedServerCard({ server }: { server: FeaturedServer }) {
                         )}
                     </div>
                     <h3 className="card-title text-lg">{server.name}</h3>
-                    <p className="text-base-content/70">{server.memberCount.toLocaleString('fr-FR')} membres</p>
+                    <p className="text-base-content/70">{t('featuredServers.memberCount', { count: server.memberCount.toLocaleString(locale) })}</p>
                 </div>
             </div>
         </div>
@@ -58,15 +61,16 @@ interface FeaturedServersProps {
 }
 
 export function FeaturedServers({ servers, nonFeaturedActiveServers = 0, loading = false, error = null }: FeaturedServersProps) {
-
+    const { t, i18n } = useTranslation()
+    const locale = i18n.language.startsWith('fr') ? 'fr-FR' : 'en-US'
     const shouldShowSkeleton = loading || error !== null
 
     return (
         <section className="py-10">
             <div className="mx-auto max-w-7xl px-6 lg:px-10">
-                <h2 className="text-3xl font-extrabold sm:text-4xl">Serveurs qui nous font confiance</h2>
+                <h2 className="text-3xl font-extrabold sm:text-4xl">{t('featuredServers.title')}</h2>
                 <p className="mt-2 max-w-2xl text-base-content/70">
-                    Rejoins les serveurs Discord qui utilisent Voicey pour gérer leurs salons vocaux.
+                    {t('featuredServers.subtitle')}
                 </p>
             </div>
 
@@ -83,8 +87,8 @@ export function FeaturedServers({ servers, nonFeaturedActiveServers = 0, loading
                                     <div className="flex h-20 w-20 items-center justify-center rounded-lg bg-base-300 text-4xl font-black text-base-content">
                                         +
                                     </div>
-                                    <h3 className="card-title text-lg">Et encore plus</h3>
-                                    <p className="text-base-content/70">{nonFeaturedActiveServers.toLocaleString('fr-FR')} autres serveurs actifs</p>
+                                    <h3 className="card-title text-lg">{t('featuredServers.andMoreTitle')}</h3>
+                                    <p className="text-base-content/70">{t('featuredServers.andMoreSubtitle', { count: nonFeaturedActiveServers.toLocaleString(locale) })}</p>
                                 </div>
                             </div>
                         </div>

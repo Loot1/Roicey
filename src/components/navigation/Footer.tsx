@@ -1,9 +1,11 @@
 import { Link } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { ROICEY_GITHUB_URL, VOICEY_HELP_DISCORD_URL } from '../../config'
 
 import logoSansFond from '../../assets/images/voicey-logo.png'
 
 export function Footer() {
+    const { t } = useTranslation()
     return (
         <footer className="border-t border-base-300/70 bg-base-100">
             <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-10">
@@ -14,7 +16,7 @@ export function Footer() {
                         className="mb-2 h-10 w-10 rounded-lg object-cover"
                     />
                     <p className="text-base font-black leading-tight">Voicey</p>
-                    <p className="text-sm text-base-content/70">Gestion automatique de salons vocaux Discord</p>
+                    <p className="text-sm text-base-content/70">{t('footer.tagline')}</p>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -29,10 +31,10 @@ export function Footer() {
                         </svg>
                     </a>
                     <Link to="/legal" className="link link-hover ml-2 text-sm font-medium text-base-content/80">
-                        Mentions légales
+                        {t('footer.legal')}
                     </Link>
                     <Link to="/privacy-policy" className="link link-hover text-sm font-medium text-base-content/80">
-                        Politique de confidentialité
+                        {t('footer.privacy')}
                     </Link>
                     <span className="ml-2 text-xs text-base-content/60">© {new Date().getFullYear()}</span>
                 </div>

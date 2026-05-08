@@ -1,5 +1,6 @@
 import { ArrowDownTrayIcon, InformationCircleIcon } from '@heroicons/react/24/outline'
 import { useMemo, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, RecordingMetaChip, RecordingSessionTracksPlayer } from '../../components/dashboard'
 import { demoRecording, demoRecordingMixPath, demoRecordingUserTrackPaths } from '../../config'
@@ -10,6 +11,7 @@ export function DemoRecordingsPage() {
     const [tracksPrepared, setTracksPrepared] = useState(false)
     const [downloadLoadingUserId, setDownloadLoadingUserId] = useState<string | null>(null)
     const [downloadLoadingGlobalMix, setDownloadLoadingGlobalMix] = useState(false)
+    const { t } = useTranslation()
 
     const recording = demoRecording
     const userGroups = useMemo(() => groupFilesByUser(recording), [recording])
@@ -23,7 +25,7 @@ export function DemoRecordingsPage() {
 
             return streamPath
                 ? [[group.userId, {
-                    label: `${group.username} • Démo #${recording.id}`,
+                    label: `${group.username} • ${t('demo.recordings.demoLabel')} #${recording.id}`,
                     objectUrl: streamPath,
                 } satisfies PreparedAudioSource] as const]
                 : []
@@ -78,29 +80,29 @@ export function DemoRecordingsPage() {
     return (
         <section className="space-y-0 bg-base-100 pb-10 lg:pb-14">
             <DashboardPageHeader
-                title={recording.channelName ?? `Salon ${recording.channelId}`}
+                title={recording.channelName ?? t('dashboard.recordingDetail.channelFallback', { id: recording.channelId })}
                 description={
                     <div className="space-y-3">
                         <div className="space-y-3">
                             <p>
-                                Demandé par {recording.requesterName ?? recording.requesterId} ({recording.requesterId}) le {formatDateTime(recording.requestedAt)}.
-                                {' '}Raison: <span className="font-semibold text-base-content/80">{recording.reason}</span>
+                                {t('dashboard.recordingDetail.requestedBy', { requester: recording.requesterName ?? recording.requesterId, requesterId: recording.requesterId, date: formatDateTime(recording.requestedAt) })}
+                                {' '}{t('dashboard.recordingDetail.reason')}: <span className="font-semibold text-base-content/80">{recording.reason}</span>
                             </p>
                             <div className="flex flex-wrap items-center gap-3">
                                 <RecordingMetaChip
-                                    label="Durée"
+                                    label={t('dashboard.recordingDetail.chipDuration')}
                                     toneClassName="border-[#00a86b]/80 bg-[#00a86b]/10 text-[#00a86b]"
                                 >
-                                    <span>{`${actualDurationSeconds ? formatDuration(actualDurationSeconds) : 'Indisponible'} / ${formatDuration(recording.durationSeconds)}`}</span>
+                                    <span>{`${actualDurationSeconds ? formatDuration(actualDurationSeconds) : t('dashboard.recordingDetail.durationUnavailable')} / ${formatDuration(recording.durationSeconds)}`}</span>
                                 </RecordingMetaChip>
                                 <RecordingMetaChip
-                                    label="Voice room"
+                                    label={t('dashboard.recordingDetail.chipVoiceRoom')}
                                     toneClassName="border-[#1520a6]/30 bg-[#1520a6]/12 text-[#1520a6]"
                                 >
-                                    <span>{recording.voiceRoomId ? `#${recording.voiceRoomId}` : 'Aucune'}</span>
+                                    <span>{recording.voiceRoomId ? `#${recording.voiceRoomId}` : t('dashboard.recordingDetail.noVoiceRoom')}</span>
                                 </RecordingMetaChip>
                                 <RecordingMetaChip
-                                    label="Participants"
+                                    label={t('dashboard.recordingDetail.chipParticipants')}
                                     toneClassName="border-[#5865F2]/30 bg-[#5865F2]/12 text-[#5865F2]"
                                     leading={
                                         <div className="-ml-[5px] flex -space-x-1.5">
@@ -123,7 +125,7 @@ export function DemoRecordingsPage() {
                                     <span>{allParticipants.length}</span>
                                 </RecordingMetaChip>
                                 <RecordingMetaChip
-                                    label="Segments"
+                                    label={t('dashboard.recordingDetail.chipSegments')}
                                     toneClassName="border-[#c35500]/80 bg-[#c35500]/10 text-[#c35500]"
                                 >
                                     <span>{recording.outputFiles.length}</span>
@@ -134,7 +136,7 @@ export function DemoRecordingsPage() {
                 }
                 actions={
                     <ButtonOne
-                        label={areTracksPrepared ? 'Pistes chargées' : 'Charger les pistes'}
+                        label={areTracksPrepared ? t('dashboard.recordingDetail.tracksLoaded') : t('dashboard.recordingDetail.loadTracks')}
                         variant="outline"
                         Icon={ArrowDownTrayIcon}
                         onClick={() => setTracksPrepared(true)}
@@ -144,7 +146,7 @@ export function DemoRecordingsPage() {
             />
 
             <DashboardAlert tone="info" icon={<InformationCircleIcon className="h-5 w-5" />} className="alert-outline mx-6 mt-6 lg:mx-8">
-                Cette démo lit uniquement des fichiers audio statiques stockés dans le site. Le téléchargement du mix récupère le master public de référence.
+                {t('demo.recordings.notice')}
             </DashboardAlert>
 
             <RecordingSessionTracksPlayer

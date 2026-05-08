@@ -1,3 +1,4 @@
+﻿import { useTranslation } from 'react-i18next'
 import { DocsCard, DocsTable } from '../../components'
 import type { DocsTableColumn } from '../../components'
 
@@ -7,82 +8,60 @@ type CommandRow = {
     permission: string
 }
 
-const commandColumns: DocsTableColumn<CommandRow>[] = [
-    {
-        key: 'command',
-        header: 'Commande',
-        render: (row: CommandRow) => <code className="badge badge-ghost">{row.command}</code>,
-    },
-    {
-        key: 'description',
-        header: 'Description',
-        render: (row: CommandRow) => row.description,
-    },
-    {
-        key: 'permission',
-        header: 'Permissions',
-        headerClassName: 'hidden md:table-cell',
-        cellClassName: 'hidden md:table-cell',
-        render: (row: CommandRow) => row.permission,
-    },
-]
-
-const commandRows = [
-    {
-        command: '/config',
-        description: "Ouvre l'assistant de configuration du serveur",
-        permission: 'Administrateur',
-    },
-    {
-        command: '/settings',
-        description: 'Met à jour un paramètre spécifique du bot',
-        permission: 'Administrateur',
-    },
-    {
-        command: '/recordban',
-        description: "Interdit à une personne d'utiliser la fonctionnalité d'enregistrement",
-        permission: 'Modération',
-    },
-    {
-        command: '/banhistory',
-        description: "Consulte l'historique des bannissements d'un salon vocal d'une personne",
-        permission: 'Modération',
-    },
-    {
-        command: '/record',
-        description: 'Lance un enregistrement du salon vocal courant avec la durée prévue par la configuration',
-        permission: 'Membres',
-    },
-    {
-        command: '/ping',
-        description: 'Vérifie rapidement que le bot répond',
-        permission: 'Membres',
-    },
-] satisfies CommandRow[]
-
 export function DocsCommandsPage() {
+    const { t } = useTranslation()
+
+    const commandColumns: DocsTableColumn<CommandRow>[] = [
+        {
+            key: 'command',
+            header: t('docs.commands.colCommand'),
+            render: (row: CommandRow) => <code className="badge badge-ghost">{row.command}</code>,
+        },
+        {
+            key: 'description',
+            header: t('docs.commands.colDescription'),
+            render: (row: CommandRow) => row.description,
+        },
+        {
+            key: 'permission',
+            header: t('docs.commands.colPermission'),
+            headerClassName: 'hidden md:table-cell',
+            cellClassName: 'hidden md:table-cell',
+            render: (row: CommandRow) => row.permission,
+        },
+    ]
+
+    const commandRows: CommandRow[] = [
+        { command: '/config', description: t('docs.commands.configDesc'), permission: t('docs.commands.permAdmin') },
+        { command: '/settings', description: t('docs.commands.settingsDesc'), permission: t('docs.commands.permAdmin') },
+        { command: '/recordban', description: t('docs.commands.recordbanDesc'), permission: t('docs.commands.permMod') },
+        { command: '/banhistory', description: t('docs.commands.banhistoryDesc'), permission: t('docs.commands.permMod') },
+        { command: '/record', description: t('docs.commands.recordDesc'), permission: t('docs.commands.permMember') },
+        { command: '/ping', description: t('docs.commands.pingDesc'), permission: t('docs.commands.permMember') },
+    ]
+
     return (
         <div className="space-y-4">
-            <h1 className="text-3xl font-bold">Commandes disponibles</h1>
+            <h1 className="text-3xl font-bold">{t('docs.commands.title')}</h1>
             <p className="text-base-content/70">
-                Voicey reste simple à utiliser : peu de slash commands et une gestion quotidienne directement via les boutons des salons vocaux.
+                {t('docs.commands.intro')}
             </p>
 
             <DocsTable columns={commandColumns} rows={commandRows} rowKey={(row) => row.command} />
 
             <div className="mt-6 space-y-4">
-                <h2 className="text-2xl font-bold">Boutons d'action</h2>
+                <h2 className="text-2xl font-bold">{t('docs.commands.buttonsTitle')}</h2>
                 <p className="text-base-content/70">
-                    Dans chaque salon vocal géré par Voicey, les actions sont accessibles sans mémoriser de commande via des boutons :
+                    {t('docs.commands.buttonsIntro')}
                 </p>
 
                 <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                    <DocsCard title="🔒 Verrouiller" description="Ferme ou rouvre le salon aux nouveaux entrants." />
-                    <DocsCard title="🎯 Limit" description="Change la limite de places du salon vocal." />
-                    <DocsCard title="🫴 Claim" description="Récupère le contrôle du salon si le propriétaire n'est plus présent." />
-                    <DocsCard title="👑 Transférer" description="Transfère la gestion du salon à un autre membre." />
-                    <DocsCard title="🚫 Kick / Ban / Unban" description="Expulse, bannit ou débannit un membre d'un salon vocal." />
-                    <DocsCard title="🎙️ Enregistrement" description="Ouvre une demande d'enregistrement dans le salon vocal." />
+                    <DocsCard title={t('docs.commands.btn0Title')} description={t('docs.commands.btn0Desc')} />
+                    <DocsCard title={t('docs.commands.btn1Title')} description={t('docs.commands.btn1Desc')} />
+                    <DocsCard title={t('docs.commands.btn2Title')} description={t('docs.commands.btn2Desc')} />
+                    <DocsCard title={t('docs.commands.btn3Title')} description={t('docs.commands.btn3Desc')} />
+                    <DocsCard title={t('docs.commands.btn4Title')} description={t('docs.commands.btn4Desc')} />
+                    <DocsCard title={t('docs.commands.btn5Title')} description={t('docs.commands.btn5Desc')} />
                 </div>
             </div>
         </div>

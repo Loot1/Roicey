@@ -1,0 +1,201 @@
+{
+    "home": {
+        "hero": {
+            "badge": "Bot Discord Voicey",
+            "title": "Le bot de gestion des salons vocaux conçu pour la modération",
+            "description": "Voicey crée automatiquement les salons vocaux temporaires, les rend simples à piloter avec des boutons et ajoute des fonctionnalités pensées pour la modération vocale.",
+            "addBot": "Ajouter Voicey",
+            "joinDiscord": "Rejoindre le Discord",
+            "infoAlert": "Enregistrements publiés dans Discord, historique des bannissements vocaux et dashboard réservé à la modération : Voicey facilite la modération de vos salons vocaux."
+        },
+        "stats": {
+            "roomsCreatedToday": "Salons créés aujourd'hui",
+            "roomsTotalDesc": "{{value}} au total",
+            "avgCreationTime": "Temps moyen création",
+            "instant": "instantané",
+            "activeServers": "Serveurs actifs",
+            "nonFeaturedDesc": "{{value}} autres hors featured"
+        },
+        "features": {
+            "title": "Fonctions principales",
+            "subtitle": "Une boîte à outils complète pour gérer des salons vocaux dynamiques sur Discord.",
+            "buttons": {
+                "title": "Contrôles par boutons, menus et modals",
+                "description": "Verouiller, limiter, transférer, expulser et bannir de votre salon sans taper de commande. Gérer votre salon vocal Discord devient très simple!",
+                "badge": "Accessibilité"
+            },
+            "recording": {
+                "title": "Enregistrement à la demande",
+                "description": "Enregistrement vocal déclenché par vos membres et publié dans le salon de logs de votre serveur Discord pour fournir une preuve exploitable.",
+                "badge": "Modération avancée"
+            },
+            "bans": {
+                "title": "Historique des bannissements",
+                "description": "Une alerte est envoyée dès qu'un utilisateur est banni d'un salon vocal et un historique est conservé consultable à tout moment.",
+                "badge": "Traçabilité"
+            }
+        },
+        "setup": {
+            "title": "Mise en place en 3 étapes",
+            "step1": "Invite le bot",
+            "step2": "Configure avec /config",
+            "step3": "C'est parti !",
+            "faq": {
+                "q1": "Qui peut voir les enregistrements ?",
+                "a1": "Uniquement les modérateurs autorisés dans le serveur, selon la configuration des rôles et des accès aux salons.",
+                "q2": "Peut-on empêcher un membre d'utiliser /record ?",
+                "a2": "Oui. Les modérateurs peuvent appliquer des restrictions ciblées pour bloquer la demande d'enregistrement à des utilisateurs précis.",
+                "q3": "Les salons vocaux temporaires sont-ils nettoyés automatiquement ?",
+                "a3": "Oui. Dès que le dernier membre quitte, le salon temporaire est retiré pour garder le serveur propre et lisible."
+            }
+        },
+        "cta": {
+            "title": "Prêt à fluidifier ton vocal Discord ?",
+            "description": "Installe Voicey et donne à tes membres des salons vocaux simples à utiliser, avec une vraie boîte à outils de modération.",
+            "addBot": "Ajouter Voicey",
+            "docs": "Documentation"
+        }
+    },
+    "nav": {
+        "home": "Accueil",
+        "about": "À propos",
+        "docs": "Documentation",
+        "demo": "Démo",
+        "guidelines": "Charte",
+        "login": "Se connecter",
+        "logout": "Déconnexion",
+        "dashboard": "Dashboard"
+    },
+    "footer": {
+        "tagline": "Gestion automatique de salons vocaux Discord",
+        "legal": "Mentions légales",
+        "privacy": "Politique de confidentialité"
+    },
+    "about": {
+        "badge": "Origine du projet",
+        "title": "Modérer les salons vocaux est un vrai défi.",
+        "description": "Combien de fois les modérateurs ont-ils dû faire confiance à des récits contradictoires ou à des enregistrements bricolés pour prendre une décision ? Combien de fois ont-ils dû se contenter d'un report vocal sans preuve exploitable ? Voicey est né de ce constat : la modération vocale mérite mieux que des solutions de fortune.",
+        "ctaRecord": "Voir le record",
+        "ctaGuidelines": "Lire la charte",
+        "diffLeftLabel": "Sans Voicey",
+        "diffLeftSublabel": "Report vocal",
+        "diffLeftQuote": "\"Encore un <error>signalement en vocal</error> pour lequel il n'y a aucune preuve.\"",
+        "diffLeftAuthor": "Modérateur fatigué",
+        "diffRightLabel": "Avec Voicey",
+        "diffRightSublabel": "Preuve exploitable",
+        "diffRightQuote": "\"C'est bon, on a la <primary>preuve</primary> pour bannir ce fauteur de troubles grâce à Voicey!\"",
+        "diffRightAuthor": "Modérateur soulagé",
+        "principlesBadge": "Fondements",
+        "principlesTitle": "Les idées clefs",
+        "roadmapBadge": "Roadmap",
+        "roadmapTitle": "La construction de Voicey, et la suite",
+        "roadmapJoinDiscord": "Rejoindre le Discord pour aider",
+        "principle0Title": "Un bot Discord né d'un cas concret",
+        "principle0Text": "Voicey a été créé par un développeur qui a lui-même modéré des serveurs Discord et fait face à la difficulté de gérer les incidents vocaux sans preuve exploitable.",
+        "principle1Title": "S'intégrer dans l'écosystème du serveur",
+        "principle1Text": "Les éléments principaux restent dans l'écosystème du serveur : dashboard, règles, historique et accès réservés aux personnes autorisées.",
+        "principle2Title": "Le record directement dans Discord",
+        "principle2Text": "Tout le monde n'a pas la possibilité technique de capturer un salon vocal depuis son PC. Voicey apporte cette capacité au niveau du serveur, sans imposer un setup local aux modérateurs.",
+        "roadmap0Title": "Étape actuelle",
+        "roadmap0Period": "Aujourd'hui",
+        "roadmap0Text": "Voicey est déjà dans sa première étape: enregistrements exploitables, consultation via dashboard, archivage, garde-fous et outils concrets pour traiter un incident vocal.",
+        "roadmap1Title": "Bêta test et stabilité",
+        "roadmap1Period": "Étape 2",
+        "roadmap1Text": "La prochaine phase consiste à ouvrir davantage les tests pour consolider la stabilité du bot avant une diffusion plus large.",
+        "roadmap2Title": "Développement continu",
+        "roadmap2Period": "Étape 3",
+        "roadmap2Text": "Pour la suite s'imagine déjà des logs complètes des salons vocaux temporaires, une retranscription écrite des enregistrements et une internationalisation du bot. Voicey reste en développement continu et s'ouvre aux retours des personnes qui veulent aider."
+    },
+    "guidelines": {
+        "badge": "Charte d'utilisation",
+        "title": "Charte d'utilisation de Voicey",
+        "subtitle": "Cette charte fixe le cadre d'un usage transparent, proportionné et compatible avec un bot Discord pensé pour la modération vocale.",
+        "quote": "\"Un grand pouvoir implique de <primary>grandes responsabilités</primary>.\"",
+        "transparencyTitle": "Transparence",
+        "transparencyText": "Tout serveur Discord qui utilise Voicey ne doit pas chercher à cacher le fonctionnement des salons vocaux, du dashboard et de l'existence possible d'enregistrements à ses membres.",
+        "moderationTitle": "Usage à seule fin de modération",
+        "moderationText": "Les outils de Voicey doivent servir le seul objectif de préserver un espace communautaire. Tout usage des fonctionnalités de modération de Voicey n'ayant pas pour sens de documenter un incident ou faciliter une décision est à proscrire.",
+        "accessTitle": "Accès limité au dashboard",
+        "accessText": "Seuls les modérateurs et responsables habilités du serveur doivent pouvoir accéder au dashboard et consulter les éléments sensibles.",
+        "harassmentTitle": "Interdiction de surveillance, discrimination et de harcèlement",
+        "harassmentText": "Voicey ne doit jamais être utilisé pour surveiller des membres, constituer des dossiers personnels ou nourrir un comportement de harcèlement.",
+        "noncomplianceTitle": "Non-respect de la charte",
+        "noncomplianceText": "En cas de non-respect de cette charte, il est possible que l'accès au bot soit retiré à un serveur Discord ou bien à un utilisateur."
+    },
+    "legal": {
+        "badge": "Informations légales",
+        "title": "Mentions légales",
+        "subtitle": "Cette page présente les informations légales relatives au site Roicey, interface web de Voicey, ainsi que les principales conditions d'utilisation du contenu publié sur le site.",
+        "editorTitle": "Éditeur du site",
+        "editorText1": "Le site Roicey est la vitrine et l'interface web du projet Voicey, dédié à la gestion de salons vocaux Discord, à la modération vocale et à l'accès à un dashboard réservé aux personnes autorisées.",
+        "editorText2": "La publication du site est assurée pour le compte du projet Voicey. Les pages publiques ont pour objet de présenter les fonctionnalités du bot, sa documentation, sa charte d'usage et les informations associées à l'utilisation du service.",
+        "hostingTitle": "Hébergement",
+        "hostingText1": "Le site est hébergé via GitHub Pages, service proposé par GitHub, Inc. Le contenu public du site est distribué à partir de cette infrastructure d'hébergement statique.",
+        "hostingText2": "L'hébergement GitHub Pages concerne la partie site web. Les services applicatifs liés à l'authentification Discord, au dashboard et aux fonctionnalités associées à Voicey relèvent d'une infrastructure distincte du simple site statique.",
+        "ipTitle": "Propriété intellectuelle",
+        "ipText1": "Les textes, éléments visuels, signes distinctifs, logos, compositions graphiques et contenus présents sur le site sont protégés par les règles applicables en matière de propriété intellectuelle. Sauf mention contraire, ils sont réservés au projet Voicey ou à leurs titulaires respectifs.",
+        "ipText2": "Toute reproduction, adaptation, extraction, republication ou réutilisation substantielle du site ou de son contenu, en tout ou partie, sans autorisation préalable, peut constituer une atteinte aux droits applicables.",
+        "functionTitle": "Fonction du site",
+        "functionText1": "Roicey a pour fonction de présenter Voicey, d'exposer sa documentation, de fournir des pages d'information publique et, pour les personnes autorisées, de servir d'accès au dashboard lié aux serveurs Discord utilisant le bot.",
+        "functionText2": "Les contenus du site ont une valeur informative et descriptive. Ils ne constituent pas, par eux-mêmes, une garantie absolue de disponibilité, de compatibilité ou d'adéquation à un besoin particulier.",
+        "responsabilityTitle": "Responsabilité",
+        "responsabilityText1": "Malgré le soin apporté à la rédaction du site, des imprécisions, omissions ou écarts entre la documentation publique et le fonctionnement effectif du service peuvent exister. Le site peut également évoluer à tout moment.",
+        "responsabilityText2": "L'utilisation de Voicey, du dashboard et des fonctionnalités de modération suppose en outre le respect des règles du serveur Discord concerné, de la charte du site, ainsi que des conditions applicables aux services tiers utilisés par le projet.",
+        "externalLinksTitle": "Liens externes et services tiers",
+        "externalLinksText1": "Le site peut renvoyer vers des services tiers, notamment Discord et GitHub Pages. Ces services disposent de leurs propres conditions d'utilisation, règles techniques et politiques de confidentialité.",
+        "externalLinksText2": "Les fonctionnalités de connexion, d'invitation du bot ou d'accès à certaines ressources dépendent de ces services externes et de leur disponibilité.",
+        "contactTitle": "Contact",
+        "contactText1": "Pour toute question relative au site, au fonctionnement général de Voicey, à la documentation ou au cadre d'utilisation, le point de contact public mis en avant sur le site demeure le serveur Discord d'assistance du projet.",
+        "contactText2": "Les demandes liées aux contenus publics du site ou aux informations légales peuvent y être adressées afin d'être orientées vers le canal approprié.",
+        "updateTitle": "Mise à jour",
+        "updateText": "Les présentes mentions légales peuvent être adaptées pour refléter l'évolution du site, de son hébergement, de ses fonctionnalités ou du cadre d'utilisation de Voicey."
+    },
+    "privacy": {
+        "badge": "Traitement des données",
+        "title": "Politique de confidentialité",
+        "subtitle": "Cette page décrit comment Voicey collecte, utilise et conserve les données nécessaires à l'authentification Discord, au dashboard et aux fonctions de modération.",
+        "principlesTitle": "Principes généraux",
+        "principlesText1": "La logique exposée sur le site repose sur un principe simple : collecter uniquement les données nécessaires au fonctionnement du bot, à l'authentification des personnes autorisées, à la gestion des serveurs Discord et à la mise à disposition des outils de modération présentés dans la documentation.",
+        "principlesText2": "Voicey n'est pas présenté comme un outil de surveillance générale. Les traitements décrits ici s'inscrivent dans un cadre de gestion vocale, de traçabilité utile et d'aide à la modération, conformément aux pages publiques du site et à la charte d'utilisation.",
+        "dataTitle": "Données susceptibles d'être traitées",
+        "dataText1": "Selon les fonctionnalités utilisées, le service peut traiter des données issues de Discord, notamment des identifiants techniques, des noms d'utilisateur, des noms de serveur, des rôles d'administration ou de modération, des informations de configuration de guildes et des éléments nécessaires à l'accès au dashboard.",
+        "dataText2": "Le service peut également traiter des données liées aux salons vocaux temporaires, à l'historique des bannissements vocaux, aux restrictions de record, aux liens de messages ou d'archives et, lorsque la fonctionnalité correspondante est utilisée, aux enregistrements publiés dans Discord.",
+        "authTitle": "Authentification Discord",
+        "authText1": "L'accès au dashboard repose sur une authentification via Discord. À cette fin, des données de session et des informations liées au compte Discord connecté sont traitées pour identifier la personne, maintenir sa session et déterminer si elle peut accéder au dashboard d'un serveur.",
+        "authText2": "Ces traitements ont pour finalité de sécuriser l'accès aux pages privées et de réserver les outils sensibles aux personnes disposant des droits nécessaires.",
+        "purposeTitle": "Finalités du traitement",
+        "purposeText1": "Les données sont traitées afin de permettre la connexion au dashboard, d'afficher les serveurs accessibles, de gérer les paramètres de guildes, de consulter les éléments de modération, d'exploiter la documentation et de faire fonctionner les fonctionnalités décrites publiquement sur le site.",
+        "purposeText2": "Lorsqu'un record est déclenché, la finalité annoncée sur le site reste l'appui à une action de modération légitime, et non un usage de confort, de curiosité ou de surveillance généralisée.",
+        "recordingsTitle": "Enregistrements et stockage",
+        "recordingsText1": "Conformément au contenu des pages publiques, les enregistrements sont publiés dans Discord, dans le salon de logs du serveur concerné, avec une archive destinée à l'exploitation via le dashboard.",
+        "recordingsText2": "Le site présente cette architecture comme une logique de souveraineté des données adossée à l'espace Discord du serveur utilisateur. Les enregistrements n'ont pas vocation à être stockés comme une bibliothèque centralisée destinée à des usages étrangers à la modération du serveur.",
+        "accessTitle": "Accès aux données",
+        "accessText1": "Le site et la documentation indiquent que le dashboard est réservé aux modérateurs et responsables habilités du serveur. Les informations sensibles ne sont donc pas destinées à un accès public ou généralisé aux membres d'une communauté.",
+        "accessText2": "Les administrateurs et équipes de modération utilisant Voicey demeurent responsables du cadre d'usage sur leur serveur, de l'information donnée aux membres et du respect des règles qu'ils imposent localement.",
+        "cookiesTitle": "Cookies et sessions",
+        "cookiesText1": "Le fonctionnement de l'authentification et du dashboard peut impliquer l'utilisation de mécanismes techniques de session, indispensables à la connexion, au maintien de l'état authentifié et à la sécurisation de l'accès aux pages privées.",
+        "cookiesText2": "Aucun engagement public distinct en faveur d'un suivi publicitaire ou d'un profilage marketing n'est présenté sur le site dans le cadre des pages actuellement publiées.",
+        "thirdPartyTitle": "Services tiers",
+        "thirdPartyText1": "Le service s'appuie sur des plateformes tierces, notamment Discord pour l'identité, les serveurs, les messages et la publication des éléments liés à la modération, ainsi que GitHub Pages pour l'hébergement du site public.",
+        "thirdPartyText2": "Les traitements opérés par ces services tiers relèvent également de leurs propres politiques, conditions et obligations techniques.",
+        "rightsTitle": "Droits et demandes",
+        "rightsText1": "Toute demande relative aux données traitées via le site, à l'accès au dashboard ou au cadre d'utilisation présenté publiquement peut être adressée via le point de contact public du projet indiqué sur le site, à savoir le serveur Discord d'assistance.",
+        "rightsText2": "Les demandes doivent être appréciées au regard du rôle du site, de la nature des données, des contraintes de sécurité du dashboard, ainsi que des services tiers impliqués dans le fonctionnement global de Voicey.",
+        "updateTitle": "Évolution de la politique",
+        "updateText": "La présente politique peut évoluer pour tenir compte des modifications apportées à Roicey, à Voicey, au dashboard, aux fonctionnalités de modération ou aux services tiers mobilisés par le projet."
+    },
+    "notFound": {
+        "errorCode": "Erreur 404",
+        "title": "Ce coin du site s'est volatilisé.",
+        "description": "On a cherché partout, même derrière le bouton mute, mais cette page a visiblement quitté le vocal sans prévenir.",
+        "backHome": "Retour à l'accueil",
+        "openDashboard": "Ouvrir le dashboard"
+    },
+    "featuredServers": {
+        "title": "Serveurs qui nous font confiance",
+        "subtitle": "Rejoins les serveurs Discord qui utilisent Voicey pour gérer leurs salons vocaux.",
+        "memberCount": "{{count}} membres",
+        "andMoreTitle": "Et encore plus",
+        "andMoreSubtitle": "{{count}} autres serveurs actifs"
+    }
+}

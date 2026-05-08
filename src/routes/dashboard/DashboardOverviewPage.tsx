@@ -1,5 +1,6 @@
 import { Cog6ToothIcon, GlobeAltIcon, ShieldCheckIcon, SparklesIcon } from '@heroicons/react/24/outline'
 import { useOutletContext } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { DashboardPageHeader } from '../../components/dashboard'
 import type { DashboardLayoutContextValue } from '../../types'
 
@@ -17,56 +18,57 @@ function checkPermissions(permissions: string): { hasPerm: boolean; reason: stri
         const hasRequired = (permBigInt & requiredPermissions) === requiredPermissions
 
         if (hasAdmin || hasRequired) {
-            return { hasPerm: true, reason: 'Le bot dispose de toutes les permissions nécessaires.' }
+            return { hasPerm: true, reason: 'ok' }
         }
 
-        return { hasPerm: false, reason: 'Le bot manque de permissions pour fonctionner correctement.' }
+        return { hasPerm: false, reason: 'missing' }
     } catch {
-        return { hasPerm: false, reason: 'Impossible de vérifier les permissions.' }
+        return { hasPerm: false, reason: 'error' }
     }
 }
 
 export function DashboardOverviewPage() {
     const { selectedGuild } = useOutletContext<DashboardLayoutContextValue>()
+    const { t } = useTranslation()
     const guild = selectedGuild!
 
-    const { hasPerm, reason } = checkPermissions(guild.permissions)
+    const { hasPerm } = checkPermissions(guild.permissions)
     const stats = [
         {
             id: 'status',
             icon: <ShieldCheckIcon className="h-5 w-5" />,
-            label: 'Statut',
-            value: guild.owner ? 'Propriétaire' : 'Gestionnaire',
-            description: 'Accès complet aux actions du dashboard.',
+            label: t('dashboard.overview.statStatusLabel'),
+            value: guild.owner ? t('dashboard.overview.statStatusOwner') : t('dashboard.overview.statStatusManager'),
+            description: t('dashboard.overview.statStatusDesc'),
         },
         {
             id: 'bot',
             icon: <SparklesIcon className="h-5 w-5" />,
-            label: 'Bot',
-            value: guild.botInGuild ? 'Présent' : 'Absent',
-            description: guild.botInGuild ? 'Le bot est déjà connecté à cette guilde.' : 'Le bot doit rejoindre cette guilde avant la configuration.',
+            label: t('dashboard.overview.statBotLabel'),
+            value: guild.botInGuild ? t('dashboard.overview.statBotPresent') : t('dashboard.overview.statBotAbsent'),
+            description: guild.botInGuild ? t('dashboard.overview.statBotPresentDesc') : t('dashboard.overview.statBotAbsentDesc'),
         },
         {
             id: 'permissions',
             icon: <GlobeAltIcon className="h-5 w-5" />,
-            label: 'Permissions',
-            value: hasPerm ? '✓ Complètes' : '✗ Insuffisantes',
-            description: reason,
+            label: t('dashboard.overview.statPermLabel'),
+            value: hasPerm ? t('dashboard.overview.statPermOk') : t('dashboard.overview.statPermFail'),
+            description: hasPerm ? t('dashboard.overview.statPermOkDesc') : t('dashboard.overview.statPermFailDesc'),
         },
         {
             id: 'access',
             icon: <Cog6ToothIcon className="h-5 w-5" />,
-            label: 'Accès',
-            value: 'Dashboard prêt',
-            description: 'Passe à la configuration pour modifier les paramètres du serveur.',
+            label: t('dashboard.overview.statAccessLabel'),
+            value: t('dashboard.overview.statAccessValue'),
+            description: t('dashboard.overview.statAccessDesc'),
         },
     ]
 
     return (
         <section className="space-y-0 bg-base-100">
             <DashboardPageHeader
-                title="Vue d'ensemble"
-                description={guild.owner ? 'Tu es propriétaire de cette guilde.' : "Tu disposes d'un accès de gestion sur cette guilde."}
+                title={t('dashboard.overview.title')}
+                description={guild.owner ? t('dashboard.overview.descOwner') : t('dashboard.overview.descManager')}
             />
 
             <div className="px-6 py-6 lg:px-8">
