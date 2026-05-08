@@ -2,7 +2,7 @@ import { ArrowDownTrayIcon, InformationCircleIcon } from '@heroicons/react/24/ou
 import { useMemo, useState } from 'react'
 import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, RecordingMetaChip, RecordingSessionTracksPlayer } from '../../components/dashboard'
-import { demoRecording, demoRecordingMixPath, demoRecordingUserTrackPaths } from '../../constants'
+import { demoRecording, demoRecordingMixPath, demoRecordingUserTrackPaths } from '../../config'
 import type { DashboardRecordingParticipant } from '../../types'
 import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
 

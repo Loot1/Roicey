@@ -4,7 +4,7 @@ import { InformationCircleIcon, ShieldCheckIcon, SpeakerWaveIcon, WrenchScrewdri
 import logoSansFond from '../assets/images/voicey-logo.png'
 import { FeaturedServers } from '../components'
 import { getPublicStats } from '../api/discordAuth'
-import { VOICEY_HELP_DISCORD_URL, VOICEY_INVITE_URL } from '../constants'
+import { VOICEY_HELP_DISCORD_URL, VOICEY_INVITE_URL } from '../config'
 import type { FeaturedServer } from '../types'
 
 export function HomePage() {

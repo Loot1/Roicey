@@ -5,7 +5,7 @@ import { DashboardAlert, DashboardStateCard } from '../dashboard'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
 import { useDashboardGuildSelection } from '../../hooks/useDashboardGuildSelection'
-import { DASHBOARD_SIDEBAR_NAVIGATION, VOICEY_INVITE_URL } from '../../constants'
+import { DASHBOARD_SIDEBAR_NAVIGATION, VOICEY_INVITE_URL } from '../../config'
 import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
 
 export function DashboardLayout() {
