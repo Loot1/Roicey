@@ -36,7 +36,6 @@
   }
 }
 
-
 @plugin "daisyui" {
   themes: voicey --default, voicey-dark --prefersdark;
   root: ":root";
@@ -48,7 +47,7 @@
 
 @plugin "daisyui/theme" {
   name: "voicey";
-  default: true;
+  default: false;
   prefersdark: false;
   color-scheme: "light";
   --color-base-100: #89C9EC;
@@ -83,7 +82,7 @@
 
 @plugin "daisyui/theme" {
   name: "voicey-dark";
-  default: false;
+  default: true;
   prefersdark: true;
   color-scheme: "dark";
   --color-base-100: #0f1c2a;
