@@ -1,6 +1,6 @@
 import { Link } from 'react-router'
 import { DocsStep } from '../../components'
-import { VOICEY_INVITE_URL } from '../../constants'
+import { VOICEY_INVITE_URL } from '../../config'
 
 export function DocsGettingStartedPage() {
     return (

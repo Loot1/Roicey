@@ -2,8 +2,8 @@ import { NavLink, Outlet } from 'react-router'
 import { useState } from 'react'
 import { QuestionMarkCircleIcon } from '@heroicons/react/24/outline'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
-import { DOCS_SIDEBAR_NAVIGATION } from '../../constants'
-import { VOICEY_HELP_DISCORD_URL } from '../../constants/externalLinks'
+import { DOCS_SIDEBAR_NAVIGATION } from '../../config'
+import { VOICEY_HELP_DISCORD_URL } from '../../config/externalLinks'
 
 export function DocsLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)

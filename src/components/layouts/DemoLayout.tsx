@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { NavLink, Outlet } from 'react-router'
 import { PlayCircleIcon } from '@heroicons/react/24/outline'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
-import { DEMO_SIDEBAR_NAVIGATION } from '../../constants'
+import { DEMO_SIDEBAR_NAVIGATION } from '../../config'
 
 export function DemoLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)

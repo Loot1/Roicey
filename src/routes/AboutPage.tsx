@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router'
 import { ShieldCheckIcon, SpeakerWaveIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
-import { VOICEY_HELP_DISCORD_URL } from '../constants/externalLinks'
+import { VOICEY_HELP_DISCORD_URL } from '../config/externalLinks'
 
 const principles = [
     {

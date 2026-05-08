@@ -1,7 +1,8 @@
 import { ArrowTopRightOnSquareIcon, MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router'
-import { ButtonOne, DashboardAlert, DashboardPageHeader } from '../../components'
+import { ButtonOne } from '../../components/ButtonOne'
+import { DashboardAlert, DashboardPageHeader } from '../../components/dashboard'
 
 export function DashboardRecordingsPage() {
     const navigate = useNavigate()

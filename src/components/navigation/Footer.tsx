@@ -1,5 +1,5 @@
 import { Link } from 'react-router'
-import { ROICEY_GITHUB_URL, VOICEY_HELP_DISCORD_URL } from '../../constants'
+import { ROICEY_GITHUB_URL, VOICEY_HELP_DISCORD_URL } from '../../config'
 
 import logoSansFond from '../../assets/images/voicey-logo.png'
 

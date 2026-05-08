@@ -2,7 +2,8 @@ import { ArrowPathIcon, MagnifyingGlassIcon, TrashIcon, XMarkIcon } from '@heroi
 import { useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router'
 import { deleteGuildDashboardRecordRestriction, getGuildDashboardRecordRestrictions } from '../../api/discordAuth'
-import { ButtonOne, DashboardAlert, DashboardPageHeader, DashboardStateCard } from '../../components'
+import { ButtonOne } from '../../components/ButtonOne'
+import { DashboardAlert, DashboardPageHeader, DashboardStateCard } from '../../components/dashboard'
 import type { DashboardLayoutContextValue, DashboardRecordRestriction } from '../../types'
 import { formatDateTime } from '../../utils'
 

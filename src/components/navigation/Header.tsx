@@ -3,9 +3,9 @@ import { Link, useLocation } from 'react-router'
 import { Bars3Icon, MoonIcon, SunIcon, UserCircleIcon } from '@heroicons/react/24/outline'
 import logoSansFond from '../../assets/images/voicey-logo.png'
 import { getDiscordSession, logoutDiscord, onAuthChanged, startDiscordLogin } from '../../api/discordAuth'
-import { HEADER_NAVIGATION } from '../../constants'
+import { HEADER_NAVIGATION } from '../../config'
 import type { DiscordUser } from '../../types'
-import { useTheme } from '../../hooks'
+import { useTheme } from '../../hooks/useTheme'
 
 export function Header() {
     const location = useLocation()
