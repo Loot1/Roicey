@@ -5,7 +5,7 @@ import logoSansFond from '../../assets/images/voicey-logo.png'
 import { getDiscordSession, logoutDiscord, onAuthChanged, startDiscordLogin } from '../../api/discordAuth'
 import { HEADER_NAVIGATION } from '../../constants'
 import type { DiscordUser } from '../../types'
-import { useTheme } from '../../hooks'
+import { useTheme } from '../../hooks/useTheme'
 
 export function Header() {
     const location = useLocation()

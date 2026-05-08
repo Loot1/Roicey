@@ -1,4 +1,4 @@
-import { DashboardPageHeader, DashboardStateCard } from '../../components'
+import { DashboardPageHeader, DashboardStateCard } from '../../components/dashboard'
 
 export function DashboardLogsViewerPage() {
     return (

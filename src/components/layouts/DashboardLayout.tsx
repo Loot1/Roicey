@@ -1,9 +1,10 @@
 import { ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router'
-import { DashboardAlert, DashboardStateCard, ResponsiveSidebarLayout } from '../../components'
+import { DashboardAlert, DashboardStateCard } from '../dashboard'
+import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
-import { useDashboardGuildSelection } from '../../hooks'
+import { useDashboardGuildSelection } from '../../hooks/useDashboardGuildSelection'
 import { DASHBOARD_SIDEBAR_NAVIGATION, VOICEY_INVITE_URL } from '../../constants'
 import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
 
