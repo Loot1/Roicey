@@ -300,7 +300,7 @@ export function DashboardLayout() {
                             <NavLink
                                 key={item.id}
                                 to={item.href}
-                                end={item.end}
+                                end={'end' in item ? item.end : undefined}
                                 className={({ isActive }) => `${index > 0 ? 'mt-1 ' : ''}flex rounded-lg px-3 py-2 text-sm transition ${
                                     isActive
                                         ? 'bg-primary/20 text-primary font-semibold'

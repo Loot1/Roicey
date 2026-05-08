@@ -1,4 +1,5 @@
 import { ArrowDownTrayIcon, ArrowLeftIcon, ArrowPathIcon, ExclamationTriangleIcon, XCircleIcon } from '@heroicons/react/24/outline'
+import type { TFunction } from 'i18next'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
 import { useTranslation } from 'react-i18next'
@@ -8,7 +9,7 @@ import { DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingMetaC
 import type { DashboardRecording, DashboardRecordingParticipant, RecordingStopReason } from '../../types'
 import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
 
-function formatStopReason(reason: RecordingStopReason | null, t: (key: string) => string): string {
+function formatStopReason(reason: RecordingStopReason | null, t: TFunction): string {
     switch (reason) {
         case 'completed': return t('dashboard.recordingDetail.stopCompleted')
         case 'manual': return t('dashboard.recordingDetail.stopManual')

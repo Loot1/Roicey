@@ -42,7 +42,7 @@ export const DASHBOARD_SIDEBAR_NAVIGATION = [
         title: 'dashboard.layout.nav.recordRestrictions',
         href: '/dashboard/record-restrictions',
     },
-] satisfies SidebarNavigationItem[]
+] as const satisfies SidebarNavigationItem[]
 
 export const DOCS_SIDEBAR_NAVIGATION = [
     {
@@ -81,7 +81,7 @@ export const DOCS_SIDEBAR_NAVIGATION = [
         href: '/docs/faq',
         icon: QuestionMarkCircleIcon,
     },
-] satisfies SidebarDocumentationNavigationItem[]
+] as const satisfies SidebarDocumentationNavigationItem[]
 
 export const DEMO_SIDEBAR_NAVIGATION = [
     {
@@ -91,7 +91,7 @@ export const DEMO_SIDEBAR_NAVIGATION = [
         icon: SpeakerWaveIcon,
         end: true,
     },
-] satisfies SidebarDemoNavigationItem[]
+] as const satisfies SidebarDemoNavigationItem[]
 
 export type DashboardSidebarNavigationItem = (typeof DASHBOARD_SIDEBAR_NAVIGATION)[number]
 export type DocsSidebarNavigationItem = (typeof DOCS_SIDEBAR_NAVIGATION)[number]
