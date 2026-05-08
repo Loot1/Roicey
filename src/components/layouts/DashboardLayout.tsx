@@ -308,7 +308,7 @@ export function DashboardLayout() {
                                 }`}
                                 onClick={() => setSidebarOpen(false)}
                             >
-                                {item.title}
+                                {t(item.title)}
                             </NavLink>
                         ))}
                     </div>
