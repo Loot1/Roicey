@@ -1,19 +1,20 @@
 import { ArrowDownTrayIcon, ArrowLeftIcon, ArrowPathIcon, ExclamationTriangleIcon, XCircleIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { downloadRecordingSourceMix, downloadRecordingSourceUserMix, resolveDashboardRecordingSource } from '../../api/discordAuth'
 import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingMetaChip, RecordingSessionTracksPlayer } from '../../components/dashboard'
 import type { DashboardRecording, DashboardRecordingParticipant, RecordingStopReason } from '../../types'
 import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
 
-function formatStopReason(reason: RecordingStopReason | null): string {
+function formatStopReason(reason: RecordingStopReason | null, t: (key: string) => string): string {
     switch (reason) {
-        case 'completed': return 'Terminé'
-        case 'manual': return 'Arrêt manuel'
-        case 'size_limit': return 'Limite de taille'
-        case 'disconnected': return 'Déconnexion'
-        default: return 'Terminé'
+        case 'completed': return t('dashboard.recordingDetail.stopCompleted')
+        case 'manual': return t('dashboard.recordingDetail.stopManual')
+        case 'size_limit': return t('dashboard.recordingDetail.stopSizeLimit')
+        case 'disconnected': return t('dashboard.recordingDetail.stopDisconnected')
+        default: return t('dashboard.recordingDetail.stopCompleted')
     }
 }
 
@@ -29,6 +30,7 @@ function stopReasonToneClassName(reason: RecordingStopReason | null): string {
 
 export function DashboardRecordingDetailPage() {
     const [searchParams] = useSearchParams()
+    const { t } = useTranslation()
     const [recording, setRecording] = useState<DashboardRecording | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -68,7 +70,7 @@ export function DashboardRecordingDetailPage() {
 
         if (!source) {
             setRecording(null)
-            setError('Aucune source d\'archive fournie.')
+            setError(t('dashboard.recordingDetail.noSource'))
             return
         }
 
@@ -84,7 +86,7 @@ export function DashboardRecordingDetailPage() {
             } catch {
                 if (!ignore) {
                     setRecording(null)
-                    setError('Impossible de charger cet enregistrement.')
+                    setError(t('dashboard.recordingDetail.loadError'))
                 }
             } finally {
                 if (!ignore) {
@@ -143,7 +145,7 @@ export function DashboardRecordingDetailPage() {
             }))
         } catch {
             createdUrls.forEach((url) => URL.revokeObjectURL(url))
-            setError('La préparation des pistes audio a échoué pour cet enregistrement.')
+            setError(t('dashboard.recordingDetail.prepareFailed'))
         } finally {
             setAudioLoadingKey((currentKey) => (currentKey === `session:${recording?.id ?? 'unknown'}` ? null : currentKey))
         }
@@ -200,7 +202,7 @@ export function DashboardRecordingDetailPage() {
             anchor.click()
             anchor.remove()
         } catch {
-            setError('Le téléchargement de la piste participant a échoué.')
+            setError(t('dashboard.recordingDetail.downloadTrackFailed'))
         } finally {
             setDownloadLoadingKey((currentKey) => (currentKey === userId ? null : currentKey))
         }
@@ -225,7 +227,7 @@ export function DashboardRecordingDetailPage() {
             anchor.remove()
             URL.revokeObjectURL(objectUrl)
         } catch {
-            setError('Le téléchargement du mix global a échoué.')
+            setError(t('dashboard.recordingDetail.downloadMixFailed'))
         } finally {
             setGlobalMixDownloadLoading(false)
         }
@@ -235,7 +237,7 @@ export function DashboardRecordingDetailPage() {
         return (
             <section className="bg-base-100 px-6 py-8 lg:px-8">
                 <DashboardStateCard className="text-base-content/70">
-                    <div className="flex items-center gap-3 text-base-content/70"><ArrowPathIcon className="h-5 w-5 animate-spin text-primary" /><span>Chargement de l'enregistrement en cours...</span></div>
+                    <div className="flex items-center gap-3 text-base-content/70"><ArrowPathIcon className="h-5 w-5 animate-spin text-primary" /><span>{t('dashboard.recordingDetail.loading')}</span></div>
                 </DashboardStateCard>
             </section>
         )
@@ -244,8 +246,8 @@ export function DashboardRecordingDetailPage() {
     if (!recording) {
         return (
             <section className="space-y-4 bg-base-100 px-6 py-8 lg:px-8">
-                <Link to="/dashboard/recordings" className="btn btn-ghost btn-sm self-start"><ArrowLeftIcon className="h-4 w-4" />Retour aux enregistrements</Link>
-                <DashboardStateCard className="text-base-content/70"><div className="flex items-start gap-3 text-base-content/70"><ExclamationTriangleIcon className="mt-0.5 h-5 w-5 text-warning" /><span>{error ?? 'Enregistrement introuvable.'}</span></div></DashboardStateCard>
+                <Link to="/dashboard/recordings" className="btn btn-ghost btn-sm self-start"><ArrowLeftIcon className="h-4 w-4" />{t('dashboard.recordingDetail.backButton')}</Link>
+                <DashboardStateCard className="text-base-content/70"><div className="flex items-start gap-3 text-base-content/70"><ExclamationTriangleIcon className="mt-0.5 h-5 w-5 text-warning" /><span>{error ?? t('dashboard.recordingDetail.notFound')}</span></div></DashboardStateCard>
             </section>
         )
     }
@@ -268,29 +270,29 @@ export function DashboardRecordingDetailPage() {
     return (
         <section className="space-y-0 bg-base-100">
             <DashboardPageHeader
-                title={recording.channelName ?? `Salon ${recording.channelId}`}
+                title={recording.channelName ?? t('dashboard.recordingDetail.channelFallback', { id: recording.channelId })}
                 description={
                     <div className="space-y-3">
                         <div className="space-y-3">
                             <p>
-                                Demandé par {recording.requesterName ?? recording.requesterId} ({recording.requesterId}) le {formatDateTime(recording.requestedAt)}.
-                                {' '}Raison: <span className="font-semibold text-base-content/80">{recording.reason}</span>
+                                {t('dashboard.recordingDetail.requestedBy', { requester: recording.requesterName ?? recording.requesterId, requesterId: recording.requesterId, date: formatDateTime(recording.requestedAt) })}
+                                {' '}{t('dashboard.recordingDetail.reason')}: <span className="font-semibold text-base-content/80">{recording.reason}</span>
                             </p>
                             <div className="flex flex-wrap items-center gap-3">
                                 <RecordingMetaChip
-                                    label="Durée"
+                                    label={t('dashboard.recordingDetail.chipDuration')}
                                     toneClassName="border-[#00a86b]/80 bg-[#00a86b]/10 text-[#00a86b]"
                                 >
-                                    <span>{`${actualDurationSeconds ? formatDuration(actualDurationSeconds) : 'Indisponible'} / ${formatDuration(recording.durationSeconds)}`}</span>
+                                    <span>{`${actualDurationSeconds ? formatDuration(actualDurationSeconds) : t('dashboard.recordingDetail.durationUnavailable')} / ${formatDuration(recording.durationSeconds)}`}</span>
                                 </RecordingMetaChip>
                                 <RecordingMetaChip
-                                    label="Voice room"
+                                    label={t('dashboard.recordingDetail.chipVoiceRoom')}
                                     toneClassName="border-[#1520a6]/30 bg-[#1520a6]/12 text-[#1520a6]"
                                 >
-                                    <span>{recording.voiceRoomId ? `#${recording.voiceRoomId}` : 'Aucune'}</span>
+                                    <span>{recording.voiceRoomId ? `#${recording.voiceRoomId}` : t('dashboard.recordingDetail.noVoiceRoom')}</span>
                                 </RecordingMetaChip>
                                 <RecordingMetaChip
-                                    label="Participants"
+                                    label={t('dashboard.recordingDetail.chipParticipants')}
                                     toneClassName="border-[#5865F2]/30 bg-[#5865F2]/12 text-[#5865F2]"
                                     leading={
                                         <div className="-ml-[5px] flex -space-x-1.5">
@@ -313,27 +315,27 @@ export function DashboardRecordingDetailPage() {
                                     <span>{allParticipants.length}</span>
                                 </RecordingMetaChip>
                                 <RecordingMetaChip
-                                    label="Segments"
+                                    label={t('dashboard.recordingDetail.chipSegments')}
                                     toneClassName="border-[#c35500]/80 bg-[#c35500]/10 text-[#c35500]"
                                 >
                                     <span>{recording.outputFiles.length}</span>
                                 </RecordingMetaChip>
                                 <RecordingMetaChip
-                                    label="Statut"
+                                    label={t('dashboard.recordingDetail.chipStatus')}
                                     toneClassName={stopReasonToneClassName(recording.stopReason ?? null)}
                                 >
-                                    <span>{formatStopReason(recording.stopReason ?? null)}</span>
+                                    <span>{formatStopReason(recording.stopReason ?? null, t)}</span>
                                 </RecordingMetaChip>
                             </div>
                         </div>
                     </div>
                 }
                 backButton={
-                    <Link to="/dashboard/recordings" className="btn btn-ghost btn-sm"><ArrowLeftIcon className="h-4 w-4" />Retour aux enregistrements</Link>
+                    <Link to="/dashboard/recordings" className="btn btn-ghost btn-sm"><ArrowLeftIcon className="h-4 w-4" />{t('dashboard.recordingDetail.backButton')}</Link>
                 }
                 actions={
                     <ButtonOne
-                        label={areTracksPrepared ? 'Pistes chargées' : 'Charger les pistes'}
+                        label={areTracksPrepared ? t('dashboard.recordingDetail.tracksLoaded') : t('dashboard.recordingDetail.loadTracks')}
                         variant="outline"
                         Icon={ArrowDownTrayIcon}
                         onClick={() => { void prepareAllUserSources() }}
@@ -357,9 +359,9 @@ export function DashboardRecordingDetailPage() {
                 downloadLoadingUserId={downloadLoadingKey}
             />
 
-            {hasApproximateSync ? <div className="mx-6 mt-6 rounded-2xl border border-warning/30 bg-warning/10 p-4 text-sm text-warning-content/80 lg:mx-8">Certains segments ne possèdent pas encore d'offset exact. La timeline reste lisible, mais la synchronisation peut être approximative sur les anciens enregistrements.</div> : null}
+            {hasApproximateSync ? <div className="mx-6 mt-6 rounded-2xl border border-warning/30 bg-warning/10 p-4 text-sm text-warning-content/80 lg:mx-8">{t('dashboard.recordingDetail.approximateSync')}</div> : null}
 
-            {recording.errorMessage ? <div className="mx-6 mt-6 rounded-2xl border border-error/30 bg-error/8 p-4 text-sm text-error lg:mx-8"><div className="flex items-center gap-2 font-semibold"><XCircleIcon className="h-5 w-5" />Échec de traitement</div><p className="mt-2 text-error/85">{recording.errorMessage}</p></div> : null}
+            {recording.errorMessage ? <div className="mx-6 mt-6 rounded-2xl border border-error/30 bg-error/8 p-4 text-sm text-error lg:mx-8"><div className="flex items-center gap-2 font-semibold"><XCircleIcon className="h-5 w-5" />{t('dashboard.recordingDetail.processingFailed')}</div><p className="mt-2 text-error/85">{recording.errorMessage}</p></div> : null}
         </section>
     )
 }

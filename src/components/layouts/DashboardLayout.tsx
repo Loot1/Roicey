@@ -1,6 +1,7 @@
 import { ArrowPathIcon, ChevronDownIcon, ExclamationTriangleIcon, PlusIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { NavLink, Outlet, useLocation, useNavigate } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { DashboardAlert, DashboardStateCard } from '../dashboard'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
@@ -11,6 +12,7 @@ import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../
 export function DashboardLayout() {
     const location = useLocation()
     const navigate = useNavigate()
+    const { t } = useTranslation()
     const authError = useMemo(() => new URLSearchParams(location.search).get('authError'), [location.search])
     const invitedGuildId = useMemo(() => new URLSearchParams(location.search).get('guild_id'), [location.search])
     const inviteBotUrl = useMemo(() => {
@@ -52,9 +54,9 @@ export function DashboardLayout() {
                         setGuilds([])
                         setSelectedGuildId(null)
                         setError(authError === 'access_denied'
-                            ? 'Connexion Discord annulée. Relance la connexion si tu veux accéder au dashboard.'
+                            ? t('dashboard.layout.authCancelled')
                             : authError
-                                ? 'La connexion Discord a échoué. Réessaie pour continuer.'
+                                ? t('dashboard.layout.authError')
                                 : null)
                     }
 
@@ -92,7 +94,7 @@ export function DashboardLayout() {
                 }
             } catch {
                 if (!ignore) {
-                    setError('Impossible de charger les données du dashboard pour le moment.')
+                    setError(t('dashboard.layout.loadError'))
                 }
             } finally {
                 if (!ignore) {
@@ -155,8 +157,8 @@ export function DashboardLayout() {
                 <div className="flex items-center gap-4 text-center lg:text-left">
                     <ArrowPathIcon className="h-6 w-6 animate-spin text-primary" />
                     <div>
-                        <h1 className="text-2xl font-black">Connexion au dashboard</h1>
-                        <p className="text-base-content/70">Chargement de ta session Discord en cours...</p>
+                        <h1 className="text-2xl font-black">{t('dashboard.layout.loadingTitle')}</h1>
+                        <p className="text-base-content/70">{t('dashboard.layout.loadingDesc')}</p>
                     </div>
                 </div>
             </main>
@@ -168,7 +170,7 @@ export function DashboardLayout() {
             <main className="flex min-h-screen items-center justify-center bg-base-100 px-6 py-16 lg:px-10">
                 <div className="w-full max-w-xl space-y-4">
                     <DashboardAlert tone="warning" icon={<ExclamationTriangleIcon className="h-5 w-5" />}>
-                        {error ?? 'Aucune session Discord active.'}
+                        {error ?? t('dashboard.layout.noSession')}
                     </DashboardAlert>
                     <button
                         type="button"
@@ -186,7 +188,7 @@ export function DashboardLayout() {
 
     return (
         <ResponsiveSidebarLayout
-            mobileTitle="Dashboard"
+            mobileTitle={t('dashboard.layout.mobileTitle')}
             sidebarOpen={sidebarOpen}
             onToggleSidebar={() => setSidebarOpen(!sidebarOpen)}
             onCloseSidebar={() => setSidebarOpen(false)}
@@ -195,10 +197,10 @@ export function DashboardLayout() {
             sidebar={
                 <nav className="space-y-4 p-4">
                     <div>
-                        <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">Serveur</p>
+                        <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">{t('dashboard.layout.serverSection')}</p>
                         {guilds.length === 0 ? (
                             <div className="rounded-box border border-dashed border-base-300 px-3 py-4 text-sm text-base-content/65">
-                                Aucun serveur gérable trouvé.
+                                    {t('dashboard.layout.noServer')}
                             </div>
                         ) : (
                             <div ref={guildPickerRef} className="space-y-2">
@@ -217,10 +219,10 @@ export function DashboardLayout() {
                                     </div>
 
                                     <div className="min-w-0 flex-1">
-                                        <p className="truncate text-sm font-semibold">{selectedGuild?.name ?? 'Aucune guilde'}</p>
+                                        <p className="truncate text-sm font-semibold">{selectedGuild?.name ?? t('dashboard.layout.noGuild')}</p>
                                         {selectedGuild ? (
                                             <p className="text-xs text-base-content/60">
-                                                {selectedGuild.owner ? 'Propriétaire' : 'Membre'}
+                                                    {selectedGuild.owner ? t('dashboard.layout.roleOwner') : t('dashboard.layout.roleMember')}
                                             </p>
                                         ) : null}
                                     </div>
@@ -239,8 +241,8 @@ export function DashboardLayout() {
                                             </div>
 
                                             <div className="min-w-0 flex-1">
-                                                <p className="truncate text-sm font-semibold text-base-content">Ajouter Voicey</p>
-                                                <p className="text-xs text-base-content/60">Inviter le bot sur un serveur</p>
+                                                <p className="truncate text-sm font-semibold text-base-content">{t('dashboard.layout.addVoicey')}</p>
+                                                <p className="text-xs text-base-content/60">{t('dashboard.layout.addVoiceyDesc')}</p>
                                             </div>
                                         </a>
                                         {guilds.map((guild) => {
@@ -279,7 +281,7 @@ export function DashboardLayout() {
 
                                                     <div className="min-w-0 flex-1">
                                                         <p className="truncate text-sm font-semibold">{guild.name}</p>
-                                                        <p className="text-xs text-base-content/60">{guild.owner ? 'Propriétaire' : 'Membre'}</p>
+                                                        <p className="text-xs text-base-content/60">{guild.owner ? t('dashboard.layout.roleOwner') : t('dashboard.layout.roleMember')}</p>
                                                     </div>
                                                 </button>
                                             )
@@ -291,7 +293,7 @@ export function DashboardLayout() {
                     </div>
 
                     <div>
-                        <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">Navigation</p>
+                        <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">{t('dashboard.layout.navSection')}</p>
                         {DASHBOARD_SIDEBAR_NAVIGATION
                             .filter((item) => item.id !== 'settings' || selectedGuild?.canAccessSettings)
                             .map((item, index) => (
@@ -322,7 +324,7 @@ export function DashboardLayout() {
             {!selectedGuild ? (
                 <section className="bg-base-100 px-6 py-8 lg:px-8">
                     <DashboardStateCard tone="muted" className="text-base-content/70">
-                        Sélectionne un serveur dans la sidebar pour accéder à cette section du dashboard.
+                        {t('dashboard.layout.selectServer')}
                     </DashboardStateCard>
                 </section>
             ) : (

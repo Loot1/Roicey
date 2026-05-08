@@ -18,28 +18,28 @@ type SidebarDemoNavigationItem = SidebarNavigationItem & {
 export const DASHBOARD_SIDEBAR_NAVIGATION = [
     {
         id: 'overview',
-        title: "Vue d'ensemble",
+        title: 'dashboard.layout.nav.overview',
         href: '/dashboard',
         end: true,
     },
     {
         id: 'settings',
-        title: 'Configuration',
+        title: 'dashboard.layout.nav.settings',
         href: '/dashboard/settings',
     },
     {
         id: 'logs',
-        title: 'Logs',
+        title: 'dashboard.layout.nav.logs',
         href: '/dashboard/logs',
     },
     {
         id: 'recordings',
-        title: 'Enregistrements',
+        title: 'dashboard.layout.nav.recordings',
         href: '/dashboard/recordings',
     },
     {
         id: 'record-restrictions',
-        title: 'Bannissement des enregistrements',
+        title: 'dashboard.layout.nav.recordRestrictions',
         href: '/dashboard/record-restrictions',
     },
 ] satisfies SidebarNavigationItem[]
@@ -47,37 +47,37 @@ export const DASHBOARD_SIDEBAR_NAVIGATION = [
 export const DOCS_SIDEBAR_NAVIGATION = [
     {
         id: 'getting-started',
-        title: 'Démarrage rapide',
+        title: 'docs.layout.nav.gettingStarted',
         href: '/docs',
         icon: CommandLineIcon,
     },
     {
         id: 'commands',
-        title: 'Commandes',
+        title: 'docs.layout.nav.commands',
         href: '/docs/commands',
         icon: CommandLineIcon,
     },
     {
         id: 'settings',
-        title: 'Configuration',
+        title: 'docs.layout.nav.settings',
         href: '/docs/settings',
         icon: Cog6ToothIcon,
     },
     {
         id: 'moderation',
-        title: 'Modération',
+        title: 'docs.layout.nav.moderation',
         href: '/docs/moderation',
         icon: ShieldCheckIcon,
     },
     {
         id: 'recording',
-        title: 'Enregistrement',
+        title: 'docs.layout.nav.recording',
         href: '/docs/recording',
         icon: SpeakerWaveIcon,
     },
     {
         id: 'faq',
-        title: 'FAQ',
+        title: 'docs.layout.nav.faq',
         href: '/docs/faq',
         icon: QuestionMarkCircleIcon,
     },
@@ -86,7 +86,7 @@ export const DOCS_SIDEBAR_NAVIGATION = [
 export const DEMO_SIDEBAR_NAVIGATION = [
     {
         id: 'recordings',
-        title: 'Enregistrements',
+        title: 'dashboard.layout.nav.recordings',
         href: '/demo',
         icon: SpeakerWaveIcon,
         end: true,

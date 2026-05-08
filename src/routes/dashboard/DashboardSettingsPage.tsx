@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { Link, useOutletContext } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, DashboardSelectField, DashboardStateCard } from '../../components/dashboard'
 import { getGuildDashboardConfig, getGuildDashboardOptions, saveGuildDashboardConfig } from '../../api/discordAuth'
@@ -34,6 +35,7 @@ const emptyOptions: GuildDashboardOptions = {
 
 export function DashboardSettingsPage() {
     const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
+    const { t } = useTranslation()
     const form = useForm<ConfigFormState>({
         defaultValues: defaultFormValues,
         mode: 'onChange',
@@ -74,7 +76,7 @@ export function DashboardSettingsPage() {
                 }
             } catch {
                 if (!ignore) {
-                    setConfigMessage('Impossible de charger la configuration de ce serveur.')
+                    setConfigMessage(t('dashboard.settings.loadError'))
                 }
             } finally {
                 if (!ignore) {
@@ -107,13 +109,13 @@ export function DashboardSettingsPage() {
 
         const maxMembers = Number(data.defaultMaxMembers)
         if (!Number.isInteger(maxMembers) || maxMembers < 1 || maxMembers > 99) {
-            setConfigMessage('Le nombre de places par défaut doit être compris entre 1 et 99.')
+            setConfigMessage(t('dashboard.settings.invalidMaxMembers'))
             return
         }
 
         const recordingDurationSeconds = Number(data.defaultRecordingDurationSeconds)
         if (!Number.isInteger(recordingDurationSeconds) || recordingDurationSeconds < 10 || recordingDurationSeconds > 180) {
-            setConfigMessage("La durée d'enregistrement par défaut doit être comprise entre 10 et 180 secondes.")
+            setConfigMessage(t('dashboard.settings.invalidDuration'))
             return
         }
 
@@ -138,9 +140,9 @@ export function DashboardSettingsPage() {
                 defaultRecordingDurationSeconds: String(savedConfig.defaultRecordingDurationSeconds),
                 adminRolesIds: savedConfig.adminRolesIds,
             })
-            setConfigMessage('Configuration sauvegardée avec succès.')
+            setConfigMessage(t('dashboard.settings.saveSuccess'))
         } catch {
-            setConfigMessage('La sauvegarde a échoué. Vérifie les valeurs puis réessaie.')
+            setConfigMessage(t('dashboard.settings.saveError'))
         } finally {
             setConfigSaving(false)
         }
@@ -154,13 +156,13 @@ export function DashboardSettingsPage() {
         return (
             <section className="space-y-0 bg-base-100">
                 <DashboardPageHeader
-                    title="Configuration"
-                    description="Cette section est réservée aux administrateurs de la guilde."
+                    title={t('dashboard.settings.title')}
+                    description={t('dashboard.settings.noAccessDesc')}
                 />
 
                 <div className="px-6 py-4 lg:px-8">
                     <DashboardStateCard tone="dashed" className="text-base-content/70">
-                        Tu dois avoir la permission Administrateur sur ce serveur pour modifier la configuration.
+                        {t('dashboard.settings.noAccessText')}
                     </DashboardStateCard>
                 </div>
             </section>
@@ -170,16 +172,16 @@ export function DashboardSettingsPage() {
     return (
         <section className="space-y-0 bg-base-100">
             <DashboardPageHeader
-                title="Configuration"
-                description="Ajuste les paramètres du serveur, les salons utilisés par Voicey et les rôles autorisés à gérer les salons vocaux."
-                actions={<ButtonOne label="Sauvegarder" type="submit" form={formId} loadingLabel={configLoading ? 'Chargement...' : 'Sauvegarde...'} loading={isDisabled} />}
+                title={t('dashboard.settings.title')}
+                description={t('dashboard.settings.description')}
+                actions={<ButtonOne label={t('dashboard.settings.saveButton')} type="submit" form={formId} loadingLabel={configLoading ? t('dashboard.settings.loadingLabel') : t('dashboard.settings.savingLabel')} loading={isDisabled} />}
             />
 
             <DashboardAlert tone="info" icon={<InformationCircleIcon className="h-5 w-5" />} className="alert-outline mx-6 mt-6 lg:mx-8">
                 <div className="grid w-full gap-4 md:grid-cols-2 md:items-center">
-                    <p>Envie d'en savoir plus sur les paramètres de configuration et leurs effets ?</p>
+                    <p>{t('dashboard.settings.docsText')}</p>
                     <Link to="/docs/settings" className="btn btn-primary btn-sm w-fit justify-self-start md:justify-self-end">
-                        Consulte la documentation
+                        {t('dashboard.settings.docsButton')}
                     </Link>
                 </div>
             </DashboardAlert>
@@ -192,16 +194,16 @@ export function DashboardSettingsPage() {
                 <form id={formId} onSubmit={form.handleSubmit(handleSaveConfig)} className="space-y-6">
                     <div className="rounded-[1.6rem] border border-base-300 bg-base-100 p-5 shadow-sm">
                         <div className="mb-5">
-                            <p className="text-xs font-black uppercase tracking-[0.18em] text-base-content/45">Canaux</p>
-                            <h2 className="mt-1 text-2xl font-black tracking-tight">Structure vocale</h2>
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-base-content/45">{t('dashboard.settings.channelsSectionBadge')}</p>
+                            <h2 className="mt-1 text-2xl font-black tracking-tight">{t('dashboard.settings.channelsSection')}</h2>
                         </div>
 
                         <div className="grid gap-4 md:grid-cols-2">
                         <DashboardSelectField
                             control={form.control}
                             name="categoryId"
-                            label="Catégorie vocale"
-                            placeholder="Aucune catégorie"
+                            label={t('dashboard.settings.categoryLabel')}
+                            placeholder={t('dashboard.settings.categoryPlaceholder')}
                             options={options.categories}
                             disabled={isDisabled}
                         />
@@ -209,8 +211,8 @@ export function DashboardSettingsPage() {
                         <DashboardSelectField
                             control={form.control}
                             name="createChannelId"
-                            label="Salon vocal de création"
-                            placeholder="Aucun salon"
+                            label={t('dashboard.settings.createChannelLabel')}
+                            placeholder={t('dashboard.settings.createChannelPlaceholder')}
                             options={options.voiceChannels}
                             disabled={isDisabled}
                         />
@@ -218,14 +220,14 @@ export function DashboardSettingsPage() {
                         <DashboardSelectField
                             control={form.control}
                             name="logChannelId"
-                            label="Salon de logs"
-                            placeholder="Aucun salon"
+                            label={t('dashboard.settings.logChannelLabel')}
+                            placeholder={t('dashboard.settings.logChannelPlaceholder')}
                             options={options.logChannels}
                             disabled={isDisabled}
                         />
 
                         <label className="form-control flex flex-col">
-                            <span className="label-text mb-1">Limite par défaut (1-99)</span>
+                            <span className="label-text mb-1">{t('dashboard.settings.maxMembersLabel')}</span>
                             <input
                                 type="number"
                                 min={1}
@@ -237,7 +239,7 @@ export function DashboardSettingsPage() {
                         </label>
 
                         <label className="form-control flex flex-col">
-                            <span className="label-text mb-1">Durée d'enregistrement par défaut (10-180s)</span>
+                            <span className="label-text mb-1">{t('dashboard.settings.durationLabel')}</span>
                             <input
                                 type="number"
                                 min={10}
@@ -252,14 +254,14 @@ export function DashboardSettingsPage() {
 
                     <div className="rounded-[1.6rem] border border-base-300 bg-base-100 p-5 shadow-sm">
                         <div className="mb-5">
-                            <p className="text-xs font-black uppercase tracking-[0.18em] text-base-content/45">Accès</p>
-                            <h2 className="mt-1 text-2xl font-black tracking-tight">Rôles de modération</h2>
+                            <p className="text-xs font-black uppercase tracking-[0.18em] text-base-content/45">{t('dashboard.settings.rolesSectionBadge')}</p>
+                            <h2 className="mt-1 text-2xl font-black tracking-tight">{t('dashboard.settings.rolesSection')}</h2>
                         </div>
 
                         <div className="form-control">
                             {options.roles.length === 0 ? (
                                 <div className="rounded-box border border-dashed border-base-300 p-3 text-sm text-base-content/65">
-                                    Aucun rôle disponible pour ce serveur.
+                                    {t('dashboard.settings.noRoles')}
                                 </div>
                             ) : (
                                 <div className="max-h-72 w-full space-y-2 overflow-y-auto rounded-box border border-base-300 bg-base-200/30 p-3">

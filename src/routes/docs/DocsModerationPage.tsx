@@ -1,64 +1,58 @@
-import { Link } from 'react-router'
-
+﻿import { Link } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { DocsCard } from '../../components'
 
 export function DocsModerationPage() {
+    const { t } = useTranslation()
+
     return (
         <div className="space-y-4">
-            <h1 className="text-3xl font-bold">Accès et modération</h1>
+            <h1 className="text-3xl font-bold">{t('docs.moderation.title')}</h1>
             <p className="text-base-content/70">
-                Voicey n'est pas que le bot Discord qui va gérer les salons vocaux, c'est un bot vocal orienté modération. Plusieurs fonctionnalités sont pensées pour faciliter le travail de modération au quotidien.
+                {t('docs.moderation.intro')}
             </p>
 
             <div className="grid gap-4 xl:grid-cols-2">
-                <DocsCard title="🏠 Salons vocaux temporaires pour contrôle modérateur">
+                <DocsCard title={t('docs.moderation.card0Title')}>
                     <p className="text-sm text-base-content/70">
-                        Les salons vocaux temporaires améliorent aussi la modération au quotidien, car ils donnent aux
-                        modérateurs un vrai contrôle directement depuis les boutons du salon.
+                        {t('docs.moderation.card0Text1')}
                     </p>
                     <p className="text-sm text-base-content/70">
-                        Les modérateurs sont immunisés contre les actions de ban, de kick et les autres restrictions
-                        appliquées par un propriétaire de salon, et peuvent utiliser les boutons pour reprendre la main,
-                        retirer la gestion d'un salon ou corriger une situation abusive.
+                        {t('docs.moderation.card0Text2')}
                     </p>
                 </DocsCard>
 
-                <DocsCard title="🎙️ Fonctionnalité de record">
+                <DocsCard title={t('docs.moderation.card1Title')}>
                     <p className="text-sm text-base-content/70">
-                        Voicey met aussi à disposition une fonctionnalité de record capable d'enregistrer puis de
-                        transmettre le résultat dans le cadre prévu par le serveur.
+                        {t('docs.moderation.card1Text1')}
                     </p>
                     <p className="text-sm text-base-content/70">
-                        En cas d'abus, la commande <code className="badge badge-ghost px-1">/recordban</code> permet de bannir
-                        les personnes qui détournent cette fonctionnalité, sans les exclure du reste du serveur.
+                        {t('docs.moderation.card1Text2Pre')} <code className="badge badge-ghost px-1">/recordban</code> {t('docs.moderation.card1Text2Post')}
                     </p>
                     <div className="mt-4">
                         <Link to="/docs/recording" className="btn btn-secondary btn-sm">
-                            En savoir plus
+                            {t('docs.moderation.card1Button')}
                         </Link>
                     </div>
                 </DocsCard>
 
-                <DocsCard title="🛡️ Dashboard regroupant l'ensemble">
+                <DocsCard title={t('docs.moderation.card2Title')}>
                     <p className="text-sm text-base-content/70">
-                        Le dashboard regroupe ces informations et donne à la modération un outil de suivi simple et performant. 
-                        Il peut permettre une lecture plus fine des enregistrements notamment avec une lecture de l'audio de chaque utilisateur.
+                        {t('docs.moderation.card2Text')}
                     </p>
                     <div className="mt-4">
                         <Link to="/demo" className="btn btn-secondary btn-sm">
-                            Voir la démo
+                            {t('docs.moderation.card2Button')}
                         </Link>
                     </div>
                 </DocsCard>
 
-                <DocsCard title="📣 Alertes et historique des bans vocaux">
+                <DocsCard title={t('docs.moderation.card3Title')}>
                     <p className="text-sm text-base-content/70">
-                        Lorsqu'un bannissement est appliqué dans un salon vocal, une alerte est remontée afin que
-                        l'équipe de modération sache immédiatement ce qui s'est passé.
+                        {t('docs.moderation.card3Text1')}
                     </p>
                     <p className="text-sm text-base-content/70">
-                        L'historique peut ensuite être consulté avec la commande <code className="badge badge-ghost px-1">/banhistory</code>,
-                        afin de relire les bannissements de salons vocaux avec leur contexte.
+                        {t('docs.moderation.card3Text2Pre')} <code className="badge badge-ghost px-1">/banhistory</code>{t('docs.moderation.card3Text2Post')}
                     </p>
                 </DocsCard>
             </div>

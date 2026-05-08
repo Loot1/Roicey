@@ -1,6 +1,7 @@
 import { ArrowDownTrayIcon, ArrowPathIcon, BellAlertIcon, MicrophoneIcon } from '@heroicons/react/24/outline'
 import { useWavesurfer } from '@wavesurfer/react'
 import { useEffect, useMemo, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { DashboardRecording } from '../../types'
 import { formatPlaybackClock, formatSize, getApproximateFileOffsetMs, getRecordingFileDurationMs, type UserRecordingGroup } from '../../utils'
 
@@ -124,6 +125,7 @@ export function RecordingSessionParticipantCard({
     onToggleUserMute,
     onDownloadUserTrack,
 }: RecordingSessionParticipantCardProps) {
+    const { t } = useTranslation()
     const opacityWave = isMuted ? 0.30 : isActive ? 1 : 0.72
     const { waveColor, progressColor } = getLaneWaveColors(index)
 
@@ -149,7 +151,7 @@ export function RecordingSessionParticipantCard({
                                     <span className="h-3 w-3 rounded-full border border-white/60" style={{ background: getLaneGradient(index) }} />
                                     <p className="truncate text-base font-black">{group.username}</p>
                                     {isRequester ? (
-                                        <span className="inline-flex items-center text-error" title="Demandeur de l'enregistrement" aria-label="Demandeur de l'enregistrement">
+                                        <span className="inline-flex items-center text-error" title={t('recordingParticipantCard.requesterTitle')} aria-label={t('recordingParticipantCard.requesterAria')}>
                                             <BellAlertIcon className="h-4 w-4" />
                                         </span>
                                     ) : null}
@@ -165,7 +167,7 @@ export function RecordingSessionParticipantCard({
                             className={`btn btn-sm btn-square ${isMuted ? 'border-error bg-error text-error-content hover:bg-error/90' : 'btn-ghost border border-base-300'}`}
                             onClick={() => onToggleUserMute(group.userId)}
                             disabled={!isReady}
-                            aria-label={isMuted ? `Réactiver ${group.username}` : `Muter ${group.username}`}
+                            aria-label={isMuted ? t('recordingParticipantCard.unmuteAria', { name: group.username }) : t('recordingParticipantCard.muteAria', { name: group.username })}
                         >
                             <MicrophoneIcon className="h-4 w-4" />
                         </button>
@@ -174,7 +176,7 @@ export function RecordingSessionParticipantCard({
                             className="btn btn-sm btn-square btn-ghost border border-base-300"
                             onClick={() => onDownloadUserTrack(group.userId)}
                             disabled={!isReady || downloadLoadingUserId === group.userId}
-                            aria-label={`Télécharger la piste de ${group.username}`}
+                            aria-label={t('recordingParticipantCard.downloadAria', { name: group.username })}
                         >
                             {downloadLoadingUserId === group.userId ? <ArrowPathIcon className="h-4 w-4 animate-spin" /> : <ArrowDownTrayIcon className="h-4 w-4" />}
                         </button>
@@ -182,9 +184,9 @@ export function RecordingSessionParticipantCard({
                 </div>
 
                 <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs text-base-content/55">
-                    <span>Temps de parole: <span className="font-semibold text-base-content/75">{formatPlaybackClock(metrics?.speakingDurationSeconds ?? 0)}</span></span>
-                    <span>Taille: <span className="font-semibold text-base-content/75">{formatSize(metrics?.totalSizeBytes ?? 0)}</span></span>
-                    <span>{metrics?.segmentsCount ?? 0} segment{(metrics?.segmentsCount ?? 0) > 1 ? 's' : ''}</span>
+                    <span>{t('recordingParticipantCard.speakingTime')}: <span className="font-semibold text-base-content/75">{formatPlaybackClock(metrics?.speakingDurationSeconds ?? 0)}</span></span>
+                    <span>{t('recordingParticipantCard.sizeLabel')}: <span className="font-semibold text-base-content/75">{formatSize(metrics?.totalSizeBytes ?? 0)}</span></span>
+                    <span>{t('recordingParticipantCard.segmentsLabel', { count: metrics?.segmentsCount ?? 0 })}</span>
                 </div>
             </article>
 
@@ -234,7 +236,7 @@ export function RecordingSessionParticipantCard({
                 </div>
 
                 <div className="mt-3 flex items-center justify-start text-xs font-semibold text-base-content/55">
-                    <span>{isMuted ? 'Muet' : isActive ? 'Parle actuellement' : 'En attente'}</span>
+                    <span>{isMuted ? t('recordingParticipantCard.statusMuted') : isActive ? t('recordingParticipantCard.statusSpeaking') : t('recordingParticipantCard.statusWaiting')}</span>
                 </div>
             </div>
         </div>

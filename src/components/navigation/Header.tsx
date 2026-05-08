@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { Bars3Icon, MoonIcon, SunIcon, UserCircleIcon } from '@heroicons/react/24/outline'
 import logoSansFond from '../../assets/images/voicey-logo.png'
 import { getDiscordSession, logoutDiscord, onAuthChanged, startDiscordLogin } from '../../api/discordAuth'
@@ -10,6 +11,24 @@ import { useTheme } from '../../hooks/useTheme'
 export function Header() {
     const location = useLocation()
     const { isDark, toggleTheme } = useTheme()
+    const { i18n, t } = useTranslation()
+    const currentLang = i18n.language.startsWith('fr') ? 'fr' : 'en'
+
+    const languages = [
+        { code: 'fr', label: 'Français', flag: '🇫🇷', display: 'FR' },
+        { code: 'en', label: 'English', flag: '🇺🇸', display: 'EN' },
+    ] as const
+
+    const langDropdownRef = useRef<HTMLDetailsElement | null>(null)
+
+    const handleChangeLang = (code: string) => {
+        void i18n.changeLanguage(code)
+        if (langDropdownRef.current) {
+            langDropdownRef.current.removeAttribute('open')
+        }
+    }
+
+    const currentCode = languages.find((l) => l.code === currentLang)?.display ?? 'EN'
     const [user, setUser] = useState<DiscordUser | null>(null)
     const [loadingUser, setLoadingUser] = useState(true)
     const currentPath = `${location.pathname}${location.search}`
@@ -82,14 +101,14 @@ export function Header() {
                                     to={item.href}
                                     className={isActive(item.href, item.exact) ? 'active font-semibold' : ''}
                                 >
-                                    {item.label}
+                                    {t(item.label)}
                                 </Link>
                             </li>
                         ))}
                         {!user && !loadingUser ? (
                             <li className="sm:hidden">
                                 <button onClick={handleLoginClick}>
-                                    Se connecter
+                                    {t('nav.login')}
                                 </button>
                             </li>
                         ) : null}
@@ -98,8 +117,8 @@ export function Header() {
                                 <li className="menu-title px-2 py-1 sm:hidden">
                                     <span>{user.global_name ?? user.username}</span>
                                 </li>
-                                <li className="sm:hidden"><Link to="/dashboard">Dashboard</Link></li>
-                                <li className="sm:hidden"><button onClick={handleLogoutClick}>Déconnexion</button></li>
+                                <li className="sm:hidden"><Link to="/dashboard">{t('nav.dashboard')}</Link></li>
+                                <li className="sm:hidden"><button onClick={handleLogoutClick}>{t('nav.logout')}</button></li>
                             </>
                         ) : null}
                     </ul>
@@ -124,14 +143,36 @@ export function Header() {
                                         ? 'bg-primary/20 text-primary font-semibold'
                                         : 'hover:bg-base-200'
                                 }`}
-                            >
-                                {item.label}
+                            >   
+                                {t(item.label)}
                             </Link>
                         </li>
                     ))}
                 </ul>
             </div>
-            <div className="navbar-end gap-4">
+            <div className="navbar-end gap-2">
+                <details ref={langDropdownRef} className="dropdown dropdown-end">
+                    <summary
+                        className="btn btn-ghost btn-circle text-xs font-bold"
+                        aria-label="Changer de langue"
+                        title="Changer de langue"
+                    >
+                        {currentCode}
+                    </summary>
+                    <ul className="dropdown-content menu menu-sm bg-base-100 rounded-box z-50 mt-3 w-40 p-2 shadow-lg border border-base-200">
+                        {languages.map((lang) => (
+                            <li key={lang.code}>
+                                <button
+                                    onClick={() => handleChangeLang(lang.code)}
+                                    className={currentLang === lang.code ? 'active font-semibold' : ''}
+                                >
+                                    <span>{lang.flag}</span>
+                                    {lang.label}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </details>
                 <button
                     type="button"
                     className="btn btn-ghost btn-circle"
@@ -147,7 +188,7 @@ export function Header() {
                         onClick={handleLoginClick}
                     >
                         <UserCircleIcon className="h-5 w-5" />
-                        Se connecter
+                        {t('nav.login')}
                     </button>
                 ) : null}
                 {user ? (
@@ -176,8 +217,8 @@ export function Header() {
                         <li className="menu-title px-2 py-1">
                             <span>{user.global_name ?? user.username}</span>
                         </li>
-                        <li><Link to="/dashboard">Dashboard</Link></li>
-                        <li><button onClick={handleLogoutClick}>Déconnexion</button></li>
+                        <li><Link to="/dashboard">{t('nav.dashboard')}</Link></li>
+                        <li><button onClick={handleLogoutClick}>{t('nav.logout')}</button></li>
                     </ul>
                 </div>
                 ) : null}

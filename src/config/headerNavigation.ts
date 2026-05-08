@@ -1,9 +1,9 @@
 export const HEADER_NAVIGATION = [
-    { label: 'Accueil', href: '/', exact: true },
-    { label: 'À propos', href: '/about', exact: true },
-    { label: 'Documentation', href: '/docs', exact: false },
-    { label: 'Démo', href: '/demo', exact: true },
-    { label: 'Charte', href: '/guidelines', exact: true },
+    { label: 'nav.home', href: '/', exact: true },
+    { label: 'nav.about', href: '/about', exact: true },
+    { label: 'nav.docs', href: '/docs', exact: false },
+    { label: 'nav.demo', href: '/demo', exact: true },
+    { label: 'nav.guidelines', href: '/guidelines', exact: true },
 ] as const
 
 export type HeaderNavigationItem = (typeof HEADER_NAVIGATION)[number]

@@ -1,6 +1,7 @@
 import { ArrowPathIcon, MagnifyingGlassIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { useEffect, useMemo, useState } from 'react'
 import { useOutletContext } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { deleteGuildDashboardRecordRestriction, getGuildDashboardRecordRestrictions } from '../../api/discordAuth'
 import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, DashboardStateCard } from '../../components/dashboard'
@@ -9,6 +10,7 @@ import { formatDateTime } from '../../utils'
 
 export function DashboardRecordRestrictionsPage() {
     const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
+    const { t } = useTranslation()
     const [restrictions, setRestrictions] = useState<DashboardRecordRestriction[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -22,7 +24,7 @@ export function DashboardRecordRestrictionsPage() {
         try {
             setRestrictions(await getGuildDashboardRecordRestrictions(guildId))
         } catch {
-            setError('Impossible de charger les sanctions d\'enregistrement pour ce serveur.')
+            setError(t('dashboard.restrictions.loadError'))
         } finally {
             setLoading(false)
         }
@@ -40,8 +42,8 @@ export function DashboardRecordRestrictionsPage() {
 
     const summaryLabel = useMemo(() => {
         const total = restrictions.length
-        return `${total} sanction${total > 1 ? 's' : ''} active${total > 1 ? 's' : ''}`
-    }, [restrictions])
+        return t('dashboard.restrictions.activeCount', { count: total })
+    }, [restrictions, t])
 
     const filteredRestrictions = useMemo(() => {
         const normalizedSearch = searchUserId.trim()
@@ -58,8 +60,8 @@ export function DashboardRecordRestrictionsPage() {
         }
 
         const total = filteredRestrictions.length
-        return `${total} résultat${total > 1 ? 's' : ''} pour l'ID recherché`
-    }, [filteredRestrictions.length, searchUserId, summaryLabel])
+        return t('dashboard.restrictions.filteredCount', { count: total })
+    }, [filteredRestrictions.length, searchUserId, summaryLabel, t])
 
     const handleRefreshRestrictions = () => {
         if (!selectedGuildId) {
@@ -80,7 +82,7 @@ export function DashboardRecordRestrictionsPage() {
             await deleteGuildDashboardRecordRestriction(selectedGuildId, restriction.id)
             setRestrictions((currentRestrictions) => currentRestrictions.filter((entry) => entry.id !== restriction.id))
         } catch {
-            setError('Impossible de supprimer cette sanction pour le moment.')
+            setError(t('dashboard.restrictions.deleteError'))
         } finally {
             setDeletingRestrictionId(null)
         }
@@ -96,9 +98,9 @@ export function DashboardRecordRestrictionsPage() {
     return (
         <section className="space-y-0 bg-base-100">
             <DashboardPageHeader
-                title="Bannissement des enregistrements"
-                description={`Sanctions actives pour ${selectedGuild?.name ?? 'ce serveur'}: les utilisateurs listés ici ne peuvent plus utiliser la fonctionnalité de record.`}
-                actions={<ButtonOne label="Actualiser" variant="outline" Icon={ArrowPathIcon} onClick={handleRefreshRestrictions} loading={loading} disabled={!selectedGuildId} />}
+                title={t('dashboard.restrictions.title')}
+                description={t('dashboard.restrictions.description', { name: selectedGuild?.name ?? t('dashboard.restrictions.thisServer') })}
+                actions={<ButtonOne label={t('dashboard.restrictions.refreshButton')} variant="outline" Icon={ArrowPathIcon} onClick={handleRefreshRestrictions} loading={loading} disabled={!selectedGuildId} />}
                 bottom={(
                     <div className="space-y-3">
                         <div className="text-sm text-base-content/60">{filteredSummaryLabel}</div>
@@ -110,14 +112,14 @@ export function DashboardRecordRestrictionsPage() {
                                 value={searchUserId}
                                 onChange={(event) => setSearchUserId(event.target.value.replace(/\s+/g, ''))}
                                 className="w-full bg-transparent text-sm outline-none"
-                                placeholder="Rechercher un utilisateur banni par ID Discord"
+                                placeholder={t('dashboard.restrictions.searchPlaceholder')}
                             />
                             {searchUserId ? (
                                 <button
                                     type="button"
                                     onClick={() => setSearchUserId('')}
                                     className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-base-300 text-base-content/55 transition hover:border-base-content/25 hover:text-base-content"
-                                    aria-label="Effacer la recherche"
+                                    aria-label={t('dashboard.restrictions.clearSearch')}
                                 >
                                     <XMarkIcon className="h-4 w-4" />
                                 </button>
@@ -132,12 +134,12 @@ export function DashboardRecordRestrictionsPage() {
             <div className="px-6 py-4 lg:px-8">
                 {loading ? (
                     <DashboardStateCard className="p-6 text-base-content/70">
-                        <div className="flex items-center gap-3 text-base-content/70"><ArrowPathIcon className="h-5 w-5 animate-spin text-primary" /><span>Chargement des sanctions...</span></div>
+                        <div className="flex items-center gap-3 text-base-content/70"><ArrowPathIcon className="h-5 w-5 animate-spin text-primary" /><span>{t('dashboard.restrictions.loading')}</span></div>
                     </DashboardStateCard>
                 ) : restrictions.length === 0 ? (
-                    <DashboardStateCard tone="dashed" className="text-base-content/70">Aucune sanction d'enregistrement active sur ce serveur.</DashboardStateCard>
+                    <DashboardStateCard tone="dashed" className="text-base-content/70">{t('dashboard.restrictions.empty')}</DashboardStateCard>
                 ) : filteredRestrictions.length === 0 ? (
-                    <DashboardStateCard tone="dashed" className="text-base-content/70">Aucun bannissement ne correspond à cet ID utilisateur.</DashboardStateCard>
+                    <DashboardStateCard tone="dashed" className="text-base-content/70">{t('dashboard.restrictions.noResults')}</DashboardStateCard>
                 ) : (
                     <div className="space-y-4">
                         {filteredRestrictions.map((restriction) => (
@@ -162,14 +164,14 @@ export function DashboardRecordRestrictionsPage() {
                                                     <h2 className="text-xl font-black tracking-tight">{restriction.userName ?? restriction.userId} <span className="text-base-content/45">({restriction.userId})</span></h2>
                                                     {searchUserId ? <span className="rounded-full border border-primary/20 bg-primary/8 px-3 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-primary">Correspondance</span> : null}
                                                 </div>
-                                                <p className="mt-1 text-sm text-base-content/60">Ajoutée par {restriction.executorName ?? restriction.executorId} <span className="text-base-content/45">({restriction.executorId})</span> le {formatDateTime(restriction.createdAt)} • Motif: {restriction.reason ?? 'Non renseigné'}</p>
+                                                <p className="mt-1 text-sm text-base-content/60">{t('dashboard.restrictions.addedBy', { executor: restriction.executorName ?? restriction.executorId, executorId: restriction.executorId, date: formatDateTime(restriction.createdAt), reason: restriction.reason ?? t('dashboard.restrictions.noReason') })}</p>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="flex flex-wrap gap-2">
                                         <ButtonOne
-                                            label="Supprimer la sanction"
+                                            label={t('dashboard.restrictions.deleteButton')}
                                             variant="danger"
                                             size="sm"
                                             Icon={TrashIcon}

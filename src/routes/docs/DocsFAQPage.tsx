@@ -1,57 +1,48 @@
-import { Link } from 'react-router'
-
+﻿import { Link } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { DocsCollapse } from '../../components'
 
 export function DocsFAQPage() {
+    const { t } = useTranslation()
+
     return (
         <div className="space-y-4">
-            <h1 className="text-3xl font-bold">FAQ - Questions fréquentes</h1>
+            <h1 className="text-3xl font-bold">{t('docs.faq.title')}</h1>
             <p className="text-base-content/70">
-                Les réponses aux questions les plus courantes sur Voicey.
+                {t('docs.faq.intro')}
             </p>
 
             <div className="space-y-3">
-                <DocsCollapse name="faq" title="❓ Le bot a-t-il besoin de la permission Adminsitrateur ?" defaultChecked>
+                <DocsCollapse name="faq" title={t('docs.faq.q0Title')} defaultChecked>
+                    <p>{t('docs.faq.q0Text')}</p>
+                </DocsCollapse>
+
+                <DocsCollapse name="faq" title={t('docs.faq.q1Title')}>
+                    <p>{t('docs.faq.q1Text')}</p>
+                </DocsCollapse>
+
+                <DocsCollapse name="faq" title={t('docs.faq.q2Title')}>
+                    <p>{t('docs.faq.q2Text')}</p>
+                </DocsCollapse>
+
+                <DocsCollapse name="faq" title={t('docs.faq.q3Title')}>
                     <p>
-                        Non. Voicey a besoin des permissions utiles à sa mission, pas d'un accès administrateur global.
+                        {t('docs.faq.q3TextPre')} <code className="badge badge-ghost px-1">/recordban</code> {t('docs.faq.q3TextPost')}
                     </p>
                 </DocsCollapse>
 
-                <DocsCollapse name="faq" title="🛡️ Qui peut accéder au dashboard ?">
-                    <p>
-                        Le dashboard est réservé aux modérateurs et responsables du serveur qui disposent des droits de gestion nécessaires. Ce n'est pas un espace ouvert à tous les membres.
-                    </p>
-                </DocsCollapse>
-
-                <DocsCollapse name="faq" title="💾 Où sont stockés les enregistrements ?">
-                    <p>
-                        Voicey publie les enregistrements dans le salon de logs Discord du serveur, avec une
-                        archive prévue pour le dashboard. En aucun cas Voicey ne stocke les enregistements dans une base de données.
-                    </p>
-                </DocsCollapse>
-
-                <DocsCollapse name="faq" title="🚫 Peut-on empêcher une personne d'utiliser le record ?">
-                    <p>
-                        Oui. Les commandes <code className="badge badge-ghost px-1">/recordban</code> permettent de bloquer une personne sur cette fonctionnalité
-                        sans l'exclure du serveur ni lui retirer l'accès aux salons vocaux standards.
-                    </p>
-                </DocsCollapse>
-
-                <DocsCollapse name="faq" title="🎧 Peut-on réutiliser une voix enregistrée dans un autre but ?">
-                    <p>
-                        Non. La voix enregistrée ne doit servir qu'à prouver une atteinte au règlement du serveur.
-                        Toute réutilisation hors de ce cadre est contraire à la charte d'utilisation.
-                    </p>
+                <DocsCollapse name="faq" title={t('docs.faq.q4Title')}>
+                    <p>{t('docs.faq.q4Text')}</p>
                     <div className="mt-4">
                         <Link to="/guidelines" className="btn btn-error btn-sm">
-                            Lire la charte
+                            {t('docs.faq.q4Button')}
                         </Link>
                     </div>
                 </DocsCollapse>
 
-                <DocsCollapse name="faq" title="🎙️ Est-ce que l'on peut faire un enregistrement dans un salon qui n'a pas été créé par Voicey ?">
+                <DocsCollapse name="faq" title={t('docs.faq.q5Title')}>
                     <p>
-                        Totalement ! C'est possible en utilisant la commande <code className="badge badge-ghost px-1">/record</code> et en étant présent dans le salon.
+                        {t('docs.faq.q5TextPre')} <code className="badge badge-ghost px-1">/record</code> {t('docs.faq.q5TextPost')}
                     </p>
                 </DocsCollapse>
             </div>

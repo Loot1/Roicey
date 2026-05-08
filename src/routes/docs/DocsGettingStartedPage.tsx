@@ -1,41 +1,42 @@
 import { Link } from 'react-router'
+import { useTranslation } from 'react-i18next'
 import { DocsStep } from '../../components'
 import { VOICEY_INVITE_URL } from '../../config'
 
 export function DocsGettingStartedPage() {
+    const { t } = useTranslation()
+
     return (
         <div className="space-y-4">
-            <h1 className="text-3xl font-bold">Démarrage rapide</h1>
+            <h1 className="text-3xl font-bold">{t('docs.gettingStarted.title')}</h1>
             <p className="text-base-content/70">
-                Suivez ces étapes pour que Voicey soit opérationnel sur votre serveur. Vous pourrez ensuite consulter les autres pages de la documentation pour maîtriser tous les détails du fonctionnement du bot.
+                {t('docs.gettingStarted.intro')}
             </p>
 
             <div className="space-y-4">
                 <DocsStep
                     step={1}
-                    title="Invite le bot"
-                    description={
-                        "Ajoute Voicey sur ton serveur, puis vérifie qu'il peut créer des salons vocaux, modifier leurs permissions, rejoindre un salon vocal et écrire dans ton salon de logs."
-                    }
-                    action={<a href={VOICEY_INVITE_URL} target="_blank" rel="noreferrer" className="btn btn-primary btn-sm w-fit">Inviter Voicey</a>}
+                    title={t('docs.gettingStarted.step1Title')}
+                    description={t('docs.gettingStarted.step1Desc')}
+                    action={<a href={VOICEY_INVITE_URL} target="_blank" rel="noreferrer" className="btn btn-primary btn-sm w-fit">{t('docs.gettingStarted.inviteButton')}</a>}
                 />
 
                 <DocsStep
                     step={2}
-                    title="Configure les permissions"
-                    description="Les permissions minimales à prévoir côté bot sont :"
+                    title={t('docs.gettingStarted.step2Title')}
+                    description={t('docs.gettingStarted.step2Desc')}
                 >
                     <ul className="mt-2 list-disc space-y-1 pl-5 text-sm">
-                        <li>Créer et supprimer des salons vocaux temporaires</li>
-                        <li>Modifier les permissions d'accès des salons</li>
-                        <li>Rejoindre un salon vocal pour lancer un enregistrement</li>
-                        <li>Écrire dans le salon de logs configuré</li>
+                        <li>{t('docs.gettingStarted.step2List0')}</li>
+                        <li>{t('docs.gettingStarted.step2List1')}</li>
+                        <li>{t('docs.gettingStarted.step2List2')}</li>
+                        <li>{t('docs.gettingStarted.step2List3')}</li>
                     </ul>
                 </DocsStep>
 
-                <DocsStep step={3} title="Lance l'assistant de configuration">
+                <DocsStep step={3} title={t('docs.gettingStarted.step3Title')}>
                     <p className="text-sm text-base-content/70">
-                        Utilise la commande <code className="badge badge-ghost">/config</code> pour régler les paramètres de base du bot.
+                        {t('docs.gettingStarted.step3DescPre')} <code className="badge badge-ghost">/config</code>{t('docs.gettingStarted.step3DescPost')}
                     </p>
                 </DocsStep>
 
@@ -43,9 +44,9 @@ export function DocsGettingStartedPage() {
 
             <div className="mt-6 rounded-box border border-info/25 bg-info/12 p-6">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
-                    <p className="text-sm text-base-content/80">Le démarrage rapide suffit pour que le bot fonctionne sur votre serveur Discord, mais n'hésitez pas à aller lire en détail les options de configuration.</p>
+                    <p className="text-sm text-base-content/80">{t('docs.gettingStarted.footer')}</p>
                     <Link to="/docs/settings" className="btn btn-info btn-sm">
-                        Voir les paramètres
+                        {t('docs.gettingStarted.footerButton')}
                     </Link>
                 </div>
             </div>
