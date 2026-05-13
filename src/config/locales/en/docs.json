@@ -15,6 +15,7 @@
                 "settings": "Settings"
             }
         },
+        "step": "Step",
         "gettingStarted": {
             "title": "Getting started",
             "step1Title": "Invite the bot",
@@ -40,6 +41,7 @@
             "configDesc": "Opens the server configuration wizard",
             "settingsDesc": "Updates a specific bot parameter",
             "recordbanDesc": "Prevents a person from using the recording feature",
+            "voicealertDesc": "Get notified in the log channel when a watched user joins voice",
             "banhistoryDesc": "Views a person's voice channel ban history",
             "recordDesc": "Starts a recording of the current voice channel with the duration set in configuration",
             "pingDesc": "Quickly checks that the bot is responding",
