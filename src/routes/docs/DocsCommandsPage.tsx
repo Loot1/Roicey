@@ -35,6 +35,7 @@ export function DocsCommandsPage() {
         { command: '/config', description: t('docs.commands.configDesc'), permission: t('docs.commands.permAdmin') },
         { command: '/settings', description: t('docs.commands.settingsDesc'), permission: t('docs.commands.permAdmin') },
         { command: '/recordban', description: t('docs.commands.recordbanDesc'), permission: t('docs.commands.permMod') },
+        { command: '/voicealert', description: t('docs.commands.voicealertDesc'), permission: t('docs.commands.permMod') },
         { command: '/banhistory', description: t('docs.commands.banhistoryDesc'), permission: t('docs.commands.permMod') },
         { command: '/record', description: t('docs.commands.recordDesc'), permission: t('docs.commands.permMember') },
         { command: '/ping', description: t('docs.commands.pingDesc'), permission: t('docs.commands.permMember') },

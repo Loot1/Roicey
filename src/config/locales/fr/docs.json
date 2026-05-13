@@ -15,6 +15,7 @@
                 "settings": "Configuration"
             }
         },
+        "step": "Étape",
         "gettingStarted": {
             "title": "Démarrage rapide",
             "step1Title": "Invite le bot",
@@ -40,6 +41,7 @@
             "configDesc": "Ouvre l'assistant de configuration du serveur",
             "settingsDesc": "Met à jour un paramètre spécifique du bot",
             "recordbanDesc": "Interdit à une personne d'utiliser la fonctionnalité d'enregistrement",
+            "voicealertDesc": "Reçoit une notification dans le salon de logs lorsqu'un utilisateur surveillé rejoint un salon vocal",
             "banhistoryDesc": "Consulte l'historique des bannissements d'un salon vocal d'une personne",
             "recordDesc": "Lance un enregistrement du salon vocal courant avec la durée prévue par la configuration",
             "pingDesc": "Vérifie rapidement que le bot répond",
