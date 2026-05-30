@@ -8,14 +8,24 @@ function checkPermissions(permissions: string): { hasPerm: boolean; reason: stri
     try {
         const permBigInt = BigInt(permissions)
 
-        const administrator = BigInt(1 << 3)
-        const manageChannels = BigInt(1 << 4)
-        const moveMembers = BigInt(1 << 17)
-        const manageRoles = BigInt(1 << 28)
+        const administrator = 8n
 
-        const requiredPermissions = manageChannels | moveMembers | manageRoles
+        const requiredBotPermissions = [
+            16n,                // ManageChannels
+            1024n,              // ViewChannel
+            2048n,              // SendMessages
+            16384n,             // EmbedLinks
+            32768n,             // AttachFiles
+            65536n,             // ReadMessageHistory
+            1048576n,           // Connect
+            16777216n,          // MoveMembers
+            268435456n,         // ManageRoles
+            2147483648n,        // UseApplicationCommands
+            70368744177664n,    // SendVoiceMessages
+        ]
+
         const hasAdmin = (permBigInt & administrator) === administrator
-        const hasRequired = (permBigInt & requiredPermissions) === requiredPermissions
+        const hasRequired = requiredBotPermissions.every(perm => (permBigInt & perm) === perm)
 
         if (hasAdmin || hasRequired) {
             return { hasPerm: true, reason: 'ok' }
@@ -32,7 +42,7 @@ export function DashboardOverviewPage() {
     const { t } = useTranslation()
     const guild = selectedGuild!
 
-    const { hasPerm } = checkPermissions(guild.permissions)
+    const { hasPerm } = checkPermissions(guild.botPermissions ?? '0')
     const stats = [
         {
             id: 'status',

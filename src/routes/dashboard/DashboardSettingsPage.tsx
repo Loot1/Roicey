@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { Link, useOutletContext } from 'react-router'
+import { Link, useBlocker, useOutletContext } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, DashboardSelectField, DashboardStateCard } from '../../components/dashboard'
@@ -90,7 +90,7 @@ export function DashboardSettingsPage() {
         return () => {
             ignore = true
         }
-    }, [selectedGuildId, form])
+    }, [selectedGuildId])
 
     const toggleRole = (roleId: string) => {
         const currentRoles = form.getValues('adminRolesIds')
@@ -151,6 +151,9 @@ export function DashboardSettingsPage() {
     const adminRolesIds = form.watch('adminRolesIds')
     const isDisabled = configLoading || configSaving
     const formId = 'dashboard-settings-form'
+    const isDirty = form.formState.isDirty
+
+    const blocker = useBlocker(isDirty)
 
     if (selectedGuild && !selectedGuild.canAccessSettings) {
         return (
@@ -171,6 +174,22 @@ export function DashboardSettingsPage() {
 
     return (
         <section className="space-y-0 bg-base-100">
+            {blocker.state === 'blocked' && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                    <div className="mx-4 w-full max-w-md rounded-[1.6rem] border border-base-300 bg-base-100 p-6 shadow-xl">
+                        <h2 className="text-lg font-black tracking-tight">{t('dashboard.settings.unsavedTitle')}</h2>
+                        <p className="mt-2 text-sm text-base-content/70">{t('dashboard.settings.unsavedMessage')}</p>
+                        <div className="mt-6 flex justify-end gap-3">
+                            <button className="btn btn-ghost btn-sm" onClick={() => blocker.reset()}>
+                                {t('dashboard.settings.unsavedCancel')}
+                            </button>
+                            <button className="btn btn-error btn-sm" onClick={() => blocker.proceed()}>
+                                {t('dashboard.settings.unsavedConfirm')}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <DashboardPageHeader
                 title={t('dashboard.settings.title')}
                 description={t('dashboard.settings.description')}

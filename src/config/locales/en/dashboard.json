@@ -74,7 +74,11 @@
             "rolesSectionBadge": "Access",
             "rolesSection": "Moderation roles",
             "invalidMaxMembers": "The default slot count must be between 1 and 99.",
-            "invalidDuration": "The default recording duration must be between 10 and 180 seconds."
+            "invalidDuration": "The default recording duration must be between 10 and 180 seconds.",
+            "unsavedTitle": "Unsaved changes",
+            "unsavedMessage": "You have unsaved changes. If you leave this page, they will be lost.",
+            "unsavedConfirm": "Leave without saving",
+            "unsavedCancel": "Stay on page"
         },
         "logs": {
             "title": "Logs",

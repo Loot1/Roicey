@@ -1,17 +1,24 @@
 import { StrictMode } from 'react'
-import { BrowserRouter } from 'react-router'
+import { createBrowserRouter, RouterProvider } from 'react-router'
 import { createRoot } from 'react-dom/client'
 import './assets/css/index.css'
 import './config/i18n'
 import { App } from './App'
 import { ThemeProvider } from './contexts/ThemeContext'
 
+const router = createBrowserRouter([
+    {
+        path: '*',
+        element: (
+            <ThemeProvider>
+                <App />
+            </ThemeProvider>
+        ),
+    },
+])
+
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <ThemeProvider>
-            <BrowserRouter>
-                <App />
-            </BrowserRouter>
-        </ThemeProvider>
+        <RouterProvider router={router} />
     </StrictMode>,
 )
