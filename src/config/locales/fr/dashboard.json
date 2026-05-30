@@ -74,7 +74,11 @@
             "rolesSectionBadge": "Accès",
             "rolesSection": "Rôles de modération",
             "invalidMaxMembers": "Le nombre de places par défaut doit être compris entre 1 et 99.",
-            "invalidDuration": "La durée d'enregistrement par défaut doit être comprise entre 10 et 180 secondes."
+            "invalidDuration": "La durée d'enregistrement par défaut doit être comprise entre 10 et 180 secondes.",
+            "unsavedTitle": "Modifications non sauvegardées",
+            "unsavedMessage": "Tu as des modifications non sauvegardées. Si tu quittes cette page, elles seront perdues.",
+            "unsavedConfirm": "Quitter sans sauvegarder",
+            "unsavedCancel": "Rester sur la page"
         },
         "logs": {
             "title": "Logs",
