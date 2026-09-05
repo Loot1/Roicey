@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite'
-import react, { reactCompilerPreset } from '@vitejs/plugin-react'
+import { reactRouter } from '@react-router/dev/vite'
+import { reactCompilerPreset } from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import babel from '@rolldown/plugin-babel'
 
@@ -7,7 +8,7 @@ import babel from '@rolldown/plugin-babel'
 export default defineConfig({
   envDir: '.env',
   plugins: [
-    react(),
+    reactRouter(),
     tailwindcss(),
     babel({ presets: [reactCompilerPreset()] })
   ],

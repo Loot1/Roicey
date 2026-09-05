@@ -34,7 +34,7 @@ export function ResponsiveSidebarLayout({
 
             <div className="w-full flex-1">
                 <div className="sticky top-0 z-30 flex items-center justify-between border-b border-base-300 bg-base-100 px-4 py-3 lg:hidden">
-                    <h1 className="font-semibold">{mobileTitle}</h1>
+                    <p className="font-semibold">{mobileTitle}</p>
                     <button
                         onClick={onToggleSidebar}
                         className="btn btn-ghost btn-sm btn-square"

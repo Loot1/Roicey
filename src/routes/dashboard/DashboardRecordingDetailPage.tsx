@@ -366,3 +366,5 @@ export function DashboardRecordingDetailPage() {
         </section>
     )
 }
+
+export default DashboardRecordingDetailPage

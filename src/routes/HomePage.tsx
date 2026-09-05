@@ -2,14 +2,17 @@ import { Link } from 'react-router'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { InformationCircleIcon, ShieldCheckIcon, SpeakerWaveIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/outline'
-import logoSansFond from '../assets/images/voicey-logo.png'
-import { FeaturedServers } from '../components'
+import logoSansFond from '../assets/images/voicey-logo-640.webp'
+import { FeaturedServers } from '../components/FeaturedServers'
 import { getPublicStats } from '../api/discordAuth'
 import { VOICEY_HELP_DISCORD_URL, VOICEY_INVITE_URL } from '../config'
 import type { FeaturedServer } from '../types'
+import { useLocalizedPath } from '../hooks/useLocale'
+import { seoMeta } from '../config/seoMeta'
 
 export function HomePage() {
     const { t, i18n } = useTranslation()
+    const localizedPath = useLocalizedPath()
     const locale = i18n.language.startsWith('fr') ? 'fr-FR' : 'en-US'
     const [stats, setStats] = useState({
         createdVoiceRoomsToday: 0,
@@ -58,7 +61,7 @@ export function HomePage() {
     }, [])
 
     return (
-        <main className="relative isolate overflow-hidden bg-base-100">
+        <div className="relative isolate overflow-hidden bg-base-100">
             <div className="pointer-events-none absolute inset-0 -z-10">
                 <div className="absolute -left-24 top-10 h-72 w-72 rounded-full bg-primary/25 blur-3xl"></div>
                 <div className="absolute right-0 top-1/3 h-80 w-80 rounded-full bg-secondary/20 blur-3xl"></div>
@@ -93,7 +96,11 @@ export function HomePage() {
                         <figure className="w-full max-w-[640px]">
                             <img
                                 src={logoSansFond}
-                                alt="Logo Voicey"
+                                alt="Voicey, le bot Discord de salons vocaux temporaires"
+                                width={640}
+                                height={640}
+                                fetchPriority="high"
+                                decoding="async"
                                 className="relative z-10 w-full max-w-[640px] object-contain"
                             />
                         </figure>
@@ -225,7 +232,7 @@ export function HomePage() {
                             </p>
                             <div className="join join-vertical gap-2 sm:join-horizontal">
                                 <a href={VOICEY_INVITE_URL} target="_blank" rel="noreferrer" className="btn join-item btn-primary">{t('home.cta.addBot')}</a>
-                                <Link to="/docs" className="btn join-item btn-outline">
+                                <Link to={localizedPath('/docs')} className="btn join-item btn-outline">
                                     {t('home.cta.docs')}
                                 </Link>
                             </div>
@@ -233,6 +240,10 @@ export function HomePage() {
                     </div>
                 </div>
             </section>
-        </main>
+        </div>
     )
 }
+
+export default HomePage
+
+export const meta = seoMeta('home')

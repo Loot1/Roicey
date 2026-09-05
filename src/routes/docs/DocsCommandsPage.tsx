@@ -1,6 +1,8 @@
 ﻿import { useTranslation } from 'react-i18next'
-import { DocsCard, DocsTable } from '../../components'
-import type { DocsTableColumn } from '../../components'
+import { DocsCard } from '../../components/docs/DocsCard'
+import { DocsTable } from '../../components/docs/DocsTable'
+import type { DocsTableColumn } from '../../components/docs/DocsTable'
+import { seoMeta } from '../../config/seoMeta'
 
 type CommandRow = {
     command: string
@@ -68,3 +70,7 @@ export function DocsCommandsPage() {
         </div>
     )
 }
+
+export default DocsCommandsPage
+
+export const meta = seoMeta('docsCommands')

@@ -4,10 +4,12 @@ import { PlayCircleIcon } from '@heroicons/react/24/outline'
 import { useTranslation } from 'react-i18next'
 import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
 import { DEMO_SIDEBAR_NAVIGATION } from '../../config'
+import { useLocalizedPath } from '../../hooks/useLocale'
 
 export function DemoLayout() {
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const { t } = useTranslation()
+    const localizedPath = useLocalizedPath()
 
     return (
         <ResponsiveSidebarLayout
@@ -39,7 +41,7 @@ export function DemoLayout() {
                             return (
                                 <NavLink
                                     key={item.id}
-                                    to={item.href}
+                                    to={localizedPath(item.href)}
                                     end={item.end}
                                     className={({ isActive }) => `${index > 0 ? 'mt-1 ' : ''}flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition ${
                                         isActive
@@ -61,3 +63,5 @@ export function DemoLayout() {
         </ResponsiveSidebarLayout>
     )
 }
+
+export default DemoLayout

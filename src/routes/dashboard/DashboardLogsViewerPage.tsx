@@ -19,3 +19,5 @@ export function DashboardLogsViewerPage() {
         </section>
     )
 }
+
+export default DashboardLogsViewerPage

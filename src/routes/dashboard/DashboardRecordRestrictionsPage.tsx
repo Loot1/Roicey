@@ -188,3 +188,5 @@ export function DashboardRecordRestrictionsPage() {
         </section>
     )
 }
+
+export default DashboardRecordRestrictionsPage

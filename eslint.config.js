@@ -6,7 +6,8 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // `.react-router` holds the route types React Router generates on each build.
+  globalIgnores(['dist', '.react-router']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
@@ -18,6 +19,14 @@ export default defineConfig([
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+    },
+    rules: {
+      // Route modules export their component alongside the framework's own
+      // conventional exports; that is the documented shape, not a mistake.
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowExportNames: ['meta', 'links', 'headers', 'loader', 'action', 'handle', 'shouldRevalidate'] },
+      ],
     },
   },
 ])

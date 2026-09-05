@@ -1,9 +1,12 @@
 ﻿import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { DocsCard } from '../../components'
+import { DocsCard } from '../../components/docs/DocsCard'
+import { useLocalizedPath } from '../../hooks/useLocale'
+import { seoMeta } from '../../config/seoMeta'
 
 export function DocsModerationPage() {
     const { t } = useTranslation()
+    const localizedPath = useLocalizedPath()
 
     return (
         <div className="space-y-4">
@@ -30,7 +33,7 @@ export function DocsModerationPage() {
                         {t('docs.moderation.card1Text2Pre')} <code className="badge badge-ghost px-1">/recordban</code> {t('docs.moderation.card1Text2Post')}
                     </p>
                     <div className="mt-4">
-                        <Link to="/docs/recording" className="btn btn-secondary btn-sm">
+                        <Link to={localizedPath('/docs/recording')} className="btn btn-secondary btn-sm">
                             {t('docs.moderation.card1Button')}
                         </Link>
                     </div>
@@ -41,7 +44,7 @@ export function DocsModerationPage() {
                         {t('docs.moderation.card2Text')}
                     </p>
                     <div className="mt-4">
-                        <Link to="/demo" className="btn btn-secondary btn-sm">
+                        <Link to={localizedPath('/demo')} className="btn btn-secondary btn-sm">
                             {t('docs.moderation.card2Button')}
                         </Link>
                     </div>
@@ -59,3 +62,7 @@ export function DocsModerationPage() {
         </div>
     )
 }
+
+export default DocsModerationPage
+
+export const meta = seoMeta('docsModeration')
