@@ -45,25 +45,23 @@ export type SeoRoute = {
     id: string
     /** Canonical path, without a locale prefix. */
     path: string
-    /** Sitemap priority. */
-    priority: number
     /** JSON-LD blocks injected into this page at build time. */
     structuredData?: readonly StructuredDataKind[]
 }
 
 export const SEO_ROUTES = [
-    { id: 'home', path: '/', priority: 1.0, structuredData: ['softwareApplication', 'faq'] },
-    { id: 'about', path: '/about', priority: 0.7 },
-    { id: 'docs', path: '/docs', priority: 0.9, structuredData: ['breadcrumb'] },
-    { id: 'docsCommands', path: '/docs/commands', priority: 0.8, structuredData: ['breadcrumb'] },
-    { id: 'docsRecording', path: '/docs/recording', priority: 0.8, structuredData: ['breadcrumb'] },
-    { id: 'docsSettings', path: '/docs/settings', priority: 0.8, structuredData: ['breadcrumb'] },
-    { id: 'docsModeration', path: '/docs/moderation', priority: 0.8, structuredData: ['breadcrumb'] },
-    { id: 'docsFaq', path: '/docs/faq', priority: 0.8, structuredData: ['breadcrumb', 'faq'] },
-    { id: 'demo', path: '/demo', priority: 0.6 },
-    { id: 'guidelines', path: '/guidelines', priority: 0.6 },
-    { id: 'legal', path: '/legal', priority: 0.3 },
-    { id: 'privacy', path: '/privacy-policy', priority: 0.3 },
+    { id: 'home', path: '/', structuredData: ['softwareApplication', 'faq'] },
+    { id: 'about', path: '/about' },
+    { id: 'docs', path: '/docs', structuredData: ['breadcrumb'] },
+    { id: 'docsCommands', path: '/docs/commands', structuredData: ['breadcrumb'] },
+    { id: 'docsRecording', path: '/docs/recording', structuredData: ['breadcrumb'] },
+    { id: 'docsSettings', path: '/docs/settings', structuredData: ['breadcrumb'] },
+    { id: 'docsModeration', path: '/docs/moderation', structuredData: ['breadcrumb'] },
+    { id: 'docsFaq', path: '/docs/faq', structuredData: ['breadcrumb', 'faq'] },
+    { id: 'demo', path: '/demo' },
+    { id: 'guidelines', path: '/guidelines' },
+    { id: 'legal', path: '/legal' },
+    { id: 'privacy', path: '/privacy-policy' },
 ] as const satisfies readonly SeoRoute[]
 
 /**

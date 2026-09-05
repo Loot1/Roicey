@@ -33,7 +33,6 @@ function buildSitemap(): string {
                 ...alternates.map((alternate) =>
                     `    <xhtml:link rel="alternate" hreflang="${alternate.hreflang}" href="${alternate.href}" />`),
                 `    <lastmod>${lastmod}</lastmod>`,
-                `    <priority>${route.priority.toFixed(1)}</priority>`,
                 '  </url>',
             ].join('\n')
         }),
