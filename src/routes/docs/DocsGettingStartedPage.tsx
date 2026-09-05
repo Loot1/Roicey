@@ -1,10 +1,13 @@
 import { Link } from 'react-router'
 import { useTranslation } from 'react-i18next'
-import { DocsStep } from '../../components'
+import { DocsStep } from '../../components/docs/DocsStep'
 import { VOICEY_INVITE_URL } from '../../config'
+import { useLocalizedPath } from '../../hooks/useLocale'
+import { seoMeta } from '../../config/seoMeta'
 
 export function DocsGettingStartedPage() {
     const { t } = useTranslation()
+    const localizedPath = useLocalizedPath()
 
     return (
         <div className="space-y-4">
@@ -45,7 +48,7 @@ export function DocsGettingStartedPage() {
             <div className="mt-6 rounded-box border border-info/25 bg-info/12 p-6">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
                     <p className="text-sm text-base-content/80">{t('docs.gettingStarted.footer')}</p>
-                    <Link to="/docs/settings" className="btn btn-info btn-sm">
+                    <Link to={localizedPath('/docs/settings')} className="btn btn-info btn-sm">
                         {t('docs.gettingStarted.footerButton')}
                     </Link>
                 </div>
@@ -53,3 +56,7 @@ export function DocsGettingStartedPage() {
         </div>
     )
 }
+
+export default DocsGettingStartedPage
+
+export const meta = seoMeta('docs')

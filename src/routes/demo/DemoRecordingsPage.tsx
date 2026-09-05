@@ -6,6 +6,7 @@ import { DashboardAlert, DashboardPageHeader, RecordingMetaChip, RecordingSessio
 import { demoRecording, demoRecordingMixPath, demoRecordingUserTrackPaths } from '../../config'
 import type { DashboardRecordingParticipant } from '../../types'
 import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
+import { seoMeta } from '../../config/seoMeta'
 
 export function DemoRecordingsPage() {
     const [tracksPrepared, setTracksPrepared] = useState(false)
@@ -163,3 +164,7 @@ export function DemoRecordingsPage() {
         </section>
     )
 }
+
+export default DemoRecordingsPage
+
+export const meta = seoMeta('demo')

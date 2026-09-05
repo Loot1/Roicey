@@ -98,3 +98,5 @@ export function DashboardOverviewPage() {
         </section>
     )
 }
+
+export default DashboardOverviewPage

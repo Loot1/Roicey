@@ -1,0 +1,65 @@
+{
+    "seo": {
+        "siteName": "Voicey",
+        "ogImageAlt": "Voicey, bot Discord de salons vocaux temporaires et d'enregistrement",
+        "ogTagline": "Salons vocaux temporaires et enregistrement pour Discord",
+        "breadcrumbHome": "Accueil",
+        "breadcrumbDocs": "Documentation",
+        "home": {
+            "title": "Voicey - Bot Discord de salons vocaux temporaires",
+            "description": "Voicey crée des salons vocaux temporaires sur Discord, pilotables par boutons, et enregistre le vocal pour donner des preuves à vos modérateurs."
+        },
+        "about": {
+            "title": "À propos de Voicey - Un bot pensé pour la modération",
+            "description": "Modérer un salon vocal Discord sans preuve est un casse-tête. Voicey est né de ce constat : les principes du projet et sa feuille de route."
+        },
+        "docs": {
+            "title": "Documentation Voicey - Installer et configurer le bot",
+            "description": "Invitez Voicey sur votre serveur Discord, créez un salon générateur, configurez les salons vocaux temporaires et activez l'enregistrement."
+        },
+        "docsCommands": {
+            "title": "Commandes de Voicey - Slash commands Discord",
+            "description": "La liste complète des commandes Voicey : /config, /record, /recordban, et la gestion des salons vocaux par boutons, menus et modals."
+        },
+        "docsRecording": {
+            "title": "Enregistrer un salon vocal Discord - Guide Voicey",
+            "description": "Comment déclencher, publier et exploiter un enregistrement vocal Discord avec Voicey : pistes séparées, salon de logs et règles d'usage."
+        },
+        "docsSettings": {
+            "title": "Configurer Voicey - Guide des paramètres",
+            "description": "Tous les paramètres de Voicey : salon générateur, nommage des salons temporaires, salon de logs, rôles autorisés et restrictions d'enregistrement."
+        },
+        "docsModeration": {
+            "title": "Modération vocale Discord - Accès et permissions",
+            "description": "Qui peut enregistrer, qui accède au dashboard, comment sont tracés les bannissements vocaux : la modération dans Voicey, permission par permission."
+        },
+        "docsFaq": {
+            "title": "FAQ Voicey - Permissions, enregistrements, dashboard",
+            "description": "Les réponses aux questions fréquentes sur Voicey : permissions requises, stockage des enregistrements vocaux et accès au dashboard."
+        },
+        "demo": {
+            "title": "Démo Voicey - Aperçu public du dashboard",
+            "description": "Essayez le dashboard de Voicey sans installer le bot : lecture d'un enregistrement vocal Discord multipiste, directement dans le navigateur."
+        },
+        "guidelines": {
+            "title": "Charte d'utilisation de Voicey",
+            "description": "Les règles encadrant l'enregistrement vocal avec Voicey : finalité de modération, information des membres, conservation et usages interdits."
+        },
+        "legal": {
+            "title": "Mentions légales - Voicey",
+            "description": "Mentions légales du site voicey.fr et informations sur l'éditeur du bot Discord Voicey."
+        },
+        "privacy": {
+            "title": "Politique de confidentialité - Voicey",
+            "description": "Quelles données Voicey traite, comment les enregistrements vocaux sont gérés et conservés, et quels sont vos droits sur ces données."
+        },
+        "notFound": {
+            "title": "Page introuvable - Voicey",
+            "description": "Cette page n'existe pas ou n'existe plus."
+        },
+        "dashboard": {
+            "title": "Dashboard - Voicey",
+            "description": "Espace de modération réservé aux responsables de serveur Discord."
+        }
+    }
+}

@@ -1,18 +1,22 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link, useLocation } from 'react-router'
+import { Link, useLocation, useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Bars3Icon, MoonIcon, SunIcon, UserCircleIcon } from '@heroicons/react/24/outline'
-import logoSansFond from '../../assets/images/voicey-logo.png'
+import logoSansFond from '../../assets/images/voicey-logo-96.webp'
 import { getDiscordSession, logoutDiscord, onAuthChanged, startDiscordLogin } from '../../api/discordAuth'
 import { HEADER_NAVIGATION } from '../../config'
 import type { DiscordUser } from '../../types'
 import { useTheme } from '../../hooks/useTheme'
+import { useLocale, useLocalizedPath, storeLocale } from '../../hooks/useLocale'
+import { localizePath, type Locale } from '../../config/seoRoutes'
 
 export function Header() {
     const location = useLocation()
-    const { isDark, toggleTheme } = useTheme()
+    const navigate = useNavigate()
+    const { toggleTheme } = useTheme()
     const { i18n, t } = useTranslation()
-    const currentLang = i18n.language.startsWith('fr') ? 'fr' : 'en'
+    const { locale: currentLang, basePath, isPublicRoute } = useLocale()
+    const localizedPath = useLocalizedPath()
 
     const languages = [
         { code: 'fr', label: 'Français', flag: '🇫🇷', display: 'FR' },
@@ -21,8 +25,16 @@ export function Header() {
 
     const langDropdownRef = useRef<HTMLDetailsElement | null>(null)
 
-    const handleChangeLang = (code: string) => {
-        void i18n.changeLanguage(code)
+    const handleChangeLang = (code: Locale) => {
+        storeLocale(code)
+
+        if (isPublicRoute) {
+            // Each language has its own URL, so switching is a navigation.
+            navigate(`${localizePath(basePath, code)}${location.search}${location.hash}`)
+        } else {
+            void i18n.changeLanguage(code)
+        }
+
         if (langDropdownRef.current) {
             langDropdownRef.current.removeAttribute('open')
         }
@@ -35,10 +47,10 @@ export function Header() {
 
     const isActive = (path: string, exact = false) => {
         if (exact) {
-            return location.pathname === path
+            return basePath === path
         }
 
-        return location.pathname === path || location.pathname.startsWith(`${path}/`)
+        return basePath === path || basePath.startsWith(`${path}/`)
     }
 
     useEffect(() => {
@@ -98,7 +110,7 @@ export function Header() {
                         {HEADER_NAVIGATION.map((item) => (
                             <li key={item.href}>
                                 <Link
-                                    to={item.href}
+                                    to={localizedPath(item.href)}
                                     className={isActive(item.href, item.exact) ? 'active font-semibold' : ''}
                                 >
                                     {t(item.label)}
@@ -123,10 +135,12 @@ export function Header() {
                         ) : null}
                     </ul>
                 </div>
-                <Link to="/" className="btn btn-ghost text-lg font-black">
+                <Link to={localizedPath('/')} className="btn btn-ghost text-lg font-black">
                     <img
                         src={logoSansFond}
-                        alt="Logo Voicey"
+                        alt=""
+                        width={32}
+                        height={32}
                         className="h-8 w-8 rounded-lg object-cover"
                     />
                     Voicey
@@ -137,7 +151,7 @@ export function Header() {
                     {HEADER_NAVIGATION.map((item) => (
                         <li key={item.href}>
                             <Link
-                                to={item.href}
+                                to={localizedPath(item.href)}
                                 className={`rounded-lg transition-all ${
                                     isActive(item.href, item.exact)
                                         ? 'bg-primary/20 text-primary font-semibold'
@@ -177,10 +191,11 @@ export function Header() {
                     type="button"
                     className="btn btn-ghost btn-circle"
                     onClick={toggleTheme}
-                    aria-label={isDark ? 'Activer le theme clair' : 'Activer le theme sombre'}
-                    title={isDark ? 'Activer le theme clair' : 'Activer le theme sombre'}
+                    aria-label={t('nav.toggleTheme')}
+                    title={t('nav.toggleTheme')}
                 >
-                    {isDark ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
+                    <SunIcon className="theme-icon-sun h-5 w-5" />
+                    <MoonIcon className="theme-icon-moon h-5 w-5" />
                 </button>
                 {!user && !loadingUser ? (
                     <button

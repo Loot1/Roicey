@@ -1,7 +1,8 @@
 ﻿import type { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { DocsTable } from '../../components'
-import type { DocsTableColumn } from '../../components'
+import { DocsTable } from '../../components/docs/DocsTable'
+import type { DocsTableColumn } from '../../components/docs/DocsTable'
+import { seoMeta } from '../../config/seoMeta'
 
 type SettingRow = {
     id: string
@@ -94,3 +95,7 @@ export function DocsSettingsPage() {
         </div>
     )
 }
+
+export default DocsSettingsPage
+
+export const meta = seoMeta('docsSettings')

@@ -1,0 +1,65 @@
+{
+    "seo": {
+        "siteName": "Voicey",
+        "ogImageAlt": "Voicey, the Discord bot for temporary voice channels and voice recording",
+        "ogTagline": "Temporary voice channels and recording for Discord",
+        "breadcrumbHome": "Home",
+        "breadcrumbDocs": "Documentation",
+        "home": {
+            "title": "Voicey - Discord Bot for Temporary Voice Channels",
+            "description": "Voicey creates temporary voice channels on Discord, makes them controllable with buttons, and records voice chat so moderators get usable evidence."
+        },
+        "about": {
+            "title": "About Voicey - A Bot Built for Voice Moderation",
+            "description": "Moderating a Discord voice channel without evidence is a headache. Voicey was born from that: the project's principles and its roadmap."
+        },
+        "docs": {
+            "title": "Voicey Documentation - Install and Configure the Bot",
+            "description": "Invite Voicey to your Discord server, create a generator channel, configure temporary voice channels and enable voice recording."
+        },
+        "docsCommands": {
+            "title": "Voicey Commands - Discord Slash Commands",
+            "description": "The complete list of Voicey commands: /config, /record, /recordban, plus managing voice channels through buttons, menus and modals."
+        },
+        "docsRecording": {
+            "title": "Record a Discord Voice Channel - Voicey Guide",
+            "description": "How to trigger, publish and use a Discord voice recording with Voicey: separate tracks, log channel publication and the rules that apply."
+        },
+        "docsSettings": {
+            "title": "Configure Voicey - Settings Guide",
+            "description": "Every Voicey setting: generator channel, temporary channel naming, log channel, allowed roles and per-user recording restrictions."
+        },
+        "docsModeration": {
+            "title": "Discord Voice Moderation - Access and Permissions",
+            "description": "Who can record, who reaches the dashboard, how voice bans are tracked: how moderation works in Voicey, permission by permission."
+        },
+        "docsFaq": {
+            "title": "Voicey FAQ - Permissions, Recordings, Dashboard",
+            "description": "Answers to the most common questions about Voicey: required permissions, where voice recordings are stored and who reaches the dashboard."
+        },
+        "demo": {
+            "title": "Voicey Demo - Public Dashboard Preview",
+            "description": "Try the Voicey dashboard without installing the bot: play a multi-track Discord voice recording straight from your browser."
+        },
+        "guidelines": {
+            "title": "Voicey Usage Guidelines",
+            "description": "The rules governing voice recording with Voicey: moderation purpose, informing members, file retention and prohibited uses."
+        },
+        "legal": {
+            "title": "Legal Notice - Voicey",
+            "description": "Legal notice for voicey.fr and information about the publisher of the Voicey Discord bot."
+        },
+        "privacy": {
+            "title": "Privacy Policy - Voicey",
+            "description": "What data Voicey processes, how voice recordings are handled and retained, and what rights you have over that data."
+        },
+        "notFound": {
+            "title": "Page Not Found - Voicey",
+            "description": "This page does not exist or is no longer available."
+        },
+        "dashboard": {
+            "title": "Dashboard - Voicey",
+            "description": "Moderation area reserved for Discord server managers."
+        }
+    }
+}

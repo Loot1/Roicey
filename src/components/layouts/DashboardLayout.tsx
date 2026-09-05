@@ -7,6 +7,7 @@ import { ResponsiveSidebarLayout } from './ResponsiveSidebarLayout'
 import { getDashboardGuilds, getDiscordSession, startDiscordLogin } from '../../api/discordAuth'
 import { useDashboardGuildSelection } from '../../hooks/useDashboardGuildSelection'
 import { DASHBOARD_SIDEBAR_NAVIGATION, VOICEY_INVITE_URL } from '../../config'
+import { SITE_URL } from '../../config/seoRoutes'
 import type { DashboardLayoutContextValue, DiscordGuild, DiscordUser } from '../../types'
 
 export function DashboardLayout() {
@@ -17,7 +18,8 @@ export function DashboardLayout() {
     const invitedGuildId = useMemo(() => new URLSearchParams(location.search).get('guild_id'), [location.search])
     const inviteBotUrl = useMemo(() => {
         const url = new URL(VOICEY_INVITE_URL)
-        url.searchParams.set('redirect_uri', `${window.location.origin}/dashboard`)
+        const origin = typeof window === 'undefined' ? SITE_URL : window.location.origin
+        url.searchParams.set('redirect_uri', `${origin}/dashboard`)
         url.searchParams.set('response_type', 'code')
         return url.toString()
     }, [])
@@ -153,7 +155,7 @@ export function DashboardLayout() {
 
     if (loading) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-base-100 px-6 py-16 lg:px-10">
+            <div className="flex min-h-screen items-center justify-center bg-base-100 px-6 py-16 lg:px-10">
                 <div className="flex items-center gap-4 text-center lg:text-left">
                     <ArrowPathIcon className="h-6 w-6 animate-spin text-primary" />
                     <div>
@@ -161,13 +163,13 @@ export function DashboardLayout() {
                         <p className="text-base-content/70">{t('dashboard.layout.loadingDesc')}</p>
                     </div>
                 </div>
-            </main>
+            </div>
         )
     }
 
     if (!user) {
         return (
-            <main className="flex min-h-screen items-center justify-center bg-base-100 px-6 py-16 lg:px-10">
+            <div className="flex min-h-screen items-center justify-center bg-base-100 px-6 py-16 lg:px-10">
                 <div className="w-full max-w-xl space-y-4">
                     <DashboardAlert tone="warning" icon={<ExclamationTriangleIcon className="h-5 w-5" />}>
                         {error ?? t('dashboard.layout.noSession')}
@@ -182,7 +184,7 @@ export function DashboardLayout() {
                         Reconnecter Discord
                     </button>
                 </div>
-            </main>
+            </div>
         )
     }
 
@@ -333,3 +335,5 @@ export function DashboardLayout() {
         </ResponsiveSidebarLayout>
     )
 }
+
+export default DashboardLayout

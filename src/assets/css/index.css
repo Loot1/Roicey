@@ -114,3 +114,14 @@
   --depth: 0;
   --noise: 0;
 }
+
+/*
+ * The theme toggle renders both icons and lets the active theme hide one.
+ * Keeping the markup independent of React state is what lets the prerendered
+ * HTML hydrate cleanly whichever theme the visitor has, and it also shows the
+ * right icon before any script runs.
+ */
+[data-theme='voicey'] .theme-icon-sun,
+[data-theme='voicey-dark'] .theme-icon-moon {
+  display: none;
+}

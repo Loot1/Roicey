@@ -2,11 +2,14 @@
 import { Trans, useTranslation } from 'react-i18next'
 import { ShieldCheckIcon, SpeakerWaveIcon, ExclamationTriangleIcon } from '@heroicons/react/24/outline'
 import { VOICEY_HELP_DISCORD_URL } from '../config/externalLinks'
+import { useLocalizedPath } from '../hooks/useLocale'
+import { seoMeta } from '../config/seoMeta'
 
 const PRINCIPLES_ICONS = [ExclamationTriangleIcon, ShieldCheckIcon, SpeakerWaveIcon]
 
 export function AboutPage() {
     const { t } = useTranslation()
+    const localizedPath = useLocalizedPath()
 
     const principles = [
         { title: t('about.principle0Title'), text: t('about.principle0Text'), icon: PRINCIPLES_ICONS[0] },
@@ -21,7 +24,7 @@ export function AboutPage() {
     ]
 
     return (
-        <main className="relative isolate min-h-screen overflow-hidden bg-base-100">
+        <div className="relative isolate min-h-screen overflow-hidden bg-base-100">
             <div className="pointer-events-none absolute inset-0 -z-10">
                 <div className="absolute -left-28 top-0 h-80 w-80 rounded-full bg-primary/18 blur-3xl" />
                 <div className="absolute right-0 top-32 h-80 w-80 rounded-full bg-secondary/14 blur-3xl" />
@@ -43,10 +46,10 @@ export function AboutPage() {
                         </div>
 
                         <div className="flex flex-wrap gap-3">
-                            <NavLink to="/docs/recording" className="btn btn-primary">
+                            <NavLink to={localizedPath('/docs/recording')} className="btn btn-primary">
                                 {t('about.ctaRecord')}
                             </NavLink>
-                            <NavLink to="/guidelines" className="btn btn-outline btn-secondary">
+                            <NavLink to={localizedPath('/guidelines')} className="btn btn-outline btn-secondary">
                                 {t('about.ctaGuidelines')}
                             </NavLink>
                         </div>
@@ -158,6 +161,10 @@ export function AboutPage() {
                     ))}
                 </ul>
             </section>
-        </main>
+        </div>
     )
 }
+
+export default AboutPage
+
+export const meta = seoMeta('about')

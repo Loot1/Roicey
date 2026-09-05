@@ -7,6 +7,7 @@ import { DashboardAlert, DashboardPageHeader, DashboardSelectField, DashboardSta
 import { getGuildDashboardConfig, getGuildDashboardOptions, saveGuildDashboardConfig } from '../../api/discordAuth'
 import type { DashboardLayoutContextValue, GuildDashboardConfigInput, GuildDashboardOptions } from '../../types'
 import { InformationCircleIcon } from '@heroicons/react/24/outline'
+import { useLocalizedPath } from '../../hooks/useLocale'
 
 interface ConfigFormState {
     categoryId: string
@@ -36,6 +37,7 @@ const emptyOptions: GuildDashboardOptions = {
 export function DashboardSettingsPage() {
     const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
     const { t } = useTranslation()
+    const localizedPath = useLocalizedPath()
     const form = useForm<ConfigFormState>({
         defaultValues: defaultFormValues,
         mode: 'onChange',
@@ -199,7 +201,7 @@ export function DashboardSettingsPage() {
             <DashboardAlert tone="info" icon={<InformationCircleIcon className="h-5 w-5" />} className="alert-outline mx-6 mt-6 lg:mx-8">
                 <div className="grid w-full gap-4 md:grid-cols-2 md:items-center">
                     <p>{t('dashboard.settings.docsText')}</p>
-                    <Link to="/docs/settings" className="btn btn-primary btn-sm w-fit justify-self-start md:justify-self-end">
+                    <Link to={localizedPath('/docs/settings')} className="btn btn-primary btn-sm w-fit justify-self-start md:justify-self-end">
                         {t('dashboard.settings.docsButton')}
                     </Link>
                 </div>
@@ -309,3 +311,5 @@ export function DashboardSettingsPage() {
         </section>
     )
 }
+
+export default DashboardSettingsPage

@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+
+# Espace prive, derriere authentification Discord.
 Disallow: /dashboard
 
 Sitemap: https://voicey.fr/sitemap.xml

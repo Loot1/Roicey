@@ -1,10 +1,11 @@
 ﻿import { useTranslation } from 'react-i18next'
+import { seoMeta } from '../config/seoMeta'
 
 export function PrivacyPage() {
     const { t } = useTranslation()
 
     return (
-        <main className="bg-base-100">
+        <div className="bg-base-100">
             <section className="relative overflow-hidden border-b border-base-300/60 bg-gradient-to-b from-primary/10 via-base-100 to-base-100">
                 <div className="pointer-events-none absolute inset-0 -z-10">
                     <div className="absolute -left-20 top-12 h-56 w-56 rounded-full bg-primary/20 blur-3xl"></div>
@@ -97,6 +98,10 @@ export function PrivacyPage() {
                     <p className="mt-4 text-sm leading-6 text-base-content/75">{t('privacy.updateText')}</p>
                 </div>
             </section>
-        </main>
+        </div>
     )
 }
+
+export default PrivacyPage
+
+export const meta = seoMeta('privacy')

@@ -73,3 +73,5 @@ export function DashboardRecordingsPage() {
         </section>
     )
 }
+
+export default DashboardRecordingsPage
