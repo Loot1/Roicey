@@ -64,7 +64,8 @@
         "guidelines": "Charte",
         "login": "Se connecter",
         "logout": "Déconnexion",
-        "dashboard": "Dashboard"
+        "dashboard": "Dashboard",
+        "toggleTheme": "Changer de thème"
     },
     "footer": {
         "tagline": "Gestion automatique de salons vocaux Discord",

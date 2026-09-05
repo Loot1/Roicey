@@ -76,12 +76,14 @@
             "q2Text": "Voicey publie les enregistrements dans le salon de logs Discord du serveur, avec une archive prévue pour le dashboard. En aucun cas Voicey ne stocke les enregistements dans une base de données.",
             "q3Title": "🚫 Peut-on empêcher une personne d'utiliser le record ?",
             "q3TextPre": "Oui. Les commandes",
+            "q3Command": "/recordban",
             "q3TextPost": "permettent de bloquer une personne sur cette fonctionnalité sans l'exclure du serveur ni lui retirer l'accès aux salons vocaux standards.",
             "q4Title": "🎧 Peut-on réutiliser une voix enregistrée dans un autre but ?",
             "q4Text": "Non. La voix enregistrée ne doit servir qu'à prouver une atteinte au règlement du serveur. Toute réutilisation hors de ce cadre est contraire à la charte d'utilisation.",
             "q4Button": "Lire la charte",
             "q5Title": "🎙️ Est-ce que l'on peut faire un enregistrement dans un salon qui n'a pas été créé par Voicey ?",
             "q5TextPre": "Totalement ! C'est possible en utilisant la commande",
+            "q5Command": "/record",
             "q5TextPost": "et en étant présent dans le salon."
         },
         "moderation": {

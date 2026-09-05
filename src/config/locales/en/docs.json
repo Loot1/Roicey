@@ -76,12 +76,14 @@
             "q2Text": "Voicey publishes recordings in the server's Discord log channel, with an archive intended for the dashboard. Voicey never stores recordings in a database.",
             "q3Title": "🚫 Can you prevent someone from using the record feature?",
             "q3TextPre": "Yes. The commands",
+            "q3Command": "/recordban",
             "q3TextPost": "allow blocking a person from this feature without excluding them from the server or removing their access to standard voice channels.",
             "q4Title": "🎧 Can a recorded voice be reused for another purpose?",
             "q4Text": "No. A recorded voice must only serve to prove a violation of the server rules. Any reuse outside this framework is against the usage guidelines.",
             "q4Button": "Read the guidelines",
             "q5Title": "🎙️ Can you record in a channel that wasn't created by Voicey?",
             "q5TextPre": "Absolutely! It's possible using the command",
+            "q5Command": "/record",
             "q5TextPost": "while being present in the channel."
         },
         "moderation": {

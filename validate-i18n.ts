@@ -163,9 +163,17 @@ function codeKeyExistsIn(lang: string, key: string): boolean {
     return m.has(key) || m.has(`${key}_one`) || m.has(`${key}_other`)
 }
 
+/**
+ * Keys reached through a computed name instead of a literal `t('...')` call.
+ * `SeoHead` builds `seo.<routeId>.title` from the route table, and
+ * `scripts/structured-data.mjs` reads the same block to emit JSON-LD.
+ */
+const DYNAMIC_KEY_PREFIXES = ['seo.']
+
 /** Is a JSON key reachable from the code (direct or via plural base)? */
 function jsonKeyIsUsed(key: string): boolean {
     if (usedKeySet.has(key)) return true
+    if (DYNAMIC_KEY_PREFIXES.some(prefix => key.startsWith(prefix))) return true
     const base = pluralBase(key)
     return base !== null && usedKeySet.has(base)
 }
