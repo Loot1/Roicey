@@ -1,8 +1,12 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
+import type english from './locales/en'
 import { DEFAULT_LOCALE, LOCALES, type Locale } from './seoRoutes'
 
 type LocaleBundle = Record<string, unknown>
+
+/** Shape of one locale's strings, English being the reference. */
+export type LocaleStrings = typeof english
 
 const resources: Partial<Record<Locale, { translation: LocaleBundle }>> = {}
 
@@ -25,6 +29,25 @@ export function registerLocaleResources(locale: Locale, bundle: LocaleBundle) {
     if (i18n.isInitialized) {
         i18n.addResourceBundle(locale, 'translation', bundle, true, true)
     }
+}
+
+/**
+ * A locale's raw strings, for code that runs outside React (route `meta`, the
+ * JSON-LD) and so cannot go through `t()`.
+ *
+ * Reading them from here rather than importing the JSON files is what keeps
+ * those modules, which every page loads, from dragging both locales into the
+ * client bundle. The matched route's locale is always registered by the time a
+ * `meta` function runs, for the same reason as in `registerLocaleResources`.
+ */
+export function localeStrings(locale: Locale): LocaleStrings {
+    const bundle = resources[locale]?.translation
+
+    if (!bundle) {
+        throw new Error(`Locale "${locale}" is not registered: is its route wrapped in a locale resources route?`)
+    }
+
+    return bundle as LocaleStrings
 }
 
 /**

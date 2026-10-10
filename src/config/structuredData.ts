@@ -1,9 +1,4 @@
-import frCommon from './locales/fr/common.json'
-import frDocs from './locales/fr/docs.json'
-import frSeo from './locales/fr/seo.json'
-import enCommon from './locales/en/common.json'
-import enDocs from './locales/en/docs.json'
-import enSeo from './locales/en/seo.json'
+import { localeStrings, type LocaleStrings } from './i18n'
 import {
     OG_IMAGE_PATHS,
     ROICEY_GITHUB_URL,
@@ -21,13 +16,19 @@ import {
  * Google checks when it validates structured data.
  */
 
-const MESSAGES = {
-    fr: { common: frCommon, docs: frDocs, seo: frSeo.seo },
-    en: { common: enCommon, docs: enDocs, seo: enSeo.seo },
+/**
+ * The locale's strings, grouped by the file they come from. A locale is one
+ * merged object, so `common` and `docs` are the same object under two names:
+ * the names only say where to look a key up.
+ */
+function messages(locale: Locale) {
+    const strings = localeStrings(locale)
+
+    return { common: strings, docs: strings, seo: strings.seo }
 }
 
 /** Route id -> the `docs.<key>` block holding that page's own title. */
-const DOCS_TITLE_KEYS: Record<string, keyof typeof enDocs.docs> = {
+const DOCS_TITLE_KEYS: Record<string, keyof LocaleStrings['docs']> = {
     docs: 'gettingStarted',
     docsCommands: 'commands',
     docsRecording: 'recording',
@@ -44,7 +45,7 @@ type JsonLd = Record<string, unknown>
  * internal search, and declaring one it does not have is a markup error.
  */
 function website(locale: Locale): JsonLd {
-    const { seo } = MESSAGES[locale]
+    const { seo } = messages(locale)
 
     return {
         '@context': 'https://schema.org',
@@ -59,7 +60,7 @@ function website(locale: Locale): JsonLd {
 }
 
 function softwareApplication(locale: Locale): JsonLd {
-    const { seo } = MESSAGES[locale]
+    const { seo } = messages(locale)
 
     return {
         '@context': 'https://schema.org',
@@ -78,7 +79,7 @@ function softwareApplication(locale: Locale): JsonLd {
 }
 
 function faqEntries(locale: Locale, routeId: string) {
-    const { common, docs } = MESSAGES[locale]
+    const { common, docs } = messages(locale)
 
     if (routeId === 'home') {
         const faq = common.home.setup.faq as Record<string, string>
@@ -115,7 +116,7 @@ function faqPage(locale: Locale, routeId: string): JsonLd {
 
 /** The label a page shows in a breadcrumb trail, in the visitor's language. */
 function pageName(locale: Locale, routeId: string): string {
-    const { common, docs } = MESSAGES[locale]
+    const { common, docs } = messages(locale)
 
     if (routeId in DOCS_TITLE_KEYS) {
         return (docs.docs[DOCS_TITLE_KEYS[routeId]] as { title: string }).title
@@ -133,12 +134,12 @@ function pageName(locale: Locale, routeId: string): string {
         case 'privacy':
             return common.footer.privacy
         default:
-            return MESSAGES[locale].seo[routeId as 'home'].title
+            return messages(locale).seo[routeId as 'home'].title
     }
 }
 
 function breadcrumb(locale: Locale, route: SeoRoute): JsonLd {
-    const { seo } = MESSAGES[locale]
+    const { seo } = messages(locale)
 
     const trail = [{ name: seo.breadcrumbHome, item: canonicalUrl('/', locale) }]
 
