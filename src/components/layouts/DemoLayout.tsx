@@ -20,13 +20,13 @@ export function DemoLayout() {
             asideClassName="fixed inset-y-0 left-0 z-40 mt-16 w-72 overflow-y-auto border-r border-base-300 bg-base-200 lg:static lg:mt-0 lg:bg-base-200/50"
             contentWrapperClassName="py-0"
             sidebar={
-                <nav className="space-y-4 p-4">
+                <nav aria-label={t('demo.layout.navSection')} className="space-y-4 p-4">
                     <div className="rounded-box border border-base-300 bg-base-100 p-4 shadow-sm">
                         <div className="mb-3 flex items-center gap-3">
                             <div className="inline-flex rounded-lg bg-primary/15 p-2 text-primary">
                                 <PlayCircleIcon className="h-5 w-5" />
                             </div>
-                            <h2 className="text-base font-semibold">{t('demo.layout.sidebarTitle')}</h2>
+                            <p className="text-base font-semibold">{t('demo.layout.sidebarTitle')}</p>
                         </div>
                         <p className="mt-2 text-sm text-base-content/65">
                             {t('demo.layout.sidebarDesc')}

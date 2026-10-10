@@ -15,16 +15,15 @@
     "@heroicons/react": "^2.2.0",
     "@tailwindcss/vite": "^4.2.2",
     "@wavesurfer/react": "^1.0.12",
-    "axios": "^1.16.1",
     "i18next": "^26.3.0",
+    "isbot": "^5",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-hook-form": "^7.77.0",
     "react-i18next": "^17.0.8",
     "react-router": "^8.3.1",
     "tailwindcss": "^4.3.0",
-    "wavesurfer.js": "^7.12.7",
-    "isbot": "^5"
+    "wavesurfer.js": "^7.12.7"
   },
   "devDependencies": {
     "@babel/core": "^7.29.7",

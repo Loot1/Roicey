@@ -1,6 +1,4 @@
 import type { MetaDescriptor } from 'react-router'
-import frSeo from './locales/fr/seo.json'
-import enSeo from './locales/en/seo.json'
 import {
     LOCALES,
     OG_IMAGE_PATHS,
@@ -14,6 +12,7 @@ import {
     type Locale,
     type SeoRouteId,
 } from './seoRoutes'
+import { localeStrings } from './i18n'
 import { structuredDataFor } from './structuredData'
 
 /**
@@ -23,8 +22,6 @@ import { structuredDataFor } from './structuredData'
  * module serves both locales, the locale is read back from the URL -- the same
  * rule the canonical and hreflang tags advertise.
  */
-
-const SEO_TEXT = { fr: frSeo.seo, en: enSeo.seo }
 
 const OG_LOCALES: Record<Locale, string> = {
     fr: 'fr_FR',
@@ -38,6 +35,7 @@ type PrivateSeoId = 'notFound' | 'dashboard'
 
 function shared(locale: Locale, title: string, description: string, url: string): MetaDescriptor[] {
     const image = `${SITE_URL}${OG_IMAGE_PATHS[locale]}`
+    const { ogImageAlt } = localeStrings(locale).seo
 
     return [
         { title },
@@ -50,12 +48,13 @@ function shared(locale: Locale, title: string, description: string, url: string)
         { property: 'og:image', content: image },
         { property: 'og:image:width', content: String(OG_IMAGE_SIZE.width) },
         { property: 'og:image:height', content: String(OG_IMAGE_SIZE.height) },
-        { property: 'og:image:alt', content: SEO_TEXT[locale].ogImageAlt },
+        { property: 'og:image:alt', content: ogImageAlt },
         { property: 'og:locale', content: OG_LOCALES[locale] },
         { name: 'twitter:card', content: 'summary_large_image' },
         { name: 'twitter:title', content: title },
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: image },
+        { name: 'twitter:image:alt', content: ogImageAlt },
     ]
 }
 
@@ -68,7 +67,7 @@ export function seoMeta(routeId: SeoRouteId) {
 
     return ({ location }: MetaArgs): MetaDescriptor[] => {
         const { locale } = parseLocalizedPath(location.pathname)
-        const { title, description } = SEO_TEXT[locale][routeId]
+        const { title, description } = localeStrings(locale).seo[routeId]
         const url = canonicalUrl(route.path, locale)
 
         return [
@@ -87,7 +86,12 @@ export function seoMeta(routeId: SeoRouteId) {
                 hrefLang: 'x-default',
                 href: canonicalUrl(route.path, X_DEFAULT_LOCALE),
             },
-            ...structuredDataFor(route, locale).map((data) => ({ 'script:ld+json': data })),
+            // JSON-LD is what a crawler reads in the prerendered HTML, and every
+            // public URL is prerendered. Building it in the browser too would
+            // be work for markup no one reads, so the client build drops it.
+            ...(import.meta.env.SSR
+                ? structuredDataFor(route, locale).map((data) => ({ 'script:ld+json': data }))
+                : []),
         ] as MetaDescriptor[]
     }
 }
@@ -96,7 +100,7 @@ export function seoMeta(routeId: SeoRouteId) {
 export function privateSeoMeta(seoId: PrivateSeoId) {
     return ({ location }: MetaArgs): MetaDescriptor[] => {
         const { locale } = parseLocalizedPath(location.pathname)
-        const { title, description } = SEO_TEXT[locale][seoId]
+        const { title, description } = localeStrings(locale).seo[seoId]
 
         return [
             { title },

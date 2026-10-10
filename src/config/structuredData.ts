@@ -1,9 +1,4 @@
-import frCommon from './locales/fr/common.json'
-import frDocs from './locales/fr/docs.json'
-import frSeo from './locales/fr/seo.json'
-import enCommon from './locales/en/common.json'
-import enDocs from './locales/en/docs.json'
-import enSeo from './locales/en/seo.json'
+import { localeStrings, type LocaleStrings } from './i18n'
 import {
     OG_IMAGE_PATHS,
     ROICEY_GITHUB_URL,
@@ -21,13 +16,19 @@ import {
  * Google checks when it validates structured data.
  */
 
-const MESSAGES = {
-    fr: { common: frCommon, docs: frDocs, seo: frSeo.seo },
-    en: { common: enCommon, docs: enDocs, seo: enSeo.seo },
+/**
+ * The locale's strings, grouped by the file they come from. A locale is one
+ * merged object, so `common` and `docs` are the same object under two names:
+ * the names only say where to look a key up.
+ */
+function messages(locale: Locale) {
+    const strings = localeStrings(locale)
+
+    return { common: strings, docs: strings, seo: strings.seo }
 }
 
 /** Route id -> the `docs.<key>` block holding that page's own title. */
-const DOCS_TITLE_KEYS: Record<string, keyof typeof enDocs.docs> = {
+const DOCS_TITLE_KEYS: Record<string, keyof LocaleStrings['docs']> = {
     docs: 'gettingStarted',
     docsCommands: 'commands',
     docsRecording: 'recording',
@@ -38,8 +39,28 @@ const DOCS_TITLE_KEYS: Record<string, keyof typeof enDocs.docs> = {
 
 type JsonLd = Record<string, unknown>
 
+/**
+ * Names the site itself, so a search engine can attach the brand to the domain
+ * instead of guessing it from the <title>. No SearchAction: the site has no
+ * internal search, and declaring one it does not have is a markup error.
+ */
+function website(locale: Locale): JsonLd {
+    const { seo } = messages(locale)
+
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: SITE_NAME,
+        alternateName: seo.ogTagline,
+        url: canonicalUrl('/', locale),
+        description: seo.home.description,
+        inLanguage: locale,
+        publisher: { '@type': 'Person', name: 'Loot1', url: ROICEY_GITHUB_URL },
+    }
+}
+
 function softwareApplication(locale: Locale): JsonLd {
-    const { seo } = MESSAGES[locale]
+    const { seo } = messages(locale)
 
     return {
         '@context': 'https://schema.org',
@@ -58,7 +79,7 @@ function softwareApplication(locale: Locale): JsonLd {
 }
 
 function faqEntries(locale: Locale, routeId: string) {
-    const { common, docs } = MESSAGES[locale]
+    const { common, docs } = messages(locale)
 
     if (routeId === 'home') {
         const faq = common.home.setup.faq as Record<string, string>
@@ -93,19 +114,43 @@ function faqPage(locale: Locale, routeId: string): JsonLd {
     }
 }
 
+/** The label a page shows in a breadcrumb trail, in the visitor's language. */
+function pageName(locale: Locale, routeId: string): string {
+    const { common, docs } = messages(locale)
+
+    if (routeId in DOCS_TITLE_KEYS) {
+        return (docs.docs[DOCS_TITLE_KEYS[routeId]] as { title: string }).title
+    }
+
+    switch (routeId) {
+        case 'about':
+            return common.nav.about
+        case 'demo':
+            return common.nav.demo
+        case 'guidelines':
+            return common.nav.guidelines
+        case 'legal':
+            return common.footer.legal
+        case 'privacy':
+            return common.footer.privacy
+        default:
+            return messages(locale).seo[routeId as 'home'].title
+    }
+}
+
 function breadcrumb(locale: Locale, route: SeoRoute): JsonLd {
-    const { docs, seo } = MESSAGES[locale]
+    const { seo } = messages(locale)
 
-    const trail = [
-        { name: seo.breadcrumbHome, item: canonicalUrl('/', locale) },
-        { name: seo.breadcrumbDocs, item: canonicalUrl('/docs', locale) },
-    ]
+    const trail = [{ name: seo.breadcrumbHome, item: canonicalUrl('/', locale) }]
 
-    if (route.id !== 'docs') {
-        trail.push({
-            name: (docs.docs[DOCS_TITLE_KEYS[route.id]] as { title: string }).title,
-            item: canonicalUrl(route.path, locale),
-        })
+    // Docs pages hang under a shared section page; every other page sits one
+    // level below the home page.
+    if (route.path.startsWith('/docs')) {
+        trail.push({ name: seo.breadcrumbDocs, item: canonicalUrl('/docs', locale) })
+    }
+
+    if (route.id !== 'docs' && route.path !== '/') {
+        trail.push({ name: pageName(locale, route.id), item: canonicalUrl(route.path, locale) })
     }
 
     return {
@@ -126,6 +171,8 @@ export function structuredDataFor(route: SeoRoute, locale: Locale): JsonLd[] {
         switch (kind) {
             case 'softwareApplication':
                 return softwareApplication(locale)
+            case 'website':
+                return website(locale)
             case 'faq':
                 return faqPage(locale, route.id)
             case 'breadcrumb':

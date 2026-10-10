@@ -125,3 +125,21 @@
 [data-theme='voicey-dark'] .theme-icon-moon {
   display: none;
 }
+
+/*
+ * Honours the OS "reduce motion" setting. Cards lift on hover, the sidebar
+ * slides in, the hero logo tilts: none of that carries meaning, so it collapses
+ * to an instant change. The loading spinner is the exception -- its spin is the
+ * message, and freezing it would leave a static icon saying nothing.
+ */
+@media (prefers-reduced-motion: reduce) {
+  *:not(.animate-spin),
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+    scroll-behavior: auto !important;
+  }
+}

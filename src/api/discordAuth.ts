@@ -1,4 +1,3 @@
-import axios from 'axios'
 import type { DashboardRecordRestriction, DashboardRecording, DiscordGuild, DiscordUser, FeaturedServer, GuildDashboardConfigInput, GuildDashboardOptions } from '../types'
 
 const AUTH_CHANGED_EVENT = 'voicey-auth-changed'
@@ -67,13 +66,63 @@ interface GuildRecordRestrictionResponse {
 
 const apiBaseUrl = import.meta.env.VITE_API_URL ?? 'http://localhost:3001'
 
-export const discordApi = axios.create({
-    baseURL: apiBaseUrl,
-    withCredentials: true,
-})
+/**
+ * The API client is `fetch`, not a library.
+ *
+ * `<Header>` probes the session on every page, so whatever this module imports
+ * is downloaded on the home page, the docs and the legal pages alike. The four
+ * things axios was doing here -- a base URL, cookies, JSON, throwing on a
+ * non-2xx -- are a dozen lines, against ~16 kB gzipped on every visit.
+ */
+export class ApiError extends Error {
+    status: number
+
+    constructor(status: number, message: string) {
+        super(message)
+        this.name = 'ApiError'
+        this.status = status
+    }
+}
+
+type RequestOptions = {
+    method?: 'GET' | 'POST' | 'PUT' | 'DELETE'
+    /** Serialised as a JSON body. */
+    body?: unknown
+    params?: Record<string, string>
+}
+
+async function request(path: string, { method = 'GET', body, params }: RequestOptions = {}): Promise<Response> {
+    const url = new URL(`${apiBaseUrl}${path}`)
+
+    for (const [key, value] of Object.entries(params ?? {})) {
+        url.searchParams.set(key, value)
+    }
+
+    const response = await fetch(url, {
+        method,
+        // The Discord session lives in a cookie set by the API.
+        credentials: 'include',
+        headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+        body: body === undefined ? undefined : JSON.stringify(body),
+    })
+
+    if (!response.ok) {
+        throw new ApiError(response.status, `${method} ${path} answered ${response.status}`)
+    }
+
+    return response
+}
+
+async function requestJson<T>(path: string, options?: RequestOptions): Promise<T> {
+    return await (await request(path, options)).json() as T
+}
+
+async function requestBlob(path: string, options?: RequestOptions): Promise<Blob> {
+    return await (await request(path, options)).blob()
+}
 
 export async function startDiscordLogin(returnTo?: string): Promise<void> {
-    const { data } = await discordApi.get<{ url: string }>('/auth/discord/url', {
+    const data = await requestJson<{ url: string }>('/auth/discord/url', {
         params: returnTo ? { returnTo } : undefined,
     })
     window.location.assign(data.url)
@@ -81,10 +130,11 @@ export async function startDiscordLogin(returnTo?: string): Promise<void> {
 
 export async function getDiscordSession(): Promise<DiscordUser | null> {
     try {
-        const { data } = await discordApi.get<MeResponse>('/auth/me')
+        const data = await requestJson<MeResponse>('/auth/me')
         return data.user
     } catch (error) {
-        if (axios.isAxiosError(error) && error.response?.status === 401) {
+        // Signed out is an answer, not a failure.
+        if (error instanceof ApiError && error.status === 401) {
             return null
         }
 
@@ -93,17 +143,17 @@ export async function getDiscordSession(): Promise<DiscordUser | null> {
 }
 
 export async function getDiscordGuilds(): Promise<DiscordGuild[]> {
-    const { data } = await discordApi.get<GuildsResponse>('/auth/guilds')
+    const data = await requestJson<GuildsResponse>('/auth/guilds')
     return data.guilds
 }
 
 export async function getDashboardGuilds(): Promise<DiscordGuild[]> {
-    const { data } = await discordApi.get<GuildsResponse>('/dashboard/guilds')
+    const data = await requestJson<GuildsResponse>('/dashboard/guilds')
     return data.guilds
 }
 
 export async function getGuildDashboardConfig(guildId: string): Promise<GuildDashboardConfig> {
-    const { data } = await discordApi.get<GuildConfigResponse>(`/dashboard/guilds/${guildId}/config`)
+    const data = await requestJson<GuildConfigResponse>(`/dashboard/guilds/${guildId}/config`)
     return data.config
 }
 
@@ -111,49 +161,42 @@ export async function saveGuildDashboardConfig(
     guildId: string,
     config: GuildDashboardConfigInput,
 ): Promise<GuildDashboardConfig> {
-    const { data } = await discordApi.put<GuildConfigResponse>(`/dashboard/guilds/${guildId}/config`, config)
+    const data = await requestJson<GuildConfigResponse>(`/dashboard/guilds/${guildId}/config`, { method: 'PUT', body: config })
     return data.config
 }
 
 export async function getGuildDashboardOptions(guildId: string): Promise<GuildDashboardOptions> {
-    const { data } = await discordApi.get<GuildOptionsResponse>(`/dashboard/guilds/${guildId}/options`)
+    const data = await requestJson<GuildOptionsResponse>(`/dashboard/guilds/${guildId}/options`)
     return data.options
 }
 
 export async function getGuildDashboardRecordRestrictions(guildId: string): Promise<DashboardRecordRestriction[]> {
-    const { data } = await discordApi.get<GuildRecordRestrictionsResponse>(`/dashboard/guilds/${guildId}/record-restrictions`)
+    const data = await requestJson<GuildRecordRestrictionsResponse>(`/dashboard/guilds/${guildId}/record-restrictions`)
     return data.restrictions
 }
 
 export async function deleteGuildDashboardRecordRestriction(guildId: string, restrictionId: number): Promise<DashboardRecordRestriction> {
-    const { data } = await discordApi.delete<GuildRecordRestrictionResponse>(`/dashboard/guilds/${guildId}/record-restrictions/${restrictionId}`)
+    const data = await requestJson<GuildRecordRestrictionResponse>(`/dashboard/guilds/${guildId}/record-restrictions/${restrictionId}`, { method: 'DELETE' })
     return data.restriction
 }
 
 export async function resolveDashboardRecordingSource(source: string): Promise<DashboardRecording> {
-    const { data } = await discordApi.post<ResolveRecordingResponse>('/dashboard/recordings/resolve', { source })
+    const data = await requestJson<ResolveRecordingResponse>('/dashboard/recordings/resolve', { method: 'POST', body: { source } })
     return data.recording
 }
 
 export async function downloadRecordingSourceUserMix(source: string, userId: string): Promise<Blob> {
-    const { data } = await discordApi.post(`/dashboard/recordings/users/${userId}/mix`, {
-        source,
-    }, {
-        responseType: 'blob',
+    return await requestBlob(`/dashboard/recordings/users/${userId}/mix`, {
+        method: 'POST',
+        body: { source },
     })
-
-    return data
 }
 
 export async function downloadRecordingSourceMix(source: string, excludedUserIds: string[] = []): Promise<Blob> {
-    const { data } = await discordApi.post('/dashboard/recordings/mix', {
-        source,
-        excludedUserIds,
-    }, {
-        responseType: 'blob',
+    return await requestBlob('/dashboard/recordings/mix', {
+        method: 'POST',
+        body: { source, excludedUserIds },
     })
-
-    return data
 }
 
 export async function getPublicStats(): Promise<PublicHomeStats> {
@@ -162,9 +205,8 @@ export async function getPublicStats(): Promise<PublicHomeStats> {
     }
 
     if (!publicHomeStatsInflight) {
-        publicHomeStatsInflight = discordApi
-            .get<PublicStatsResponse>('/public/stats')
-            .then(({ data }) => {
+        publicHomeStatsInflight = requestJson<PublicStatsResponse>('/public/stats')
+            .then((data) => {
                 const normalizedData: PublicHomeStats = {
                     servers: data.servers,
                     stats: {
@@ -187,7 +229,7 @@ export async function getPublicStats(): Promise<PublicHomeStats> {
 }
 
 export async function logoutDiscord(): Promise<void> {
-    await discordApi.post('/auth/logout')
+    await request('/auth/logout', { method: 'POST' })
     window.dispatchEvent(new Event(AUTH_CHANGED_EVENT))
 }
 

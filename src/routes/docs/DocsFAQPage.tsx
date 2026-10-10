@@ -16,7 +16,7 @@ export function DocsFAQPage() {
             </p>
 
             <div className="space-y-3">
-                <DocsCollapse name="faq" title={t('docs.faq.q0Title')} defaultChecked>
+                <DocsCollapse name="faq" title={t('docs.faq.q0Title')} defaultOpen>
                     <p>{t('docs.faq.q0Text')}</p>
                 </DocsCollapse>
 

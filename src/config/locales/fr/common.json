@@ -6,7 +6,8 @@
             "description": "Voicey crée automatiquement les salons vocaux temporaires, les rend simples à piloter avec des boutons et ajoute des fonctionnalités pensées pour la modération vocale.",
             "addBot": "Ajouter Voicey",
             "joinDiscord": "Rejoindre le Discord",
-            "infoAlert": "Enregistrements publiés dans Discord, historique des bannissements vocaux et dashboard réservé à la modération : Voicey facilite la modération de vos salons vocaux."
+            "infoAlert": "Enregistrements publiés dans Discord, historique des bannissements vocaux et dashboard réservé à la modération : Voicey facilite la modération de vos salons vocaux.",
+            "logoAlt": "Voicey, le bot Discord de salons vocaux temporaires"
         },
         "stats": {
             "roomsCreatedToday": "Salons créés aujourd'hui",
@@ -54,7 +55,8 @@
             "description": "Installe Voicey et donne à tes membres des salons vocaux simples à utiliser, avec une vraie boîte à outils de modération.",
             "addBot": "Ajouter Voicey",
             "docs": "Documentation"
-        }
+        },
+        "dataError": "Impossible de charger les données publiques de Voicey pour le moment."
     },
     "nav": {
         "home": "Accueil",
@@ -65,7 +67,14 @@
         "login": "Se connecter",
         "logout": "Déconnexion",
         "dashboard": "Dashboard",
-        "toggleTheme": "Changer de thème"
+        "toggleTheme": "Changer de thème",
+        "skipToContent": "Aller au contenu principal",
+        "mainMenuAria": "Navigation principale",
+        "openMenuAria": "Ouvrir le menu de navigation",
+        "changeLanguageAria": "Changer de langue",
+        "userMenuAria": "Menu utilisateur",
+        "toggleSidebarAria": "Afficher ou masquer le menu latéral",
+        "footerAria": "Liens secondaires"
     },
     "footer": {
         "tagline": "Gestion automatique de salons vocaux Discord",
@@ -197,6 +206,7 @@
         "subtitle": "Rejoins les serveurs Discord qui utilisent Voicey pour gérer leurs salons vocaux.",
         "memberCount": "{{count}} membres",
         "andMoreTitle": "Et encore plus",
-        "andMoreSubtitle": "{{count}} autres serveurs actifs"
+        "andMoreSubtitle": "{{count}} autres serveurs actifs",
+        "listAria": "Serveurs qui utilisent Voicey"
     }
 }

@@ -11,6 +11,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
+        with:
+          # Full history: the sitemap's lastmod is the date of the last commit
+          # touching src/ or public/, which a shallow clone cannot report.
+          fetch-depth: 0
 
       - name: Setup NodeJS
         uses: actions/setup-node@v6

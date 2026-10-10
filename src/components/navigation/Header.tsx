@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Bars3Icon, MoonIcon, SunIcon, UserCircleIcon } from '@heroicons/react/24/outline'
@@ -23,7 +23,43 @@ export function Header() {
         { code: 'en', label: 'English', flag: '🇺🇸', display: 'EN' },
     ] as const
 
+    const headerRef = useRef<HTMLElement | null>(null)
     const langDropdownRef = useRef<HTMLDetailsElement | null>(null)
+
+    const closeMenus = useCallback((except?: Node) => {
+        headerRef.current?.querySelectorAll('details[open]').forEach((menu) => {
+            if (!except || !menu.contains(except)) {
+                menu.removeAttribute('open')
+            }
+        })
+    }, [])
+
+    /**
+     * Every menu here is a `<details>`, which browsers expose to assistive tech
+     * with a real expanded state and operate with the keyboard for free. What
+     * `<details>` does not do on its own is close, and Escape plus a click
+     * outside are what a menu is expected to answer to.
+     */
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') {
+                closeMenus()
+            }
+        }
+
+        const handlePointerDown = (event: PointerEvent) => closeMenus(event.target as Node)
+
+        document.addEventListener('keydown', handleKeyDown)
+        document.addEventListener('pointerdown', handlePointerDown)
+
+        return () => {
+            document.removeEventListener('keydown', handleKeyDown)
+            document.removeEventListener('pointerdown', handlePointerDown)
+        }
+    }, [closeMenus])
+
+    // A menu left open across a navigation hides the page the visitor just asked for.
+    useEffect(() => closeMenus(), [closeMenus, location.key])
 
     const handleChangeLang = (code: Locale) => {
         storeLocale(code)
@@ -98,43 +134,49 @@ export function Header() {
     const handleLogoutClick = () => void handleLogout().catch(console.error)
 
     return (
-        <div className="navbar bg-base-100 shadow-md border-base-200/50">
+        <header ref={headerRef} className="navbar bg-base-100 shadow-md border-base-200/50">
             <div className="navbar-start">
-                <div className="dropdown">
-                    <button tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
-                        <Bars3Icon className="h-5 w-5" />
-                    </button>
-                    <ul
-                        tabIndex={-1}
-                        className="menu menu-sm dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-lg border border-base-200">
-                        {HEADER_NAVIGATION.map((item) => (
-                            <li key={item.href}>
-                                <Link
-                                    to={localizedPath(item.href)}
-                                    className={isActive(item.href, item.exact) ? 'active font-semibold' : ''}
-                                >
-                                    {t(item.label)}
-                                </Link>
-                            </li>
-                        ))}
-                        {!user && !loadingUser ? (
-                            <li className="sm:hidden">
-                                <button onClick={handleLoginClick}>
-                                    {t('nav.login')}
-                                </button>
-                            </li>
-                        ) : null}
-                        {user ? (
-                            <>
-                                <li className="menu-title px-2 py-1 sm:hidden">
-                                    <span>{user.global_name ?? user.username}</span>
+                <details className="dropdown lg:hidden">
+                    <summary className="btn btn-ghost" aria-label={t('nav.openMenuAria')}>
+                        <Bars3Icon className="h-5 w-5" aria-hidden="true" />
+                    </summary>
+                    <nav
+                        aria-label={t('nav.mainMenuAria')}
+                        className="dropdown-content bg-base-100 rounded-box z-50 mt-3 w-52 p-2 shadow-lg border border-base-200"
+                    >
+                        <ul className="menu menu-sm w-full p-0">
+                            {HEADER_NAVIGATION.map((item) => (
+                                <li key={item.href}>
+                                    <Link
+                                        to={localizedPath(item.href)}
+                                        aria-current={isActive(item.href, item.exact) ? 'page' : undefined}
+                                        className={isActive(item.href, item.exact) ? 'active font-semibold' : ''}
+                                    >
+                                        {t(item.label)}
+                                    </Link>
                                 </li>
-                                <li className="sm:hidden"><Link to="/dashboard">{t('nav.dashboard')}</Link></li>
-                                <li className="sm:hidden"><button onClick={handleLogoutClick}>{t('nav.logout')}</button></li>
-                            </>
-                        ) : null}
-                    </ul>
-                </div>
+                            ))}
+                            {!user && !loadingUser ? (
+                                <li className="sm:hidden">
+                                    <button type="button" onClick={handleLoginClick}>
+                                        {t('nav.login')}
+                                    </button>
+                                </li>
+                            ) : null}
+                            {user ? (
+                                <>
+                                    <li className="menu-title px-2 py-1 sm:hidden">
+                                        <span>{user.global_name ?? user.username}</span>
+                                    </li>
+                                    <li className="sm:hidden"><Link to="/dashboard">{t('nav.dashboard')}</Link></li>
+                                    <li className="sm:hidden">
+                                        <button type="button" onClick={handleLogoutClick}>{t('nav.logout')}</button>
+                                    </li>
+                                </>
+                            ) : null}
+                        </ul>
+                    </nav>
+                </details>
                 <Link to={localizedPath('/')} className="btn btn-ghost text-lg font-black">
                     <img
                         src={logoSansFond}
@@ -146,30 +188,31 @@ export function Header() {
                     Voicey
                 </Link>
             </div>
-            <div className="navbar-center hidden lg:flex">
+            <nav aria-label={t('nav.mainMenuAria')} className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1 gap-2">
                     {HEADER_NAVIGATION.map((item) => (
                         <li key={item.href}>
                             <Link
                                 to={localizedPath(item.href)}
+                                aria-current={isActive(item.href, item.exact) ? 'page' : undefined}
                                 className={`rounded-lg transition-all ${
                                     isActive(item.href, item.exact)
                                         ? 'bg-primary/20 text-primary font-semibold'
                                         : 'hover:bg-base-200'
                                 }`}
-                            >   
+                            >
                                 {t(item.label)}
                             </Link>
                         </li>
                     ))}
                 </ul>
-            </div>
+            </nav>
             <div className="navbar-end gap-2">
                 <details ref={langDropdownRef} className="dropdown dropdown-end">
                     <summary
                         className="btn btn-ghost btn-circle text-xs font-bold"
-                        aria-label="Changer de langue"
-                        title="Changer de langue"
+                        aria-label={t('nav.changeLanguageAria')}
+                        title={t('nav.changeLanguageAria')}
                     >
                         {currentCode}
                     </summary>
@@ -177,10 +220,13 @@ export function Header() {
                         {languages.map((lang) => (
                             <li key={lang.code}>
                                 <button
+                                    type="button"
+                                    lang={lang.code}
                                     onClick={() => handleChangeLang(lang.code)}
+                                    aria-current={currentLang === lang.code ? true : undefined}
                                     className={currentLang === lang.code ? 'active font-semibold' : ''}
                                 >
-                                    <span>{lang.flag}</span>
+                                    <span aria-hidden="true">{lang.flag}</span>
                                     {lang.label}
                                 </button>
                             </li>
@@ -194,50 +240,56 @@ export function Header() {
                     aria-label={t('nav.toggleTheme')}
                     title={t('nav.toggleTheme')}
                 >
-                    <SunIcon className="theme-icon-sun h-5 w-5" />
-                    <MoonIcon className="theme-icon-moon h-5 w-5" />
+                    <SunIcon className="theme-icon-sun h-5 w-5" aria-hidden="true" />
+                    <MoonIcon className="theme-icon-moon h-5 w-5" aria-hidden="true" />
                 </button>
+                {/*
+                  * The session answer lands after first paint, so the slot it
+                  * will fill is reserved from the start: without it the whole
+                  * navbar reflows on every single page load.
+                  */}
+                {loadingUser ? (
+                    <div className="skeleton hidden h-8 w-28 sm:block" aria-hidden="true"></div>
+                ) : null}
                 {!user && !loadingUser ? (
                     <button
+                        type="button"
                         className="btn btn-primary btn-sm hidden gap-2 sm:inline-flex"
                         onClick={handleLoginClick}
                     >
-                        <UserCircleIcon className="h-5 w-5" />
+                        <UserCircleIcon className="h-5 w-5" aria-hidden="true" />
                         {t('nav.login')}
                     </button>
                 ) : null}
                 {user ? (
-                <div className="dropdown dropdown-end hidden sm:block">
-                    <button
-                        tabIndex={0}
-                        role="button"
-                        className="btn btn-ghost h-auto min-h-0 rounded-box px-2 py-1.5 md:px-3"
-                        title="Menu utilisateur"
-                    >
-                        <span className="flex items-center gap-2">
-                            <img
-                                src={user.avatarUrl}
-                                alt={user.username}
-                                className="h-8 w-8 rounded-full border border-base-300 object-cover"
-                            />
-                            <span className="max-w-32 truncate text-sm font-semibold">
-                                {user.global_name ?? user.username}
+                    <details className="dropdown dropdown-end hidden sm:block">
+                        <summary
+                            className="btn btn-ghost h-auto min-h-0 rounded-box px-2 py-1.5 md:px-3"
+                            aria-label={t('nav.userMenuAria')}
+                        >
+                            <span className="flex items-center gap-2">
+                                <img
+                                    src={user.avatarUrl}
+                                    alt=""
+                                    width={32}
+                                    height={32}
+                                    className="h-8 w-8 rounded-full border border-base-300 object-cover"
+                                />
+                                <span className="max-w-32 truncate text-sm font-semibold">
+                                    {user.global_name ?? user.username}
+                                </span>
                             </span>
-                        </span>
-                    </button>
-                    <ul
-                        tabIndex={0}
-                        className="dropdown-content z-50 menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200"
-                    >
-                        <li className="menu-title px-2 py-1">
-                            <span>{user.global_name ?? user.username}</span>
-                        </li>
-                        <li><Link to="/dashboard">{t('nav.dashboard')}</Link></li>
-                        <li><button onClick={handleLogoutClick}>{t('nav.logout')}</button></li>
-                    </ul>
-                </div>
+                        </summary>
+                        <ul className="dropdown-content z-50 menu p-2 shadow-lg bg-base-100 rounded-box w-52 border border-base-200">
+                            <li className="menu-title px-2 py-1">
+                                <span>{user.global_name ?? user.username}</span>
+                            </li>
+                            <li><Link to="/dashboard">{t('nav.dashboard')}</Link></li>
+                            <li><button type="button" onClick={handleLogoutClick}>{t('nav.logout')}</button></li>
+                        </ul>
+                    </details>
                 ) : null}
             </div>
-        </div>
+        </header>
     )
 }

@@ -6,7 +6,25 @@ import { THEME_COLOR } from './config/seoRoutes'
 import { resolveLocaleForPath } from './hooks/useLocale'
 import { ThemeProvider } from './contexts/ThemeContext'
 
+/**
+ * Origin of the API the pages talk to.
+ *
+ * The header asks it for the session and the home page for its public stats,
+ * both right after first paint. Opening the connection while the HTML is still
+ * being parsed takes the DNS lookup and the TLS handshake off that path.
+ * `use-credentials` because both calls send the session cookie: a plain
+ * preconnect would warm a connection neither of them can reuse.
+ */
+const apiOrigin = (() => {
+    try {
+        return new URL(import.meta.env.VITE_API_URL ?? 'http://localhost:3001').origin
+    } catch {
+        return null
+    }
+})()
+
 export const links: LinksFunction = () => [
+    ...(apiOrigin ? [{ rel: 'preconnect', href: apiOrigin, crossOrigin: 'use-credentials' as const }] : []),
     { rel: 'stylesheet', href: stylesheet },
     { rel: 'icon', href: '/favicon.ico', sizes: '32x32' },
     { rel: 'icon', type: 'image/png', href: '/favicon-32.png', sizes: '32x32' },

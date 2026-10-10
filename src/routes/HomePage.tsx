@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { InformationCircleIcon, ShieldCheckIcon, SpeakerWaveIcon, WrenchScrewdriverIcon } from '@heroicons/react/24/outline'
 import logoSansFond from '../assets/images/voicey-logo-640.webp'
 import { FeaturedServers } from '../components/FeaturedServers'
+import { DocsCollapse } from '../components/docs/DocsCollapse'
 import { getPublicStats } from '../api/discordAuth'
 import { VOICEY_HELP_DISCORD_URL, VOICEY_INVITE_URL } from '../config'
 import type { FeaturedServer } from '../types'
@@ -22,7 +23,7 @@ export function HomePage() {
     })
     const [featuredServers, setFeaturedServers] = useState<FeaturedServer[]>([])
     const [homeDataLoading, setHomeDataLoading] = useState(true)
-    const [homeDataError, setHomeDataError] = useState<string | null>(null)
+    const [homeDataFailed, setHomeDataFailed] = useState(false)
 
     useEffect(() => {
         let ignore = false
@@ -33,7 +34,7 @@ export function HomePage() {
                 if (!ignore) {
                     setStats(publicHomeData.stats)
                     setFeaturedServers(publicHomeData.servers)
-                    setHomeDataError(null)
+                    setHomeDataFailed(false)
                 }
             } catch {
                 if (!ignore) {
@@ -44,7 +45,7 @@ export function HomePage() {
                         nonFeaturedActiveServers: 0,
                     })
                     setFeaturedServers([])
-                    setHomeDataError('Impossible de charger les données publiques de Voicey pour le moment.')
+                    setHomeDataFailed(true)
                 }
             } finally {
                 if (!ignore) {
@@ -96,7 +97,7 @@ export function HomePage() {
                         <figure className="w-full max-w-[640px]">
                             <img
                                 src={logoSansFond}
-                                alt="Voicey, le bot Discord de salons vocaux temporaires"
+                                alt={t('home.hero.logoAlt')}
                                 width={640}
                                 height={640}
                                 fetchPriority="high"
@@ -189,28 +190,21 @@ export function HomePage() {
                         </ul>
                     </div>
 
+                    {/*
+                      * These three questions are also declared as a FAQPage in
+                      * the page's JSON-LD, so they are real headings with real
+                      * answers rather than styled divs.
+                      */}
                     <div className="space-y-3">
-                        <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
-                            <input type="radio" name="faq-voicey" defaultChecked />
-                            <div className="collapse-title font-semibold">{t('home.setup.faq.q1')}</div>
-                            <div className="collapse-content text-sm text-base-content/80">
-                                {t('home.setup.faq.a1')}
-                            </div>
-                        </div>
-                        <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
-                            <input type="radio" name="faq-voicey" />
-                            <div className="collapse-title font-semibold">{t('home.setup.faq.q2')}</div>
-                            <div className="collapse-content text-sm text-base-content/80">
-                                {t('home.setup.faq.a2')}
-                            </div>
-                        </div>
-                        <div className="collapse collapse-arrow border border-base-300 bg-base-200/70">
-                            <input type="radio" name="faq-voicey" />
-                            <div className="collapse-title font-semibold">{t('home.setup.faq.q3')}</div>
-                            <div className="collapse-content text-sm text-base-content/80">
-                                {t('home.setup.faq.a3')}
-                            </div>
-                        </div>
+                        <DocsCollapse name="faq-voicey" title={t('home.setup.faq.q1')} defaultOpen>
+                            <p className="text-base-content/80">{t('home.setup.faq.a1')}</p>
+                        </DocsCollapse>
+                        <DocsCollapse name="faq-voicey" title={t('home.setup.faq.q2')}>
+                            <p className="text-base-content/80">{t('home.setup.faq.a2')}</p>
+                        </DocsCollapse>
+                        <DocsCollapse name="faq-voicey" title={t('home.setup.faq.q3')}>
+                            <p className="text-base-content/80">{t('home.setup.faq.a3')}</p>
+                        </DocsCollapse>
                     </div>
                 </div>
             </section>
@@ -219,7 +213,7 @@ export function HomePage() {
                 servers={featuredServers}
                 nonFeaturedActiveServers={stats.nonFeaturedActiveServers}
                 loading={homeDataLoading}
-                error={homeDataError}
+                error={homeDataFailed ? t('home.dataError') : null}
             />
 
             <section className="mx-auto max-w-7xl px-6 pb-16 pt-6 lg:px-10">
