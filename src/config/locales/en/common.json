@@ -6,7 +6,8 @@
             "description": "Voicey automatically creates temporary voice channels, makes them easy to control with buttons, and adds features designed for voice moderation.",
             "addBot": "Add Voicey",
             "joinDiscord": "Join the Discord",
-            "infoAlert": "Recordings published in Discord, voice ban history and a moderation-only dashboard: Voicey makes moderating your voice channels easier."
+            "infoAlert": "Recordings published in Discord, voice ban history and a moderation-only dashboard: Voicey makes moderating your voice channels easier.",
+            "logoAlt": "Voicey, the Discord bot for temporary voice channels"
         },
         "stats": {
             "roomsCreatedToday": "Channels created today",
@@ -54,7 +55,8 @@
             "description": "Install Voicey and give your members easy-to-use voice channels, with a real moderation toolkit.",
             "addBot": "Add Voicey",
             "docs": "Documentation"
-        }
+        },
+        "dataError": "Voicey's public data could not be loaded right now."
     },
     "nav": {
         "home": "Home",
@@ -65,7 +67,14 @@
         "login": "Log in",
         "logout": "Log out",
         "dashboard": "Dashboard",
-        "toggleTheme": "Toggle theme"
+        "toggleTheme": "Toggle theme",
+        "skipToContent": "Skip to main content",
+        "mainMenuAria": "Main navigation",
+        "openMenuAria": "Open navigation menu",
+        "changeLanguageAria": "Change language",
+        "userMenuAria": "User menu",
+        "toggleSidebarAria": "Show or hide the side menu",
+        "footerAria": "Secondary links"
     },
     "footer": {
         "tagline": "Automatic Discord voice channel management",
@@ -197,6 +206,7 @@
         "subtitle": "Join the Discord servers using Voicey to manage their voice channels.",
         "memberCount": "{{count}} members",
         "andMoreTitle": "And even more",
-        "andMoreSubtitle": "{{count}} other active servers"
+        "andMoreSubtitle": "{{count}} other active servers",
+        "listAria": "Servers using Voicey"
     }
 }

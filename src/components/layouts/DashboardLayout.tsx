@@ -197,7 +197,7 @@ export function DashboardLayout() {
             asideClassName="fixed inset-y-0 left-0 z-40 mt-16 w-72 overflow-y-auto border-r border-base-300 bg-base-200 lg:static lg:mt-0 lg:bg-base-200/50"
             contentWrapperClassName="py-0"
             sidebar={
-                <nav className="space-y-4 p-4">
+                <nav aria-label={t('dashboard.layout.mobileTitle')} className="space-y-4 p-4">
                     <div>
                         <p className="px-3 py-2 text-xs font-semibold uppercase text-base-content/50">{t('dashboard.layout.serverSection')}</p>
                         {guilds.length === 0 ? (

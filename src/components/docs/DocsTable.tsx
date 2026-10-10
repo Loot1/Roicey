@@ -29,7 +29,7 @@ export function DocsTable<Row>({
                 <thead>
                     <tr>
                         {columns.map((column) => (
-                            <th key={column.key} className={column.headerClassName}>
+                            <th key={column.key} scope="col" className={column.headerClassName}>
                                 {column.header}
                             </th>
                         ))}

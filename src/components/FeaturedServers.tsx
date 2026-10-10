@@ -40,7 +40,7 @@ function FeaturedServerCard({ server }: { server: FeaturedServer }) {
                         }`}
                     >
                         {server.iconUrl ? (
-                            <img src={server.iconUrl} alt={server.name} className="h-20 w-20 object-cover" />
+                            <img src={server.iconUrl} alt="" loading="lazy" className="h-20 w-20 object-cover" />
                         ) : (
                             initials
                         )}
@@ -74,7 +74,12 @@ export function FeaturedServers({ servers, nonFeaturedActiveServers = 0, loading
                 </p>
             </div>
 
-            <div className="mt-8 w-screen overflow-x-auto scrollbar-hide">
+            <div
+                className="mt-8 w-full overflow-x-auto scrollbar-hide"
+                role="region"
+                aria-label={t('featuredServers.listAria')}
+                tabIndex={0}
+            >
                 <div className="flex gap-4 pb-4 pl-6 pr-6 lg:pl-10 lg:pr-10">
                     {shouldShowSkeleton
                         ? SKELETON_ITEMS.map((item) => <ServerCardSkeleton key={item} />)

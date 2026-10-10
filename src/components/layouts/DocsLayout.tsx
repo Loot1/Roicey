@@ -21,13 +21,13 @@ export function DocsLayout() {
             asideClassName="fixed inset-0 z-40 w-64 overflow-y-auto border-r border-base-300 bg-base-200 lg:static lg:z-auto lg:bg-base-200/50"
             contentWrapperClassName="mx-auto max-w-4xl px-6 py-12 lg:px-10"
             sidebar={
-                <nav className="space-y-4 p-4">
+                <nav aria-label={t('docs.layout.navSection')} className="space-y-4 p-4">
                     <div className="rounded-box border border-base-300 bg-base-100 p-4 shadow-sm transition hover:border-primary/30 hover:bg-base-100/90">
                         <div className="mb-3 flex items-center gap-3">
                             <div className="inline-flex rounded-lg bg-primary/15 p-2 text-primary">
                                 <QuestionMarkCircleIcon className="h-5 w-5" />
                             </div>
-                            <h2 className="text-base font-semibold">{t('docs.layout.helpTitle')}</h2>
+                            <p className="text-base font-semibold">{t('docs.layout.helpTitle')}</p>
                         </div>
                         <p className="mt-2 text-sm text-base-content/65">
                             {t('docs.layout.helpText')}

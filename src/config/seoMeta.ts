@@ -56,6 +56,7 @@ function shared(locale: Locale, title: string, description: string, url: string)
         { name: 'twitter:title', content: title },
         { name: 'twitter:description', content: description },
         { name: 'twitter:image', content: image },
+        { name: 'twitter:image:alt', content: SEO_TEXT[locale].ogImageAlt },
     ]
 }
 
@@ -87,7 +88,13 @@ export function seoMeta(routeId: SeoRouteId) {
                 hrefLang: 'x-default',
                 href: canonicalUrl(route.path, X_DEFAULT_LOCALE),
             },
-            ...structuredDataFor(route, locale).map((data) => ({ 'script:ld+json': data })),
+            // JSON-LD is what a crawler reads in the prerendered HTML, and every
+            // public URL is prerendered. Building it in the browser too would
+            // ship both locales of common.json and docs.json to every visitor
+            // for markup no one reads, so the client build drops this branch.
+            ...(import.meta.env.SSR
+                ? structuredDataFor(route, locale).map((data) => ({ 'script:ld+json': data }))
+                : []),
         ] as MetaDescriptor[]
     }
 }

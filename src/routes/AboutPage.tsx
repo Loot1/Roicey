@@ -57,7 +57,7 @@ export function AboutPage() {
                     </div>
 
                     <figure className="diff aspect-[4/3] min-h-[20rem] overflow-hidden lg:min-h-[24rem]" tabIndex={0}>
-                        <div className="diff-item-1" role="img" tabIndex={0} aria-label={`${t('about.diffLeftLabel')} - ${t('about.diffLeftSublabel')}`}>
+                        <div className="diff-item-1" role="img" aria-label={`${t('about.diffLeftLabel')} - ${t('about.diffLeftSublabel')}`}>
                             <div className="flex h-full flex-col justify-between bg-base-100 p-6 text-base-content sm:p-8">
                                 <div className="flex items-center justify-between text-xs font-black uppercase tracking-[0.24em] text-base-content/45">
                                     <span>{t('about.diffLeftLabel')}</span>

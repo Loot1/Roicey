@@ -38,7 +38,7 @@ export const OG_IMAGE_PATHS: Record<Locale, string> = {
 
 export const OG_IMAGE_SIZE = { width: 1200, height: 630 } as const
 
-export type StructuredDataKind = 'softwareApplication' | 'faq' | 'breadcrumb'
+export type StructuredDataKind = 'softwareApplication' | 'website' | 'faq' | 'breadcrumb'
 
 export type SeoRoute = {
     /** Prefix of the i18n keys: `seo.<id>.title` and `seo.<id>.description`. */
@@ -50,18 +50,18 @@ export type SeoRoute = {
 }
 
 export const SEO_ROUTES = [
-    { id: 'home', path: '/', structuredData: ['softwareApplication', 'faq'] },
-    { id: 'about', path: '/about' },
+    { id: 'home', path: '/', structuredData: ['softwareApplication', 'website', 'faq'] },
+    { id: 'about', path: '/about', structuredData: ['breadcrumb'] },
     { id: 'docs', path: '/docs', structuredData: ['breadcrumb'] },
     { id: 'docsCommands', path: '/docs/commands', structuredData: ['breadcrumb'] },
     { id: 'docsRecording', path: '/docs/recording', structuredData: ['breadcrumb'] },
     { id: 'docsSettings', path: '/docs/settings', structuredData: ['breadcrumb'] },
     { id: 'docsModeration', path: '/docs/moderation', structuredData: ['breadcrumb'] },
     { id: 'docsFaq', path: '/docs/faq', structuredData: ['breadcrumb', 'faq'] },
-    { id: 'demo', path: '/demo' },
-    { id: 'guidelines', path: '/guidelines' },
-    { id: 'legal', path: '/legal' },
-    { id: 'privacy', path: '/privacy-policy' },
+    { id: 'demo', path: '/demo', structuredData: ['breadcrumb'] },
+    { id: 'guidelines', path: '/guidelines', structuredData: ['breadcrumb'] },
+    { id: 'legal', path: '/legal', structuredData: ['breadcrumb'] },
+    { id: 'privacy', path: '/privacy-policy', structuredData: ['breadcrumb'] },
 ] as const satisfies readonly SeoRoute[]
 
 /**
