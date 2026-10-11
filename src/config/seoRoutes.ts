@@ -17,6 +17,9 @@ export const THEME_COLOR = '#cf2d2d'
 export const VOICEY_HELP_DISCORD_URL = 'https://discord.gg/QY37xT9cGW'
 export const ROICEY_GITHUB_URL = 'https://github.com/Loot1/Roicey'
 
+/** Profile of the person behind the site, used as the `publisher` in the JSON-LD. */
+export const AUTHOR_GITHUB_URL = 'https://github.com/Loot1'
+
 export const LOCALES = ['fr', 'en'] as const
 export type Locale = (typeof LOCALES)[number]
 
@@ -102,9 +105,20 @@ export function parseLocalizedPath(pathname: string): { locale: Locale; path: st
     return { locale: DEFAULT_LOCALE, path: `/${segments.join('/')}`.replace(/\/$/, '') || '/' }
 }
 
-export function canonicalUrl(path: string, locale: Locale): string {
+/**
+ * `/docs` + `en` -> `/en/docs/`: the address a public page is published at.
+ *
+ * Each page is prerendered as `<path>/index.html`, and GitHub Pages answers the
+ * slashless URL with a 301 to the slashed one. Links, canonicals, hreflang and
+ * the sitemap all use this form, so none of them points at a redirect.
+ */
+export function publicPath(path: string, locale: Locale): string {
     const localized = localizePath(path, locale)
-    return localized === '/' ? `${SITE_URL}/` : `${SITE_URL}${localized}`
+    return localized.endsWith('/') ? localized : `${localized}/`
+}
+
+export function canonicalUrl(path: string, locale: Locale): string {
+    return `${SITE_URL}${publicPath(path, locale)}`
 }
 
 export type SeoRouteDefinition = (typeof SEO_ROUTES)[number]

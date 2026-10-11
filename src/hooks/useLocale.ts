@@ -4,8 +4,8 @@ import {
     DEFAULT_LOCALE,
     findSeoRoute,
     isLocale,
-    localizePath,
     parseLocalizedPath,
+    publicPath,
     type Locale,
 } from '../config/seoRoutes'
 
@@ -60,9 +60,9 @@ export function useLocale(): ResolvedLocale {
     return useMemo(() => resolveLocaleForPath(pathname), [pathname])
 }
 
-/** Prefixes an app path with the active locale: `/docs` -> `/en/docs`. */
+/** Turns an app path into its published URL in the active locale: `/docs` -> `/en/docs/`. */
 export function useLocalizedPath() {
     const { locale } = useLocale()
 
-    return useCallback((path: string) => localizePath(path, locale), [locale])
+    return useCallback((path: string) => publicPath(path, locale), [locale])
 }

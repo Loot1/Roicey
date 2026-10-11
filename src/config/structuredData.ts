@@ -1,5 +1,6 @@
 import { localeStrings, type LocaleStrings } from './i18n'
 import {
+    AUTHOR_GITHUB_URL,
     OG_IMAGE_PATHS,
     ROICEY_GITHUB_URL,
     SITE_NAME,
@@ -55,7 +56,7 @@ function website(locale: Locale): JsonLd {
         url: canonicalUrl('/', locale),
         description: seo.home.description,
         inLanguage: locale,
-        publisher: { '@type': 'Person', name: 'Loot1', url: ROICEY_GITHUB_URL },
+        publisher: { '@type': 'Person', name: 'Loot1', url: AUTHOR_GITHUB_URL },
     }
 }
 
