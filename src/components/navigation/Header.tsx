@@ -8,7 +8,7 @@ import { HEADER_NAVIGATION } from '../../config'
 import type { DiscordUser } from '../../types'
 import { useTheme } from '../../hooks/useTheme'
 import { useLocale, useLocalizedPath, storeLocale } from '../../hooks/useLocale'
-import { localizePath, type Locale } from '../../config/seoRoutes'
+import { publicPath, type Locale } from '../../config/seoRoutes'
 
 export function Header() {
     const location = useLocation()
@@ -66,7 +66,7 @@ export function Header() {
 
         if (isPublicRoute) {
             // Each language has its own URL, so switching is a navigation.
-            navigate(`${localizePath(basePath, code)}${location.search}${location.hash}`)
+            navigate(`${publicPath(basePath, code)}${location.search}${location.hash}`)
         } else {
             void i18n.changeLanguage(code)
         }

@@ -1,6 +1,6 @@
 import { join } from 'node:path'
 import type { Config } from '@react-router/dev/config'
-import { LOCALES, SEO_ROUTES, SHELL_ROUTES, localizePath } from './src/config/seoRoutes'
+import { LOCALES, SEO_ROUTES, SHELL_ROUTES, publicPath } from './src/config/seoRoutes'
 import { writeStaticHostingFiles } from './scripts/postbuild'
 
 /**
@@ -19,7 +19,7 @@ export default {
     buildDirectory: 'dist',
     ssr: false,
     prerender: [
-        ...SEO_ROUTES.flatMap((route) => LOCALES.map((locale) => localizePath(route.path, locale))),
+        ...SEO_ROUTES.flatMap((route) => LOCALES.map((locale) => publicPath(route.path, locale))),
         ...SHELL_ROUTES,
     ],
     buildEnd({ reactRouterConfig }) {
