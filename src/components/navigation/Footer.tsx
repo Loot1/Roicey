@@ -4,10 +4,12 @@ import { ROICEY_GITHUB_URL, VOICEY_HELP_DISCORD_URL } from '../../config'
 
 import logoSansFond from '../../assets/images/voicey-logo-96.webp'
 import { useLocalizedPath } from '../../hooks/useLocale'
+import { useConsent } from '../../hooks/useConsent'
 
 export function Footer() {
     const { t } = useTranslation()
     const localizedPath = useLocalizedPath()
+    const { isConfigured, openPreferences } = useConsent()
     return (
         <footer className="border-t border-base-300/70 bg-base-100">
             <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 py-6 sm:flex-row sm:items-center sm:justify-between lg:px-10">
@@ -42,6 +44,11 @@ export function Footer() {
                         <Link to={localizedPath('/privacy-policy')} className="link link-hover text-sm font-medium text-base-content/80">
                             {t('footer.privacy')}
                         </Link>
+                        {isConfigured && (
+                            <button type="button" onClick={openPreferences} className="link link-hover text-sm font-medium text-base-content/80">
+                                {t('footer.cookies')}
+                            </button>
+                        )}
                     </nav>
                     <span className="ml-2 text-xs text-base-content/60">© {new Date().getFullYear()}</span>
                 </div>

@@ -79,7 +79,16 @@
     "footer": {
         "tagline": "Automatic Discord voice channel management",
         "legal": "Legal notice",
-        "privacy": "Privacy policy"
+        "privacy": "Privacy policy",
+        "cookies": "Manage cookies"
+    },
+    "cookieBanner": {
+        "aria": "Cookie consent",
+        "title": "Audience measurement",
+        "text": "With your consent, we use Google Analytics to measure traffic on the site and improve it. No measurement cookie is set if you decline, and you can change your mind at any time through the \"Manage cookies\" link at the bottom of the page.",
+        "learnMore": "Learn more",
+        "deny": "Decline",
+        "grant": "Accept"
     },
     "about": {
         "badge": "Project origin",
@@ -184,9 +193,9 @@
         "accessText2": "Administrators and moderation teams using Voicey remain responsible for the usage framework on their server, for informing members, and for complying with the rules they impose locally.",
         "cookiesTitle": "Cookies and sessions",
         "cookiesText1": "The operation of authentication and the dashboard may involve the use of technical session mechanisms, essential for login, maintaining the authenticated state, and securing access to private pages.",
-        "cookiesText2": "No separate public commitment to advertising tracking or marketing profiling is presented on the site within the currently published pages.",
+        "cookiesText2": "Only with your consent, the site uses Google Analytics to measure its audience (pages viewed, referrer, device type). The related cookies (_ga) are kept for 13 months at most and your choice for 6 months. No advertising tracking or marketing profiling is enabled. You can withdraw your consent at any time through the \"Manage cookies\" link at the bottom of the page: the measurement cookies are then deleted.",
         "thirdPartyTitle": "Third-party services",
-        "thirdPartyText1": "The service relies on third-party platforms, notably Discord for identity, servers, messages and the publication of moderation-related elements, as well as GitHub Pages for hosting the public site.",
+        "thirdPartyText1": "The service relies on third-party platforms, notably Discord for identity, servers, messages and the publication of moderation-related elements, GitHub Pages for hosting the public site and, if you accept it, Google Analytics (Google Ireland Ltd.) for audience measurement. Measurement data may be transferred to the United States under the EU–US Data Privacy Framework.",
         "thirdPartyText2": "Processing carried out by these third-party services also falls under their own policies, terms and technical obligations.",
         "rightsTitle": "Rights and requests",
         "rightsText1": "Any request related to data processed via the site, dashboard access, or the publicly presented usage framework can be addressed via the project's public contact point indicated on the site, namely the Discord support server.",

@@ -1,6 +1,6 @@
 ﻿# Roicey - Web Dashboard
 
-Complete web interface to manage and configure the Discord bot [Voicey](https://github.com/voicey). Roicey provides an intuitive user experience for managing Discord servers and voice channel management bot settings.
+Complete web interface to manage and configure the Discord bot Voicey. Roicey provides an intuitive user experience for managing Discord servers and voice channel management bot settings.
 
 > Note: Voicey is unfortunately not open source.
 

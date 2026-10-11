@@ -2,6 +2,7 @@ import { Outlet } from 'react-router'
 import { useTranslation } from 'react-i18next'
 import { Header } from '../navigation/Header'
 import { Footer } from '../navigation/Footer'
+import { CookieBanner } from '../CookieBanner'
 
 /** Site chrome shared by every page. Mounted as a `layout()` route. */
 export default function Layout() {
@@ -25,6 +26,7 @@ export default function Layout() {
                 <Outlet />
             </main>
             <Footer />
+            <CookieBanner />
         </div>
     )
 }

@@ -79,7 +79,16 @@
     "footer": {
         "tagline": "Gestion automatique de salons vocaux Discord",
         "legal": "Mentions légales",
-        "privacy": "Politique de confidentialité"
+        "privacy": "Politique de confidentialité",
+        "cookies": "Gérer les cookies"
+    },
+    "cookieBanner": {
+        "aria": "Consentement aux cookies",
+        "title": "Mesure d'audience",
+        "text": "Avec votre accord, nous utilisons Google Analytics pour mesurer la fréquentation du site et l'améliorer. Aucun cookie de mesure n'est déposé si vous refusez, et vous pouvez changer d'avis à tout moment via le lien « Gérer les cookies » en bas de page.",
+        "learnMore": "En savoir plus",
+        "deny": "Refuser",
+        "grant": "Accepter"
     },
     "about": {
         "badge": "Origine du projet",
@@ -184,9 +193,9 @@
         "accessText2": "Les administrateurs et équipes de modération utilisant Voicey demeurent responsables du cadre d'usage sur leur serveur, de l'information donnée aux membres et du respect des règles qu'ils imposent localement.",
         "cookiesTitle": "Cookies et sessions",
         "cookiesText1": "Le fonctionnement de l'authentification et du dashboard peut impliquer l'utilisation de mécanismes techniques de session, indispensables à la connexion, au maintien de l'état authentifié et à la sécurisation de l'accès aux pages privées.",
-        "cookiesText2": "Aucun engagement public distinct en faveur d'un suivi publicitaire ou d'un profilage marketing n'est présenté sur le site dans le cadre des pages actuellement publiées.",
+        "cookiesText2": "Avec votre consentement uniquement, le site utilise Google Analytics pour mesurer son audience (pages consultées, provenance, type d'appareil). Les cookies correspondants (_ga) sont conservés 13 mois au maximum et votre choix 6 mois. Aucun suivi publicitaire ni profilage marketing n'est activé. Vous pouvez retirer votre consentement à tout moment via le lien « Gérer les cookies » en bas de page : les cookies de mesure sont alors supprimés.",
         "thirdPartyTitle": "Services tiers",
-        "thirdPartyText1": "Le service s'appuie sur des plateformes tierces, notamment Discord pour l'identité, les serveurs, les messages et la publication des éléments liés à la modération, ainsi que GitHub Pages pour l'hébergement du site public.",
+        "thirdPartyText1": "Le service s'appuie sur des plateformes tierces, notamment Discord pour l'identité, les serveurs, les messages et la publication des éléments liés à la modération, GitHub Pages pour l'hébergement du site public et, si vous l'acceptez, Google Analytics (Google Ireland Ltd.) pour la mesure d'audience. Les données de mesure peuvent être transférées aux États-Unis, dans le cadre du Data Privacy Framework UE–États-Unis.",
         "thirdPartyText2": "Les traitements opérés par ces services tiers relèvent également de leurs propres politiques, conditions et obligations techniques.",
         "rightsTitle": "Droits et demandes",
         "rightsText1": "Toute demande relative aux données traitées via le site, à l'accès au dashboard ou au cadre d'utilisation présenté publiquement peut être adressée via le point de contact public du projet indiqué sur le site, à savoir le serveur Discord d'assistance.",
