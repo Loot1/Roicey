@@ -5,6 +5,7 @@ import i18n, { initI18n } from './config/i18n'
 import { THEME_COLOR } from './config/seoRoutes'
 import { resolveLocaleForPath } from './hooks/useLocale'
 import { ThemeProvider } from './contexts/ThemeContext'
+import { ConsentProvider } from './contexts/ConsentContext'
 
 /**
  * Origin of the API the pages talk to.
@@ -84,7 +85,9 @@ export default function Root() {
 
     return (
         <ThemeProvider>
-            <Outlet />
+            <ConsentProvider>
+                <Outlet />
+            </ConsentProvider>
         </ThemeProvider>
     )
 }
