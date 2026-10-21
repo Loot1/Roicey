@@ -13,6 +13,12 @@ export default defineConfig({
     babel({ presets: [reactCompilerPreset()] })
   ],
   base: '/',
+  define: {
+    // The footer's copyright year. Taken at build time, not in the browser: the
+    // prerendered HTML holds the build year, and a different year on the client
+    // would fail hydration once the calendar turns.
+    __BUILD_YEAR__: JSON.stringify(new Date().getFullYear()),
+  },
   server: {
     port: 5173,
     open: true

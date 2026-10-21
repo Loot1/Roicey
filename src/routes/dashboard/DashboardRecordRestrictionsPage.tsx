@@ -6,11 +6,12 @@ import { deleteGuildDashboardRecordRestriction, getGuildDashboardRecordRestricti
 import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, DashboardStateCard } from '../../components/dashboard'
 import type { DashboardLayoutContextValue, DashboardRecordRestriction } from '../../types'
-import { formatDateTime } from '../../utils'
+import { useFormatDateTime } from '../../hooks/useFormatDateTime'
 
 export function DashboardRecordRestrictionsPage() {
     const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
     const { t } = useTranslation()
+    const formatDateTime = useFormatDateTime()
     const [restrictions, setRestrictions] = useState<DashboardRecordRestriction[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)

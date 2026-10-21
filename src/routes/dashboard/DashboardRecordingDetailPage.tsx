@@ -7,7 +7,8 @@ import { downloadRecordingSourceMix, downloadRecordingSourceUserMix, resolveDash
 import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingMetaChip, RecordingSessionTracksPlayer } from '../../components/dashboard'
 import type { DashboardRecording, DashboardRecordingParticipant, RecordingStopReason } from '../../types'
-import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
+import { useFormatDateTime } from '../../hooks/useFormatDateTime'
+import { formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
 
 function formatStopReason(reason: RecordingStopReason | null, t: TFunction): string {
     switch (reason) {
@@ -32,6 +33,7 @@ function stopReasonToneClassName(reason: RecordingStopReason | null): string {
 export function DashboardRecordingDetailPage() {
     const [searchParams] = useSearchParams()
     const { t } = useTranslation()
+    const formatDateTime = useFormatDateTime()
     const [recording, setRecording] = useState<DashboardRecording | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)

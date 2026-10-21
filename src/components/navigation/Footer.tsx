@@ -50,7 +50,7 @@ export function Footer() {
                             </button>
                         )}
                     </nav>
-                    <span className="ml-2 text-xs text-base-content/60">© {new Date().getFullYear()}</span>
+                    <span className="ml-2 text-xs text-base-content/60">© {__BUILD_YEAR__}</span>
                 </div>
             </div>
         </footer>
