@@ -4,6 +4,7 @@ import stylesheet from './assets/css/index.css?url'
 import i18n, { initI18n } from './config/i18n'
 import { THEME_COLOR } from './config/seoRoutes'
 import { resolveLocaleForPath } from './hooks/useLocale'
+import { useHydrated } from './hooks/useHydrated'
 import { ThemeProvider } from './contexts/ThemeContext'
 import { ConsentProvider } from './contexts/ConsentContext'
 
@@ -50,7 +51,7 @@ const THEME_BOOTSTRAP = `(function () {
 })()`
 
 export function Layout({ children }: { children: React.ReactNode }) {
-    const { locale } = resolveLocaleForPath(useLocation().pathname)
+    const { locale } = resolveLocaleForPath(useLocation().pathname, useHydrated())
 
     return (
         <html lang={locale}>
@@ -73,7 +74,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function Root() {
-    const { locale } = resolveLocaleForPath(useLocation().pathname)
+    const { locale } = resolveLocaleForPath(useLocation().pathname, useHydrated())
 
     // Translations are bundled, so switching resolves synchronously and the
     // children below render in the right language on the very first pass --

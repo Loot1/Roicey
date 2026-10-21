@@ -16,12 +16,17 @@ function getParticipantByUserId(recording: DashboardRecording, userId: string): 
     return recording.participants?.find((participant) => participant.userId === userId) ?? null
 }
 
-export function formatDateTime(value: string | null): string {
+/**
+ * Formats in the visitor's timezone with the browser's Intl data, so the result
+ * differs from one machine to the next: on prerendered markup, go through
+ * `useFormatDateTime` instead.
+ */
+export function formatDateTime(value: string | null, locale = 'fr-FR'): string {
     if (!value) {
         return 'Pas encore disponible'
     }
 
-    return new Intl.DateTimeFormat('fr-FR', {
+    return new Intl.DateTimeFormat(locale, {
         dateStyle: 'medium',
         timeStyle: 'short',
     }).format(new Date(value))

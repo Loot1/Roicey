@@ -270,6 +270,7 @@ export function Header() {
                             <span className="flex items-center gap-2">
                                 <img
                                     src={user.avatarUrl}
+                                    crossOrigin="anonymous"
                                     alt=""
                                     width={32}
                                     height={32}

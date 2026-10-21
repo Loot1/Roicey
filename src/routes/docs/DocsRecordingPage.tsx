@@ -19,7 +19,7 @@ export function DocsRecordingPage() {
                 <DocsCard
                     title={t('docs.recording.card0Title')}
                     description={
-                        <p>{t('docs.recording.triggerDescPre')} <code className="badge badge-ghost px-1">/record</code>.</p>
+                        <>{t('docs.recording.triggerDescPre')} <code className="badge badge-ghost px-1">/record</code>.</>
                     }
                 />
                 <DocsCard title={t('docs.recording.card1Title')} description={t('docs.recording.card1Desc')} />

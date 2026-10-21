@@ -138,7 +138,7 @@ export function RecordingSessionParticipantCard({
                             <div className="avatar">
                                 <div className="h-10 w-10 rounded-full border border-base-300 bg-base-200 text-base-content/60 shadow-sm">
                                     {group.avatarUrl ? (
-                                        <img src={group.avatarUrl} alt={`Avatar de ${group.username}`} loading="lazy" />
+                                        <img src={group.avatarUrl} alt={`Avatar de ${group.username}`} loading="lazy" crossOrigin="anonymous" />
                                     ) : (
                                         <div className="flex h-full w-full items-center justify-center text-xs font-black uppercase tracking-[0.12em]">
                                             {getInitials(group.username)}

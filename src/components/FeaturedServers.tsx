@@ -40,7 +40,7 @@ function FeaturedServerCard({ server }: { server: FeaturedServer }) {
                         }`}
                     >
                         {server.iconUrl ? (
-                            <img src={server.iconUrl} alt="" loading="lazy" className="h-20 w-20 object-cover" />
+                            <img src={server.iconUrl} alt="" loading="lazy" crossOrigin="anonymous" className="h-20 w-20 object-cover" />
                         ) : (
                             initials
                         )}

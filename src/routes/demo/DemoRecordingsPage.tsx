@@ -5,7 +5,8 @@ import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, RecordingMetaChip, RecordingSessionTracksPlayer } from '../../components/dashboard'
 import { demoRecording, demoRecordingMixPath, demoRecordingUserTrackPaths } from '../../config'
 import type { DashboardRecordingParticipant } from '../../types'
-import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
+import { useFormatDateTime } from '../../hooks/useFormatDateTime'
+import { formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
 import { seoMeta } from '../../config/seoMeta'
 
 export function DemoRecordingsPage() {
@@ -13,6 +14,7 @@ export function DemoRecordingsPage() {
     const [downloadLoadingUserId, setDownloadLoadingUserId] = useState<string | null>(null)
     const [downloadLoadingGlobalMix, setDownloadLoadingGlobalMix] = useState(false)
     const { t } = useTranslation()
+    const formatDateTime = useFormatDateTime()
 
     const recording = demoRecording
     const userGroups = useMemo(() => groupFilesByUser(recording), [recording])

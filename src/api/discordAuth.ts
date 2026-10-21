@@ -3,8 +3,9 @@ import type { DashboardRecordRestriction, DashboardRecording, DiscordGuild, Disc
 const AUTH_CHANGED_EVENT = 'voicey-auth-changed'
 
 interface MeResponse {
-    user: DiscordUser
-    expiresAt: number
+    /** `null` when signed out: the API answers 200 so the console stays clean. */
+    user: DiscordUser | null
+    expiresAt: number | null
 }
 
 interface GuildsResponse {
@@ -133,7 +134,7 @@ export async function getDiscordSession(): Promise<DiscordUser | null> {
         const data = await requestJson<MeResponse>('/auth/me')
         return data.user
     } catch (error) {
-        // Signed out is an answer, not a failure.
+        // Signed out is an answer, not a failure (kept for an API still answering 401).
         if (error instanceof ApiError && error.status === 401) {
             return null
         }

@@ -6,11 +6,12 @@ import { deleteGuildDashboardRecordRestriction, getGuildDashboardRecordRestricti
 import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, DashboardStateCard } from '../../components/dashboard'
 import type { DashboardLayoutContextValue, DashboardRecordRestriction } from '../../types'
-import { formatDateTime } from '../../utils'
+import { useFormatDateTime } from '../../hooks/useFormatDateTime'
 
 export function DashboardRecordRestrictionsPage() {
     const { selectedGuild, selectedGuildId } = useOutletContext<DashboardLayoutContextValue>()
     const { t } = useTranslation()
+    const formatDateTime = useFormatDateTime()
     const [restrictions, setRestrictions] = useState<DashboardRecordRestriction[]>([])
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -149,7 +150,7 @@ export function DashboardRecordRestrictionsPage() {
                                         <div className="avatar">
                                             <div className="h-14 w-14 rounded-full border border-base-300 bg-base-200 text-base-content/60 shadow-sm">
                                                 {restriction.userAvatarUrl ? (
-                                                    <img src={restriction.userAvatarUrl} alt={`Avatar de ${restriction.userName ?? restriction.userId}`} loading="lazy" />
+                                                    <img src={restriction.userAvatarUrl} alt={`Avatar de ${restriction.userName ?? restriction.userId}`} loading="lazy" crossOrigin="anonymous" />
                                                 ) : (
                                                     <div className="flex h-full w-full items-center justify-center text-sm font-black uppercase tracking-[0.12em]">
                                                         {getInitials(restriction.userName ?? restriction.userId)}

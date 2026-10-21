@@ -7,7 +7,8 @@ import { downloadRecordingSourceMix, downloadRecordingSourceUserMix, resolveDash
 import { ButtonOne } from '../../components/ButtonOne'
 import { DashboardAlert, DashboardPageHeader, DashboardStateCard, RecordingMetaChip, RecordingSessionTracksPlayer } from '../../components/dashboard'
 import type { DashboardRecording, DashboardRecordingParticipant, RecordingStopReason } from '../../types'
-import { formatDateTime, formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
+import { useFormatDateTime } from '../../hooks/useFormatDateTime'
+import { formatDuration, getActualRecordingDurationSeconds, groupFilesByUser, type PreparedAudioSource } from '../../utils'
 
 function formatStopReason(reason: RecordingStopReason | null, t: TFunction): string {
     switch (reason) {
@@ -32,6 +33,7 @@ function stopReasonToneClassName(reason: RecordingStopReason | null): string {
 export function DashboardRecordingDetailPage() {
     const [searchParams] = useSearchParams()
     const { t } = useTranslation()
+    const formatDateTime = useFormatDateTime()
     const [recording, setRecording] = useState<DashboardRecording | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<string | null>(null)
@@ -301,7 +303,7 @@ export function DashboardRecordingDetailPage() {
                                                 <div key={participant.userId} className="avatar">
                                                     <div className="h-8 w-8 rounded-full border border-[#5865F2]/30 bg-base-200 text-[9px] font-black text-base-content shadow-none">
                                                         {participant.avatarUrl ? (
-                                                            <img src={participant.avatarUrl} alt={participant.username} loading="lazy" />
+                                                            <img src={participant.avatarUrl} alt={participant.username} loading="lazy" crossOrigin="anonymous" />
                                                         ) : (
                                                             <div className="flex h-full w-full items-center justify-center uppercase">
                                                                 {(participant.username[0] ?? '?').toUpperCase()}

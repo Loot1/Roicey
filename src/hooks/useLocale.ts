@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useLocation } from 'react-router'
+import { useHydrated } from './useHydrated'
 import {
     DEFAULT_LOCALE,
     findSeoRoute,
@@ -41,14 +42,19 @@ export type ResolvedLocale = {
  * tags advertise. Private pages (`/dashboard`) and unknown paths exist in a
  * single locale, so they keep the visitor's stored preference instead of
  * snapping back to French.
+ *
+ * That preference only exists in the browser, so it is not read before
+ * hydration is over (`canReadStorage`, see `useHydrated`): those pages are
+ * prerendered in French, and rendering them in English on the first client
+ * pass would fail hydration.
  */
-export function resolveLocaleForPath(pathname: string): ResolvedLocale {
+export function resolveLocaleForPath(pathname: string, canReadStorage: boolean): ResolvedLocale {
     const { locale: urlLocale, path } = parseLocalizedPath(pathname)
     const hasLocalePrefix = urlLocale !== DEFAULT_LOCALE
     const isPublicRoute = findSeoRoute(path) !== undefined
 
     return {
-        locale: hasLocalePrefix || isPublicRoute ? urlLocale : readStoredLocale(),
+        locale: hasLocalePrefix || isPublicRoute || !canReadStorage ? urlLocale : readStoredLocale(),
         basePath: path,
         isPublicRoute,
     }
@@ -56,8 +62,9 @@ export function resolveLocaleForPath(pathname: string): ResolvedLocale {
 
 export function useLocale(): ResolvedLocale {
     const { pathname } = useLocation()
+    const hydrated = useHydrated()
 
-    return useMemo(() => resolveLocaleForPath(pathname), [pathname])
+    return useMemo(() => resolveLocaleForPath(pathname, hydrated), [pathname, hydrated])
 }
 
 /** Turns an app path into its published URL in the active locale: `/docs` -> `/en/docs/`. */

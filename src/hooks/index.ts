@@ -1,3 +1,5 @@
 export { useDashboardGuildSelection } from './useDashboardGuildSelection'
 export { useTheme } from './useTheme'
 export { useConsent } from './useConsent'
+export { useHydrated } from './useHydrated'
+export { useFormatDateTime } from './useFormatDateTime'
