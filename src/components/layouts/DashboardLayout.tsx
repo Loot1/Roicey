@@ -214,7 +214,7 @@ export function DashboardLayout() {
                                 >
                                     <div className={`flex h-10 w-10 flex-none items-center justify-center rounded-lg text-xs font-black text-primary ${selectedGuild?.iconUrl ? '' : 'bg-primary/15'}`}>
                                         {selectedGuild?.iconUrl ? (
-                                            <img src={selectedGuild.iconUrl} alt={selectedGuild.name} className="h-10 w-10 rounded-lg object-cover" />
+                                            <img src={selectedGuild.iconUrl} alt={selectedGuild.name} crossOrigin="anonymous" className="h-10 w-10 rounded-lg object-cover" />
                                         ) : (
                                             selectedGuild?.name.slice(0, 2).toUpperCase() ?? '??'
                                         )}
@@ -275,7 +275,7 @@ export function DashboardLayout() {
                                                                 : 'bg-base-300/40 text-base-content'
                                                     }`}>
                                                         {guild.iconUrl ? (
-                                                            <img src={guild.iconUrl} alt={guild.name} className="h-10 w-10 rounded-lg object-cover" />
+                                                            <img src={guild.iconUrl} alt={guild.name} crossOrigin="anonymous" className="h-10 w-10 rounded-lg object-cover" />
                                                         ) : (
                                                             guild.name.slice(0, 2).toUpperCase()
                                                         )}
