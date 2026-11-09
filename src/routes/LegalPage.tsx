@@ -24,14 +24,12 @@ export function LegalPage() {
                 <div className="grid gap-6 lg:grid-cols-2">
                     <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
                         <h2 className="text-2xl font-black">{t('legal.editorTitle')}</h2>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.editorText1')}</p>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.editorText2')}</p>
+                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.editorText')}</p>
                     </article>
 
                     <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
                         <h2 className="text-2xl font-black">{t('legal.hostingTitle')}</h2>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.hostingText1')}</p>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.hostingText2')}</p>
+                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.hostingText')}</p>
                     </article>
                 </div>
             </section>
@@ -48,14 +46,12 @@ export function LegalPage() {
                 <div className="grid gap-6 lg:grid-cols-2">
                     <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
                         <h2 className="text-2xl font-black">{t('legal.functionTitle')}</h2>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.functionText1')}</p>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.functionText2')}</p>
+                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.functionText')}</p>
                     </article>
 
                     <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
                         <h2 className="text-2xl font-black">{t('legal.responsabilityTitle')}</h2>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.responsabilityText1')}</p>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.responsabilityText2')}</p>
+                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.responsabilityText')}</p>
                     </article>
                 </div>
             </section>
@@ -70,8 +66,7 @@ export function LegalPage() {
 
                     <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
                         <h2 className="text-2xl font-black">{t('legal.contactTitle')}</h2>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.contactText1')}</p>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.contactText2')}</p>
+                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('legal.contactText')}</p>
                     </article>
                 </div>
             </section>
