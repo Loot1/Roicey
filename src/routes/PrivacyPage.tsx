@@ -23,8 +23,7 @@ export function PrivacyPage() {
             <section className="mx-auto max-w-5xl px-6 lg:px-10 mt-10">
                 <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
                     <h2 className="text-2xl font-black">{t('privacy.principlesTitle')}</h2>
-                    <p className="mt-4 text-sm leading-6 text-base-content/75">{t('privacy.principlesText1')}</p>
-                    <p className="mt-4 text-sm leading-6 text-base-content/75">{t('privacy.principlesText2')}</p>
+                    <p className="mt-4 text-sm leading-6 text-base-content/75">{t('privacy.principlesText')}</p>
                 </article>
             </section>
 
@@ -48,14 +47,12 @@ export function PrivacyPage() {
                 <div className="grid gap-6 lg:grid-cols-2">
                     <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
                         <h2 className="text-2xl font-black">{t('privacy.purposeTitle')}</h2>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('privacy.purposeText1')}</p>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('privacy.purposeText2')}</p>
+                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('privacy.purposeText')}</p>
                     </article>
 
                     <article className="rounded-box border border-base-300 bg-base-100 p-6 shadow-sm">
                         <h2 className="text-2xl font-black">{t('privacy.recordingsTitle')}</h2>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('privacy.recordingsText1')}</p>
-                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('privacy.recordingsText2')}</p>
+                        <p className="mt-4 text-sm leading-6 text-base-content/75">{t('privacy.recordingsText')}</p>
                     </article>
                 </div>
             </section>
