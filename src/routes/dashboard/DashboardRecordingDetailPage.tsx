@@ -34,48 +34,48 @@ export function DashboardRecordingDetailPage() {
     const [searchParams] = useSearchParams()
     const { t } = useTranslation()
     const formatDateTime = useFormatDateTime()
+    const source = searchParams.get('source')?.trim() ?? ''
     const [recording, setRecording] = useState<DashboardRecording | null>(null)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(() => Boolean(source))
     const [error, setError] = useState<string | null>(null)
     const [preparedSources, setPreparedSources] = useState<Record<string, PreparedAudioSource>>({})
     const [audioLoadingKey, setAudioLoadingKey] = useState<string | null>(null)
     const [downloadLoadingKey, setDownloadLoadingKey] = useState<string | null>(null)
     const [globalMixDownloadLoading, setGlobalMixDownloadLoading] = useState(false)
+    const [currentSource, setCurrentSource] = useState(source)
     const preparedSourcesRef = useRef<Record<string, PreparedAudioSource>>({})
-    const source = searchParams.get('source')?.trim() ?? ''
 
-    const clearPreparedSources = () => {
-        setPreparedSources((currentSources) => {
-            Object.values(currentSources).forEach((entry) => {
-                URL.revokeObjectURL(entry.objectUrl)
-            })
-
-            return {}
-        })
+    // Reset the page state during render when the source changes, instead of in an effect.
+    if (currentSource !== source) {
+        setCurrentSource(source)
+        setRecording(null)
+        setError(null)
+        setLoading(Boolean(source))
+        setPreparedSources({})
     }
+
+    const displayedError = source ? error : t('dashboard.recordingDetail.noSource')
 
     useEffect(() => {
         preparedSourcesRef.current = preparedSources
     }, [preparedSources])
 
+    // Revoke the object URLs of the previous source when it changes or on unmount.
+    // React runs every effect cleanup before the new setups, so the ref still holds the old entries here.
     useEffect(() => {
         return () => {
             Object.values(preparedSourcesRef.current).forEach((entry) => {
                 URL.revokeObjectURL(entry.objectUrl)
             })
         }
-    }, [])
+    }, [source])
 
     useEffect(() => {
-        let ignore = false
-
-        clearPreparedSources()
-
         if (!source) {
-            setRecording(null)
-            setError(t('dashboard.recordingDetail.noSource'))
             return
         }
+
+        let ignore = false
 
         void (async () => {
             try {
@@ -250,7 +250,7 @@ export function DashboardRecordingDetailPage() {
         return (
             <section className="space-y-4 bg-base-100 px-6 py-8 lg:px-8">
                 <Link to="/dashboard/recordings" className="btn btn-ghost btn-sm self-start"><ArrowLeftIcon className="h-4 w-4" />{t('dashboard.recordingDetail.backButton')}</Link>
-                <DashboardStateCard className="text-base-content/70"><div className="flex items-start gap-3 text-base-content/70"><ExclamationTriangleIcon className="mt-0.5 h-5 w-5 text-warning" /><span>{error ?? t('dashboard.recordingDetail.notFound')}</span></div></DashboardStateCard>
+                <DashboardStateCard className="text-base-content/70"><div className="flex items-start gap-3 text-base-content/70"><ExclamationTriangleIcon className="mt-0.5 h-5 w-5 text-warning" /><span>{displayedError ?? t('dashboard.recordingDetail.notFound')}</span></div></DashboardStateCard>
             </section>
         )
     }
@@ -348,7 +348,7 @@ export function DashboardRecordingDetailPage() {
                 }
             />
 
-            {error ? <DashboardAlert tone="warning" icon={<ExclamationTriangleIcon className="h-5 w-5" />} className="mx-6 mt-6 lg:mx-8">{error}</DashboardAlert> : null}
+            {displayedError ? <DashboardAlert tone="warning" icon={<ExclamationTriangleIcon className="h-5 w-5" />} className="mx-6 mt-6 lg:mx-8">{displayedError}</DashboardAlert> : null}
 
             <RecordingSessionTracksPlayer
                 recording={recording}

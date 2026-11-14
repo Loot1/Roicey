@@ -13,10 +13,19 @@ export function DashboardRecordRestrictionsPage() {
     const { t } = useTranslation()
     const formatDateTime = useFormatDateTime()
     const [restrictions, setRestrictions] = useState<DashboardRecordRestriction[]>([])
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(() => Boolean(selectedGuildId))
     const [error, setError] = useState<string | null>(null)
     const [deletingRestrictionId, setDeletingRestrictionId] = useState<number | null>(null)
     const [searchUserId, setSearchUserId] = useState('')
+    const [restrictionsGuildId, setRestrictionsGuildId] = useState(selectedGuildId)
+
+    // Reset the list during render when the guild changes, instead of in an effect.
+    if (restrictionsGuildId !== selectedGuildId) {
+        setRestrictionsGuildId(selectedGuildId)
+        setRestrictions([])
+        setError(null)
+        setLoading(Boolean(selectedGuildId))
+    }
 
     const loadRestrictions = async (guildId: string) => {
         setLoading(true)
@@ -33,13 +42,32 @@ export function DashboardRecordRestrictionsPage() {
 
     useEffect(() => {
         if (!selectedGuildId) {
-            setRestrictions([])
-            setError(null)
             return
         }
 
-        void loadRestrictions(selectedGuildId)
-    }, [selectedGuildId])
+        let ignore = false
+
+        getGuildDashboardRecordRestrictions(selectedGuildId)
+            .then((nextRestrictions) => {
+                if (!ignore) {
+                    setRestrictions(nextRestrictions)
+                }
+            })
+            .catch(() => {
+                if (!ignore) {
+                    setError(t('dashboard.restrictions.loadError'))
+                }
+            })
+            .finally(() => {
+                if (!ignore) {
+                    setLoading(false)
+                }
+            })
+
+        return () => {
+            ignore = true
+        }
+    }, [selectedGuildId, t])
 
     const summaryLabel = useMemo(() => {
         const total = restrictions.length
