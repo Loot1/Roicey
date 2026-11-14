@@ -1,0 +1,1 @@
+var e=`https://discord.com/api/oauth2/authorize?client_id=1269350971570393251&scope=bot%20applications.commands&permissions=70371178040336`;export{e as t};
